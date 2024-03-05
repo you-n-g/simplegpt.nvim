@@ -1,0 +1,1 @@
+{"q": "Please tell me the solution how to solve the reported error.", "t": "You are an expert in programming.\nWe have a file with content:\n```{{filetype}} \n{{content}}\n```\nYou encountered error when running or compiling it\n```\n{{+}}\n```\n{{q}}", "+": "please i"}

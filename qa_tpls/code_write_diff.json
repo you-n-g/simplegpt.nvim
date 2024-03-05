@@ -1,0 +1,1 @@
+{"t": "You are an expert in programming.\nWe have a file with content:\n```{{filetype}} \n{{content}}\n```\nYou are focusing on following part\n```\n{{visual}}\n```\n{{q-}}\nJust output the code without any explanation.\nDon't output back quotes to fence the code.\nTry to keep all the comments (You can modify them to make it better)."}
