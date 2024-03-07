@@ -1,0 +1,141 @@
+*simplegpt.txt*           For NVIM v0.8.0           Last change: 2024 March 07
+
+==============================================================================
+Table of Contents                                *simplegpt-table-of-contents*
+
+1. Motivation of this plugin             |simplegpt-motivation-of-this-plugin|
+2. TLDR(Too Long Didn’t Read)       |simplegpt-tldr(too-long-didn’t-read)|
+3. Installation                                       |simplegpt-installation|
+4. Features                                               |simplegpt-features|
+5. Shutcuts                                               |simplegpt-shutcuts|
+6. TODOs                                                     |simplegpt-todos|
+7. Limitations                                         |simplegpt-limitations|
+8. Related Projects                               |simplegpt-related-projects|
+
+==============================================================================
+1. Motivation of this plugin             *simplegpt-motivation-of-this-plugin*
+
+Though we have |simplegpt-a-lot-of-chatgpt-plugins| to leverage the power of
+ChatGPT in Vim, I still find it hard to locate a handy one that completely fits
+my workflow.
+
+After thinking about it, I found that the main reason is that the most
+important part of my workflow is missing in existing plugins: **Fast editing of
+questions based on my current status**!!
+
+So, quickly editing the question template and building the question is the most
+important part of my workflow. Existing plugins are not convenient enough for
+this and focus more on the Chat UI.
+
+This repository is designed to offer a highly customizable and extensible QA
+interaction with ChatGPT in the simplest way possible.
+
+
+==============================================================================
+2. TLDR(Too Long Didn’t Read)       *simplegpt-tldr(too-long-didn’t-read)*
+
+
+==============================================================================
+3. Installation                                       *simplegpt-installation*
+
+>lua
+    -- Layzynvim
+    {
+      "you-n-g/simplegpt.git",
+      dependencies = {
+        "MunifTanjim/nui.nvim",
+        "nvim-lua/plenary.nvim",
+        "nvim-telescope/telescope.nvim",
+        "jackMort/ChatGPT.nvim",  -- You should configure your ChatGPT make sure it works.
+      },
+      config=true,
+    }
+<
+
+
+==============================================================================
+4. Features                                               *simplegpt-features*
+
+Supported special registers | key | meaning | | - | - | | content | the whole
+file content | | filetype | the filetype of the file | | visual | the selected
+lines | | context[TODO..] | the nearby context of the selected line(10 lines up
+& down) |
+
+
+==============================================================================
+5. Shutcuts                                               *simplegpt-shutcuts*
+
+- Dialog shortcuts:
+    - For all dialogs
+        - `{"q", "<C-c>", "<esc>"}`: exit the dialog;
+        - `{"C-k"}` Copy code in triple backquotes of current buffer;
+    - For only `ChatDialog` (The dialog that are able to get response)
+        - `{"C-a"}`: Append the response to current meeting.
+        - `{"C-y"}`: Copy the full response to the clipboard.
+        - `{"C-r"}`: Replace the selected visual text or current line.
+- normal shortcuts:
+    - …
+
+
+==============================================================================
+6. TODOs                                                     *simplegpt-todos*
+
+- TODOs
+    - Misc
+        - ☒ Resume last answer.
+        - ☒ Diff mode
+        - ☒ Fast copy code in backquotes
+        - ☐ Answering in the background
+        - ☒ Temporary register(without saving to disk)
+        - Repository level context
+            - Add file content to context
+                - ☐ current file
+            - ☐ Ask repository-level question
+        - Shotcuts
+            - ☐ Telescope to run shortcuts.
+            - ☐ Directly ask error information (load + do!)
+                - ☐ while remain the original information.
+        - Utils:
+            - ☐ get the buffer number where you are from; It is helpful to accurate control the content in different windows.
+    - Targets:
+        - Run from targets;
+            - Dialog targets ==> Supporting edit in place.
+        - Followup actions;
+            - ☒ Replace the text
+            - ☒ Append the text
+            - ☒ Yank the text
+    - UI:
+        - short cuts
+        - ☐ Help function: You can press `?` to see the help menu for shortcuts.
+            - Alternative implementation: [ ] Add shortcuts prompt around the box
+    - Navigation
+        - ☐ fast saving and loading(without entering name)
+            - ☐ remembering the filename in the background.
+        - ☒ Better Preview of the documents
+    - Docs: try panvimdoc
+        - ☐ Normal vim doc(generating from README.md).
+        - ☐ One picture docs.
+    - Open source routine
+        - ☐ Vim CI
+    - templates design
+        - ☒ Ask inline questions(continue writing)
+- Bugs
+    - ☐ qq will trigger error in answer
+
+
+==============================================================================
+7. Limitations                                         *simplegpt-limitations*
+
+- It only leverage the `ChatCompletion` API (which is the most powerful and frequently used in the future trend).
+- It is based on Vim registers, which may conflict with users’ usage of them.
+
+
+==============================================================================
+8. Related Projects                               *simplegpt-related-projects*
+
+- jackMort/ChatGPT.nvim <https://github.com/jackMort/ChatGPT.nvim>
+- robitx/gp.nvim <https://github.com/Robitx/gp.nvim>
+
+Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
+
+vim:tw=78:ts=8:noet:ft=help:norl:
