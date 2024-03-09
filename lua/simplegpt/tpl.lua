@@ -165,7 +165,7 @@ function M.RegQAUI:get_special()
   res["content"] = table.concat(lines, "\n")
 
   -- 2) get the visual content
-  local select_pos = require("extra_fea.utils").get_visual_selection()
+  local select_pos = require("simplegpt.utils").get_visual_selection()
   local start_line = select_pos["start"]["row"] - 1 -- Lua indexing is 0-based
   local end_line = select_pos["end"]["row"]
   -- Get the selected lines

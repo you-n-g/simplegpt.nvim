@@ -1,3 +1,6 @@
+# 🤏 SimpleGPT
+Simple GPT is a simple, **QA-customizable** plugin for interacting with ChatGPT in Vim.
+
 # Motivation of this plugin
 Though we have [a lot of ChatGPT plugins](#related-projects) to leverage the power of ChatGPT in Vim, I still find it hard to locate a handy one that completely fits my workflow.
 
@@ -14,9 +17,11 @@ This repository is designed to offer a highly customizable and extensible QA int
 
 # Installation
 ```lua
+-- TODO: update the content according to `tests/init_configs/lazy.lua`
 -- Layzynvim
 {
   "you-n-g/simplegpt.git",
+  -- "folke/which-key.nvim", is recommended for better experience
   dependencies = {
     "MunifTanjim/nui.nvim",
     "nvim-lua/plenary.nvim",
@@ -90,13 +95,25 @@ Supported special registers
     - [ ] Normal vim doc(generating from README.md).
     - [ ] One picture docs.
   - Open source routine
-    - [ ] Vim CI
+    - Vim CI
+      - [X] Add linting CI
+      - [ ] Fix Linting errors
+    - Tests:
+      - Add test initialization configs for fast debugging and testing.
+        - [X] lazy.nvim
   - templates design
     - [x] Ask inline questions(continue writing)
 
 - Bugs
   - [ ] qq will trigger error in answer
 
+
+# Development
+
+Welcome to contribute to this project.
+
+You can test the plugin with minimal config with
+- `vim -u tests/init_configs/lazy.lua -U NONE -N -i NONE` for [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 # Limitations
 

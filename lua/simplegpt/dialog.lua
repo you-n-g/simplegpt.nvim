@@ -187,7 +187,7 @@ function M.ChatDialog:register_keys(exit_callback)
 
       -- Get the range of lines to replace
       local start_line, end_line
-      if vim.fn.visualmode() then -- NOTE: This will return to the status of the origianl window seems beyond the expectation of me..
+      if vim.fn.visualmode() ~= "" then -- NOTE: This will return to the status of the origianl window seems beyond the expectation of me..
         -- If in visual mode, replace the selected lines; 
         start_line, end_line = unpack(vim.fn.getpos("'<"), 2, 3), unpack(vim.fn.getpos("'>"), 2, 3)
       else

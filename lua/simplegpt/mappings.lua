@@ -59,10 +59,14 @@ end
 function M.setup()
   M.setup_main_mappings()
   shortcut.register_shortcuts()
-  require("which-key").register({
-    ["<LocalLeader>s"] = { name = "+Shortcuts" },
-    ["<LocalLeader>g"] = { name = "+SimpleGPT" },
-  })
+  -- TODO: if `which-key` is installed
+  local ok, which_key = pcall(require, "which-key")
+  if ok then
+    which_key.register({
+      ["<LocalLeader>s"] = { name = "+Shortcuts" },
+      ["<LocalLeader>g"] = { name = "+SimpleGPT" },
+    })
+  end
 end
 
 return M
