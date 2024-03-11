@@ -49,8 +49,9 @@ interaction with ChatGPT in the simplest way possible.
 ==============================================================================
 2. Installation                                       *simplegpt-installation*
 
-⚠️ Please follow the [installation guide of
-ChatGPT.nvim]((https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation)
+⚠️ Please follow the installation guide of ChatGPT.nvim
+<https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation> to
+make sure your ChatGPT works.
 
 >lua
     -- Lazy.nvim
