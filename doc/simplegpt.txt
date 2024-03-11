@@ -5,14 +5,17 @@ Table of Contents                                *simplegpt-table-of-contents*
 
 1. 🤏 SimpleGPT                                   |simplegpt-🤏-simplegpt|
   - Motivation of this plugin|simplegpt-🤏-simplegpt-motivation-of-this-plugin|
-2. TLDR(Too Long Didn’t Read)       |simplegpt-tldr(too-long-didn’t-read)|
-3. Installation                                       |simplegpt-installation|
+2. Installation                                       |simplegpt-installation|
+3. Demo                                                       |simplegpt-demo|
+  - Typical workflow & Shortcuts |simplegpt-demo-typical-workflow-&-shortcuts|
+  - Console demo                                 |simplegpt-demo-console-demo|
 4. Features                                               |simplegpt-features|
-5. Shutcuts                                               |simplegpt-shutcuts|
-6. TODOs                                                     |simplegpt-todos|
-7. Development                                         |simplegpt-development|
-8. Limitations                                         |simplegpt-limitations|
-9. Related Projects                               |simplegpt-related-projects|
+  - Shutcuts                                     |simplegpt-features-shutcuts|
+  - Supported special registers|simplegpt-features-supported-special-registers|
+5. TODOs                                                     |simplegpt-todos|
+6. Development                                         |simplegpt-development|
+7. Limitations                                         |simplegpt-limitations|
+8. Related Projects                               |simplegpt-related-projects|
 
 ==============================================================================
 1. 🤏 SimpleGPT                                   *simplegpt-🤏-simplegpt*
@@ -44,40 +47,76 @@ interaction with ChatGPT in the simplest way possible.
 
 
 ==============================================================================
-2. TLDR(Too Long Didn’t Read)       *simplegpt-tldr(too-long-didn’t-read)*
-
-
-==============================================================================
-3. Installation                                       *simplegpt-installation*
+2. Installation                                       *simplegpt-installation*
 
 >lua
     -- TODO: update the content according to `tests/init_configs/lazy.lua`
     -- Lazy.nvim
     {
-      "you-n-g/simplegpt.git",
-      -- "folke/which-key.nvim", is recommended for better experience
+      "you-n-g/simplegpt.nvim",
       dependencies = {
-        "MunifTanjim/nui.nvim",
-        "nvim-lua/plenary.nvim",
-        "nvim-telescope/telescope.nvim",
-        "jackMort/ChatGPT.nvim",  -- You should configure your ChatGPT make sure it works.
+        -- "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
+        {
+          "jackMort/ChatGPT.nvim",
+          event = "VeryLazy",
+          config = true,
+          dependencies = {
+            "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+            "folke/trouble.nvim",
+            "nvim-telescope/telescope.nvim",
+          },
+        },
       },
-      config=true,
-    }
+      config = true,
+    },
+    -- or packer.nvim
+    use({
+      "you-n-g/simplegpt.nvim",
+      config = function()
+        require("simplegpt").setup()
+      end,
+      requires = {
+        {
+          "jackMort/ChatGPT.nvim",
+          event = "VimEnter",
+          config = function()
+            require("chatgpt").setup()
+          end,
+          requires = {
+            "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+            "folke/trouble.nvim",
+            "nvim-telescope/telescope.nvim",
+          },
+        },
+      },
+    })
 <
+
+
+==============================================================================
+3. Demo                                                       *simplegpt-demo*
+
+
+TYPICAL WORKFLOW & SHORTCUTS     *simplegpt-demo-typical-workflow-&-shortcuts*
+
+The question is constructed by rendering a template. The 't' register serves as
+the template, encompassing: - Special variables such as {{content}},
+{{filetype}}, and {{visual}}. - Standard registers like {{a}}, {{b}}, and
+{{c}}.
+
+
+CONSOLE DEMO                                     *simplegpt-demo-console-demo*
+
+TODO…
 
 
 ==============================================================================
 4. Features                                               *simplegpt-features*
 
-Supported special registers | key | meaning | | - | - | | content | the whole
-file content | | filetype | the filetype of the file | | visual | the selected
-lines | | context(TODO..) | the nearby context of the selected line(10 lines up
-& down) |
 
-
-==============================================================================
-5. Shutcuts                                               *simplegpt-shutcuts*
+SHUTCUTS                                         *simplegpt-features-shutcuts*
 
 - Dialog shortcuts:
     - For all dialogs
@@ -108,8 +147,23 @@ lines | | context(TODO..) | the nearby context of the selected line(10 lines up
         - `<LocalLeader>st`: Con(t)inue
 
 
+SUPPORTED SPECIAL REGISTERS   *simplegpt-features-supported-special-registers*
+
+  -----------------------------------------------------------------------
+  key                                 meaning
+  ----------------------------------- -----------------------------------
+  content                             the whole file content
+
+  filetype                            the filetype of the file
+
+  visual                              the selected lines
+
+  context(TODO..)                     the nearby context of the selected
+                                      line(10 lines up & down)
+  -----------------------------------------------------------------------
+
 ==============================================================================
-6. TODOs                                                     *simplegpt-todos*
+5. TODOs                                                     *simplegpt-todos*
 
 Flag explanation: - 🌟: high priority
 
@@ -147,8 +201,8 @@ Flag explanation: - 🌟: high priority
             - ☒ remembering the filename in the background.
         - ☒ Better Preview of the documents
     - Docs: try panvimdoc
-        - ☐ 🌟Normal vim doc(generating from README.md).
-        - ☐ 🌟One picture docs.
+        - ☒ 🌟Normal vim doc(generating from README.md).
+        - ☒ 🌟One picture docs.
         - ☐ Recording Demo
     - Open source routine
         - Vim CI
@@ -168,7 +222,7 @@ Flag explanation: - 🌟: high priority
 
 
 ==============================================================================
-7. Development                                         *simplegpt-development*
+6. Development                                         *simplegpt-development*
 
 Welcome to contribute to this project.
 
@@ -181,23 +235,24 @@ tests/init_configs/packer.lua -U NONE -N -i NONE`
 
 
 ==============================================================================
-8. Limitations                                         *simplegpt-limitations*
+7. Limitations                                         *simplegpt-limitations*
 
 - It only leverage the `ChatCompletion` API (which is the most powerful and frequently used in the future trend).
 - It is based on Vim registers, which may conflict with users’ usage of them.
 
 
 ==============================================================================
-9. Related Projects                               *simplegpt-related-projects*
+8. Related Projects                               *simplegpt-related-projects*
 
 - jackMort/ChatGPT.nvim <https://github.com/jackMort/ChatGPT.nvim>
 - robitx/gp.nvim <https://github.com/Robitx/gp.nvim>
 
 ==============================================================================
-10. Links                                                    *simplegpt-links*
+9. Links                                                     *simplegpt-links*
 
 1. *Mega-Linter*: https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg
 2. *panvimdoc*: https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg
+3. *Workflow*: https://i.imgur.com/MHdmQaX.png
 
 Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
 
