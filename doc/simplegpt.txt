@@ -49,14 +49,16 @@ interaction with ChatGPT in the simplest way possible.
 ==============================================================================
 2. Installation                                       *simplegpt-installation*
 
+⚠️ Please follow the [installation guide of
+ChatGPT.nvim]((https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation)
+
 >lua
     -- Lazy.nvim
     {
       "you-n-g/simplegpt.nvim",
       dependencies = {
-        -- "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
         {
-          "jackMort/ChatGPT.nvim",
+          "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
           event = "VeryLazy",
           config = true,
           dependencies = {
@@ -78,7 +80,7 @@ interaction with ChatGPT in the simplest way possible.
       end,
       requires = {
         {
-          "jackMort/ChatGPT.nvim",
+          "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
           event = "VimEnter",
           config = function()
             require("chatgpt").setup()
