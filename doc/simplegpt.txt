@@ -1,28 +1,30 @@
-*simplegpt.txt*           For NVIM v0.8.0           Last change: 2024 March 09
+*simplegpt.txt*           For NVIM v0.8.0           Last change: 2024 March 11
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
 
 1. 🤏 SimpleGPT                                   |simplegpt-🤏-simplegpt|
-2. Motivation of this plugin             |simplegpt-motivation-of-this-plugin|
-3. TLDR(Too Long Didn’t Read)       |simplegpt-tldr(too-long-didn’t-read)|
-4. Installation                                       |simplegpt-installation|
-5. Features                                               |simplegpt-features|
-6. Shutcuts                                               |simplegpt-shutcuts|
-7. TODOs                                                     |simplegpt-todos|
-8. Development                                         |simplegpt-development|
-9. Limitations                                         |simplegpt-limitations|
-10. Related Projects                              |simplegpt-related-projects|
+  - Motivation of this plugin|simplegpt-🤏-simplegpt-motivation-of-this-plugin|
+2. TLDR(Too Long Didn’t Read)       |simplegpt-tldr(too-long-didn’t-read)|
+3. Installation                                       |simplegpt-installation|
+4. Features                                               |simplegpt-features|
+5. Shutcuts                                               |simplegpt-shutcuts|
+6. TODOs                                                     |simplegpt-todos|
+7. Development                                         |simplegpt-development|
+8. Limitations                                         |simplegpt-limitations|
+9. Related Projects                               |simplegpt-related-projects|
 
 ==============================================================================
 1. 🤏 SimpleGPT                                   *simplegpt-🤏-simplegpt*
 
-Simple GPT is a simple, **QA-customizable** plugin for interacting with ChatGPT
-in Vim.
+<https://github.com/marketplace/actions/mega-linter>
+<https://github.com/kdheepak/panvimdoc>
+
+🤏SimpleGPT is a simple, **QA-customizable** plugin for interacting with
+ChatGPT in Vim.
 
 
-==============================================================================
-2. Motivation of this plugin             *simplegpt-motivation-of-this-plugin*
+MOTIVATION OF THIS PLUGIN *simplegpt-🤏-simplegpt-motivation-of-this-plugin*
 
 Though we have |simplegpt-a-lot-of-chatgpt-plugins| to leverage the power of
 ChatGPT in Vim, I still find it hard to locate a handy one that completely fits
@@ -32,24 +34,24 @@ After thinking about it, I found that the main reason is that the most
 important part of my workflow is missing in existing plugins: **Fast editing of
 questions based on my current status**!!
 
-So, quickly editing the question template and building the question is the most
-important part of my workflow. Existing plugins are not convenient enough for
-this and focus more on the Chat UI.
+So, **quickly editing the question template and building the question** is the
+most important part of my workflow. Existing plugins are not convenient enough
+for this and focus more on the Chat UI.
 
 This repository is designed to offer a highly customizable and extensible QA
 interaction with ChatGPT in the simplest way possible.
 
 
 ==============================================================================
-3. TLDR(Too Long Didn’t Read)       *simplegpt-tldr(too-long-didn’t-read)*
+2. TLDR(Too Long Didn’t Read)       *simplegpt-tldr(too-long-didn’t-read)*
 
 
 ==============================================================================
-4. Installation                                       *simplegpt-installation*
+3. Installation                                       *simplegpt-installation*
 
 >lua
     -- TODO: update the content according to `tests/init_configs/lazy.lua`
-    -- Layzynvim
+    -- Lazy.nvim
     {
       "you-n-g/simplegpt.git",
       -- "folke/which-key.nvim", is recommended for better experience
@@ -65,7 +67,7 @@ interaction with ChatGPT in the simplest way possible.
 
 
 ==============================================================================
-5. Features                                               *simplegpt-features*
+4. Features                                               *simplegpt-features*
 
 Supported special registers | key | meaning | | - | - | | content | the whole
 file content | | filetype | the filetype of the file | | visual | the selected
@@ -74,7 +76,7 @@ lines | | context[TODO..] | the nearby context of the selected line(10 lines up
 
 
 ==============================================================================
-6. Shutcuts                                               *simplegpt-shutcuts*
+5. Shutcuts                                               *simplegpt-shutcuts*
 
 - Dialog shortcuts:
     - For all dialogs
@@ -89,20 +91,22 @@ lines | | context[TODO..] | the nearby context of the selected line(10 lines up
 
 
 ==============================================================================
-7. TODOs                                                     *simplegpt-todos*
+6. TODOs                                                     *simplegpt-todos*
+
+Flag explanation: - 🌟: high priority
 
 - TODOs
     - Misc
         - ☒ Resume last answer.
         - ☒ Diff mode
         - ☒ Fast copy code in backquotes
-        - ☐ Answering in the background
+        - ☐ Answering in the background(it will stop the answering streaming if we exit the QA UI)
         - ☒ Temporary register(without saving to disk)
         - Repository level context
             - Add file content to context
                 - ☐ current file
             - ☐ Ask repository-level question
-        - Shotcuts
+        - Shortcuts
             - ☐ Telescope to run shortcuts.
             - ☐ Directly ask error information (load + do!)
                 - ☐ while remain the original information.
@@ -120,27 +124,31 @@ lines | | context[TODO..] | the nearby context of the selected line(10 lines up
         - ☐ Help function: You can press `?` to see the help menu for shortcuts.
             - Alternative implementation: [ ] Add shortcuts prompt around the box
     - Navigation
-        - ☐ fast saving and loading(without entering name)
-            - ☐ remembering the filename in the background.
+        - ☒ fast saving and loading(without entering name)
+            - ☒ remembering the filename in the background.
         - ☒ Better Preview of the documents
     - Docs: try panvimdoc
-        - ☐ Normal vim doc(generating from README.md).
-        - ☐ One picture docs.
+        - ☐ 🌟Normal vim doc(generating from README.md).
+        - ☐ 🌟One picture docs.
+        - ☐ Recording Demo
     - Open source routine
         - Vim CI
             - ☒ Add linting CI
             - ☐ Fix Linting errors
+                - Switching to Mega-Linter <https://github.com/nvuillam/npm-groovy-lint/pull/109/files> may help.
         - Tests:
             - Add test initialization configs for fast debugging and testing.
                 - ☒ lazy.nvim
+                - ☐ 🌟packer.nvim
     - templates design
         - ☒ Ask inline questions(continue writing)
 - Bugs
-    - ☐ qq will trigger error in answer
+- More features that may be added in the long future
+    - Automatically ask questions based on the current context(Currently we have to manually select and ask the question)
 
 
 ==============================================================================
-8. Development                                         *simplegpt-development*
+7. Development                                         *simplegpt-development*
 
 Welcome to contribute to this project.
 
@@ -150,17 +158,23 @@ tests/init_configs/lazy.lua -U NONE -N -i NONE` for lazy.nvim
 
 
 ==============================================================================
-9. Limitations                                         *simplegpt-limitations*
+8. Limitations                                         *simplegpt-limitations*
 
 - It only leverage the `ChatCompletion` API (which is the most powerful and frequently used in the future trend).
 - It is based on Vim registers, which may conflict with users’ usage of them.
 
 
 ==============================================================================
-10. Related Projects                              *simplegpt-related-projects*
+9. Related Projects                               *simplegpt-related-projects*
 
 - jackMort/ChatGPT.nvim <https://github.com/jackMort/ChatGPT.nvim>
 - robitx/gp.nvim <https://github.com/Robitx/gp.nvim>
+
+==============================================================================
+10. Links                                                    *simplegpt-links*
+
+1. *Mega-Linter*: https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg
+2. *panvimdoc*: https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg
 
 Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
 
