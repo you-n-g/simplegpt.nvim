@@ -16,7 +16,7 @@ So, **quickly editing the question template and building the question** is the m
 This repository is designed to offer a highly customizable and extensible QA interaction with ChatGPT in the simplest way possible.
 
 # Installation
-⚠️ Please follow the [installation guide of ChatGPT.nvim]((https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation)
+⚠️ Please follow the [installation guide of ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation) to make sure your ChatGPT works.
 ```lua
 -- Lazy.nvim
 {
