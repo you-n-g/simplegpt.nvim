@@ -13,7 +13,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- setup and init
-vim.g.mapleader = " "       -- Make sure to set `mapleader` before lazy so your mappings are correct
+vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
 vim.g.maplocalleader = "\\" -- Same for `maplocalleader`
 
 local plugins = {
@@ -24,20 +24,20 @@ local plugins = {
       -- "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
       {
         "jackMort/ChatGPT.nvim",
-          event = "VeryLazy",
-          config = function()
-            require("chatgpt").setup()
-          end,
-          dependencies = {
-            "MunifTanjim/nui.nvim",
-            "nvim-lua/plenary.nvim",
-            "folke/trouble.nvim",
-            "nvim-telescope/telescope.nvim"
-          }
-      }
+        event = "VeryLazy",
+        config = function()
+          require("chatgpt").setup()
+        end,
+        dependencies = {
+          "MunifTanjim/nui.nvim",
+          "nvim-lua/plenary.nvim",
+          "folke/trouble.nvim",
+          "nvim-telescope/telescope.nvim",
+        },
+      },
     },
     config = true,
-  }
+  },
 }
 
 require("lazy").setup(plugins)

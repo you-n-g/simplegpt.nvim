@@ -21,6 +21,14 @@ M = {
         "<C-y>"
       },
     },
+    -- config about building (q)uestions
+    q_build = {
+      -- repository-level configs
+      repo = {
+        reg = "p", -- the register to inject repository-level infos
+        header = "Below are some relavant files", -- the header for multiple files
+      }
+    },
     -- shortcuts to actions: directly loading specific template and sent to target
     shortcuts = {
       {

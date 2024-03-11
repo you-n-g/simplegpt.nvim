@@ -2,7 +2,9 @@
 [![Mega-Linter](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg)](https://github.com/marketplace/actions/mega-linter)
 [![panvimdoc](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg)](https://github.com/kdheepak/panvimdoc)
 
-🤏SimpleGPT is a simple, **QA-customizable** plugin for interacting with ChatGPT in Vim.
+🤏SimpleGPT is a vim plugin designed to provide the simplest method for:
+- Constructing and sending questions to ChatGPT
+- Presenting the response in the most convenient manner.
 
 ## Motivation of this plugin
 Though we have [a lot of ChatGPT plugins](#related-projects) to leverage the power of ChatGPT in Vim, I still find it hard to locate a handy one that completely fits my workflow.
@@ -44,7 +46,7 @@ Supported special registers
 | content         | the whole file content                                      |
 | filetype        | the filetype of the file                                    |
 | visual          | the selected lines                                          |
-| context[TODO..] | the nearby context of the selected line(10 lines up & down) |
+| context(TODO..) | the nearby context of the selected line(10 lines up & down) |
 
 
 # Shutcuts
@@ -57,8 +59,25 @@ Supported special registers
     - `{"C-y"}`: Copy the full response to the clipboard.
     - `{"C-r"}`: Replace the selected visual text or current line.
 
-- normal shortcuts:
-  - ...
+- Normal shortcuts start with `<LocalLeader>g`
+    - `<LocalLeader>gl`: load registers
+    - `<LocalLeader>gD`: dump registers
+    - `<LocalLeader>ge`: edit registers
+    - `<LocalLeader>gs`: send question to clipboard
+    - `<LocalLeader>gc`: send question to ChatGPT
+    - `<LocalLeader>gr`: send to get direct response
+    - `<LocalLeader>gd`: send to get response with diff
+    - `<LocalLeader>gR`: resume last popup
+    - `<LocalLeader>gp`: load current file to reg
+    - `<LocalLeader>gP`: append current file to reg
+- Shortcuts for combined actions:  Loading template + send to target
+  - By default, they start with `<LocalLeader>s`.
+  - [Full list of shortcuts](lua/simplegpt/conf.lua#L25)
+    - `<LocalLeader>sr`: (R)ewrite Text
+    - `<LocalLeader>sc`: (C)omplete Code
+    - `<LocalLeader>sg`: Fix (g)rammar
+    - `<LocalLeader>sd`: Con(d)ense
+    - `<LocalLeader>st`: Con(t)inue
 
 # TODOs
 Flag explanation:
@@ -73,8 +92,8 @@ Flag explanation:
     - [x] Temporary register(without saving to disk)
     - Repository level context
       - Add file content to context
-        - [ ] current file
-      - [ ] Ask repository-level question
+        - [x] current file
+      - [x] Ask repository-level question
     - Shortcuts
       - [ ] Telescope to run shortcuts.
       - [ ] Directly ask error information (load + do!)
@@ -92,6 +111,7 @@ Flag explanation:
     - short cuts
     - [ ] Help function: You can press `?` to see the help menu for shortcuts.
       - Alternative implementation: [ ] Add shortcuts prompt around the box
+    - Add preview of the place holders inline
   - Navigation
     - [x] fast saving and loading(without entering name)
       - [x] remembering the filename in the background.
@@ -113,6 +133,7 @@ Flag explanation:
     - [x] Ask inline questions(continue writing)
 
 - Bugs
+  - [ ] Replace only affect one line.
 
 - More features that may be added in the long future
   - Automatically ask questions based on the current context(Currently we have to manually select and ask the question)

@@ -47,13 +47,25 @@ function M.setup_main_mappings()
     shortcut.build_func("diff"),
     { noremap = true, silent = true, desc = "send to get response with diff" }
   )
+  -- utils
   vim.keymap.set(
     { "n", "v" },
     "<LocalLeader>gR",
     target.resume_popup,
     { noremap = true, silent = true, desc = "resume last popup" }
   )
-  vim.keymap.set("n", "<LocalLeader>gf", loader.tele_load_reg, { noremap = true, desc = "load tpl via telescope" })
+  vim.keymap.set(
+    { "n", "v" },
+    "<LocalLeader>gp",
+    tpl.repo_load_file,
+    { noremap = true, silent = true, desc = "load current file to reg" }
+  )
+  vim.keymap.set(
+    { "n", "v" },
+    "<LocalLeader>gP",
+    tpl.repo_append_file,
+    { noremap = true, silent = true, desc = "append current file to reg" }
+  )
 end
 
 function M.setup()

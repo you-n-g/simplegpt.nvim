@@ -3,6 +3,7 @@ local Popup = require("nui.popup")
 local Layout = require("nui.layout")
 local dialog = require("simplegpt.dialog")
 local utils = require("simplegpt.utils")
+local conf = require("simplegpt.conf")
 -- TODO:
 local M = {}
 M.RegQAUI = utils.class("RegQAUI", dialog.BaseDialog) -- register-based QA UI
@@ -189,6 +190,35 @@ function M.RegQAUI:get_q()
     ph_keys[k] = vim.fn.getreg(k)
   end
   return interp(M.get_tpl(), vim.tbl_extend("force", ph_keys, self.special_dict))
+end
+
+function M.get_current_cont()
+  local buf = 0
+
+  -- Get all lines
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+
+  -- Get the current file path
+  local file_path = vim.api.nvim_buf_get_name(buf)
+
+  local file_type = vim.api.nvim_buf_get_option(buf, "filetype")
+
+  -- Prepare the content to be set into the register
+  local content = "- " .. file_path .. ":\n" .. "```" .. file_type .. "\n" .. table.concat(lines, "\n") .. "\n```"
+  return content
+end
+
+-- some utils functions
+function M.repo_load_file()
+  -- Set the content into the register `repo_reg`
+  vim.fn.setreg(conf.options.q_build.repo.reg, conf.options.q_build.repo.header .. "\n" .. M.get_current_cont())
+  print("Load file content to reg.")
+end
+
+function M.repo_append_file()
+  local repo_reg = conf.options.q_build.repo.reg
+  vim.fn.setreg(repo_reg, vim.fn.getreg(repo_reg) .. M.get_current_cont())
+  print("Append file content to reg.")
 end
 
 return M
