@@ -10,7 +10,7 @@ require("packer").startup(function()
 
   -- plugins
   use({
-    "~/deploy/tools.py/simplegpt.nvim/",
+    "you-n-g/simplegpt.nvim",
     config = function()
       require("simplegpt").setup()
     end,

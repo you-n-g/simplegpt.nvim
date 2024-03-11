@@ -18,16 +18,13 @@ vim.g.maplocalleader = "\\" -- Same for `maplocalleader`
 
 local plugins = {
   {
-    dir = "~/deploy/tools.py/simplegpt.nvim/",
-    -- "you-n-g/simplegpt.git",
+    "you-n-g/simplegpt.nvim",
     dependencies = {
       -- "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
       {
         "jackMort/ChatGPT.nvim",
         event = "VeryLazy",
-        config = function()
-          require("chatgpt").setup()
-        end,
+        config = true,
         dependencies = {
           "MunifTanjim/nui.nvim",
           "nvim-lua/plenary.nvim",

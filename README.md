@@ -15,41 +15,68 @@ So, **quickly editing the question template and building the question** is the m
 
 This repository is designed to offer a highly customizable and extensible QA interaction with ChatGPT in the simplest way possible.
 
-
-
-# TLDR(Too Long Didn't Read)
-
-
 # Installation
 ```lua
 -- TODO: update the content according to `tests/init_configs/lazy.lua`
 -- Lazy.nvim
 {
-  "you-n-g/simplegpt.git",
-  -- "folke/which-key.nvim", is recommended for better experience
+  "you-n-g/simplegpt.nvim",
   dependencies = {
-    "MunifTanjim/nui.nvim",
-    "nvim-lua/plenary.nvim",
-    "nvim-telescope/telescope.nvim",
-    "jackMort/ChatGPT.nvim",  -- You should configure your ChatGPT make sure it works.
+    -- "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
+    {
+      "jackMort/ChatGPT.nvim",
+      event = "VeryLazy",
+      config = true,
+      dependencies = {
+        "MunifTanjim/nui.nvim",
+        "nvim-lua/plenary.nvim",
+        "folke/trouble.nvim",
+        "nvim-telescope/telescope.nvim",
+      },
+    },
   },
-  config=true,
-}
+  config = true,
+},
+-- or packer.nvim
+use({
+  "you-n-g/simplegpt.nvim",
+  config = function()
+    require("simplegpt").setup()
+  end,
+  requires = {
+    {
+      "jackMort/ChatGPT.nvim",
+      event = "VimEnter",
+      config = function()
+        require("chatgpt").setup()
+      end,
+      requires = {
+        "MunifTanjim/nui.nvim",
+        "nvim-lua/plenary.nvim",
+        "folke/trouble.nvim",
+        "nvim-telescope/telescope.nvim",
+      },
+    },
+  },
+})
 ```
+
+# Demo
+
+## Typical workflow & Shortcuts
+![Workflow](https://i.imgur.com/MHdmQaX.png)
+
+The question is constructed by rendering a template. The 't' register serves as the template, encompassing:
+- Special variables such as {{content}}, {{filetype}}, and {{visual}}.
+- Standard registers like {{a}}, {{b}}, and {{c}}.
+
+## Console demo
+TODO...
+
 
 # Features
 
-
-Supported special registers
-| key             | meaning                                                     |
-| -               | -                                                           |
-| content         | the whole file content                                      |
-| filetype        | the filetype of the file                                    |
-| visual          | the selected lines                                          |
-| context(TODO..) | the nearby context of the selected line(10 lines up & down) |
-
-
-# Shutcuts
+## Shutcuts
 - Dialog shortcuts:
   - For all dialogs
     - `{"q", "<C-c>", "<esc>"}`: exit the dialog;
@@ -78,6 +105,15 @@ Supported special registers
     - `<LocalLeader>sg`: Fix (g)rammar
     - `<LocalLeader>sd`: Con(d)ense
     - `<LocalLeader>st`: Con(t)inue
+
+## Supported special registers
+| key             | meaning                                                     |
+| -               | -                                                           |
+| content         | the whole file content                                      |
+| filetype        | the filetype of the file                                    |
+| visual          | the selected lines                                          |
+| context(TODO..) | the nearby context of the selected line(10 lines up & down) |
+
 
 # TODOs
 Flag explanation:
@@ -117,8 +153,8 @@ Flag explanation:
       - [x] remembering the filename in the background.
     - [x] Better Preview of the documents
   - Docs: try panvimdoc
-    - [ ] 🌟Normal vim doc(generating from README.md).
-    - [ ] 🌟One picture docs.
+    - [x] 🌟Normal vim doc(generating from README.md).
+    - [x] 🌟One picture docs.
     - [ ] Recording Demo
   - Open source routine
     - Vim CI
