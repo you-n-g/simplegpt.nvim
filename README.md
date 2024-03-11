@@ -1,12 +1,15 @@
 # 🤏 SimpleGPT
-Simple GPT is a simple, **QA-customizable** plugin for interacting with ChatGPT in Vim.
+[![Mega-Linter](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg)](https://github.com/marketplace/actions/mega-linter)
+[![panvimdoc](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg)](https://github.com/kdheepak/panvimdoc)
 
-# Motivation of this plugin
+🤏SimpleGPT is a simple, **QA-customizable** plugin for interacting with ChatGPT in Vim.
+
+## Motivation of this plugin
 Though we have [a lot of ChatGPT plugins](#related-projects) to leverage the power of ChatGPT in Vim, I still find it hard to locate a handy one that completely fits my workflow.
 
 After thinking about it, I found that the main reason is that the most important part of my workflow is missing in existing plugins: **Fast editing of questions based on my current status**!!
 
-So, quickly editing the question template and building the question is the most important part of my workflow. Existing plugins are not convenient enough for this and focus more on the Chat UI.
+So, **quickly editing the question template and building the question** is the most important part of my workflow. Existing plugins are not convenient enough for this and focus more on the Chat UI.
 
 This repository is designed to offer a highly customizable and extensible QA interaction with ChatGPT in the simplest way possible.
 
@@ -18,7 +21,7 @@ This repository is designed to offer a highly customizable and extensible QA int
 # Installation
 ```lua
 -- TODO: update the content according to `tests/init_configs/lazy.lua`
--- Layzynvim
+-- Lazy.nvim
 {
   "you-n-g/simplegpt.git",
   -- "folke/which-key.nvim", is recommended for better experience
@@ -58,19 +61,21 @@ Supported special registers
   - ...
 
 # TODOs
+Flag explanation:
+- 🌟: high priority
 
 - TODOs
   - Misc
     - [x] Resume last answer.
     - [X] Diff mode
     - [x] Fast copy code in backquotes
-    - [ ] Answering in the background
+    - [ ] Answering in the background(it will stop the answering streaming if we exit the QA UI)
     - [x] Temporary register(without saving to disk)
     - Repository level context
       - Add file content to context
         - [ ] current file
       - [ ] Ask repository-level question
-    - Shotcuts
+    - Shortcuts
       - [ ] Telescope to run shortcuts.
       - [ ] Directly ask error information (load + do!)
         - [ ] while remain the original information.
@@ -88,25 +93,29 @@ Supported special registers
     - [ ] Help function: You can press `?` to see the help menu for shortcuts.
       - Alternative implementation: [ ] Add shortcuts prompt around the box
   - Navigation
-    - [ ] fast saving and loading(without entering name)
-      - [ ] remembering the filename in the background.
+    - [x] fast saving and loading(without entering name)
+      - [x] remembering the filename in the background.
     - [x] Better Preview of the documents
   - Docs: try panvimdoc
-    - [ ] Normal vim doc(generating from README.md).
-    - [ ] One picture docs.
+    - [ ] 🌟Normal vim doc(generating from README.md).
+    - [ ] 🌟One picture docs.
+    - [ ] Recording Demo
   - Open source routine
     - Vim CI
       - [X] Add linting CI
       - [ ] Fix Linting errors
+        - [Switching to Mega-Linter](https://github.com/nvuillam/npm-groovy-lint/pull/109/files) may help.
     - Tests:
       - Add test initialization configs for fast debugging and testing.
         - [X] lazy.nvim
+        - [ ] 🌟packer.nvim
   - templates design
     - [x] Ask inline questions(continue writing)
 
 - Bugs
-  - [ ] qq will trigger error in answer
 
+- More features that may be added in the long future
+  - Automatically ask questions based on the current context(Currently we have to manually select and ask the question)
 
 # Development
 
