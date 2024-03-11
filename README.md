@@ -128,7 +128,7 @@ Flag explanation:
     - Tests:
       - Add test initialization configs for fast debugging and testing.
         - [X] lazy.nvim
-        - [ ] 🌟packer.nvim
+        - [X] 🌟packer.nvim
   - templates design
     - [x] Ask inline questions(continue writing)
 
@@ -144,6 +144,9 @@ Welcome to contribute to this project.
 
 You can test the plugin with minimal config with
 - `vim -u tests/init_configs/lazy.lua -U NONE -N -i NONE` for [lazy.nvim](https://github.com/folke/lazy.nvim)
+- For [packer.nvim](https://github.com/wbthomason/packer.nvim)
+  - Please install [packer.nvim](https://github.com/wbthomason/packer.nvim) first.
+  - Run `vim -u tests/init_configs/packer.lua  -U NONE -N -i NONE`
 
 # Limitations
 

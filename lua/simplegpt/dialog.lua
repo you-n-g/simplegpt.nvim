@@ -1,6 +1,8 @@
 local utils = require("simplegpt.utils")
 
-local M = {}
+local M = {
+  init = false, -- if it is initialized
+}
 M.BaseDialog = utils.class("BaseDialog")
 
 -- @param context: The context in which the dialog is being created.
@@ -79,9 +81,6 @@ function M.BaseDialog:register_keys(exit_callback)
 end
 
 
-local api = require("chatgpt.api")
-local Settings = require("chatgpt.settings")
-
 -- The dialog that are able to get response to a specific PopUps
 M.ChatDialog = utils.class("ChatDialog", M.BaseDialog)
 
@@ -93,11 +92,20 @@ function M.ChatDialog:ctor(...)
 end
 
 function M.ChatDialog:call(question)
+
+  -- NOTE: we have to initial ChatGPT.nvim at least once to make the settings effective
+  -- FIXME: But if we put it in target/init.lua, it will not work in packer.
+  local Settings = require("chatgpt.settings")
+  if not M.init then
+    Settings.get_settings_panel("chat_completions", require("chatgpt.config").options.openai_params) -- call to make  Settings.params exists
+    M.init = true
+  end
+
   local messages = {
     { content = question, role = "user" },
   }
 
-  local params = vim.tbl_extend("keep", { stream = true, messages = messages }, Settings.params)
+  local params = vim.tbl_extend("keep", { stream = true, messages = messages }, require("chatgpt.settings").params)
   local popup = self.popup -- add it to namespace to support should_stop & cb
 
   local function should_stop()
@@ -117,8 +125,8 @@ function M.ChatDialog:call(question)
     -- self.popup.border.text = {top = state}
 
     if popup.border.winid ~= nil then
-      self.popup.border:set_text("top", "State: " .. state, "center")
-      self.popup:update_layout()
+      popup.border:set_text("top", "State: " .. state, "center")
+      popup:update_layout()
     end
 
     if state == "START" or state == "CONTINUE" then
@@ -141,7 +149,7 @@ function M.ChatDialog:call(question)
     end
   end
 
-  api.chat_completions(params, cb, should_stop)
+  require("chatgpt.api").chat_completions(params, cb, should_stop)
 end
 
 function M.ChatDialog:update_full_answer()
