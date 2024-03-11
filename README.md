@@ -16,14 +16,14 @@ So, **quickly editing the question template and building the question** is the m
 This repository is designed to offer a highly customizable and extensible QA interaction with ChatGPT in the simplest way possible.
 
 # Installation
+⚠️ Please follow the [installation guide of ChatGPT.nvim]((https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation)
 ```lua
 -- Lazy.nvim
 {
   "you-n-g/simplegpt.nvim",
   dependencies = {
-    -- "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
     {
-      "jackMort/ChatGPT.nvim",
+      "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
       event = "VeryLazy",
       config = true,
       dependencies = {
@@ -45,7 +45,7 @@ use({
   end,
   requires = {
     {
-      "jackMort/ChatGPT.nvim",
+      "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
       event = "VimEnter",
       config = function()
         require("chatgpt").setup()
