@@ -17,7 +17,6 @@ This repository is designed to offer a highly customizable and extensible QA int
 
 # Installation
 ```lua
--- TODO: update the content according to `tests/init_configs/lazy.lua`
 -- Lazy.nvim
 {
   "you-n-g/simplegpt.nvim",
@@ -37,6 +36,7 @@ This repository is designed to offer a highly customizable and extensible QA int
   },
   config = true,
 },
+
 -- or packer.nvim
 use({
   "you-n-g/simplegpt.nvim",
@@ -64,7 +64,7 @@ use({
 # Demo
 
 ## Typical workflow & Shortcuts
-![Workflow](https://i.imgur.com/MHdmQaX.png)
+![Workflow](https://i.imgur.com/bPx6C1D.png)
 
 The question is constructed by rendering a template. The 't' register serves as the template, encompassing:
 - Special variables such as {{content}}, {{filetype}}, and {{visual}}.
@@ -161,6 +161,7 @@ Flag explanation:
       - [X] Add linting CI
       - [ ] Fix Linting errors
         - [Switching to Mega-Linter](https://github.com/nvuillam/npm-groovy-lint/pull/109/files) may help.
+    - [ ] Automatic releasing (maybe tagging is included)
     - Tests:
       - Add test initialization configs for fast debugging and testing.
         - [X] lazy.nvim
