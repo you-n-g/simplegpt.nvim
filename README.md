@@ -16,7 +16,7 @@ So, **quickly editing the question template and building the question** is the m
 This repository is designed to offer a highly customizable and extensible QA interaction with ChatGPT in the simplest way possible.
 
 # Installation
-⚠️ Please follow the [installation guide of ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation) to make sure your ChatGPT works.
+⚠️Please follow the [installation guide of ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation) to make sure your ChatGPT works.
 ```lua
 -- Lazy.nvim
 {
@@ -67,14 +67,54 @@ use({
 ![Workflow](https://i.imgur.com/bPx6C1D.png)
 
 The question is constructed by rendering a template. The 't' register serves as the template, encompassing:
-- Special variables such as {{content}}, {{filetype}}, and {{visual}}.
-- Standard registers like {{a}}, {{b}}, and {{c}}.
+- Special variables such as `{{content}}`, `{{filetype}}`, and `{{visual}}`.
+- Standard registers like `{{a}}`, `{{b}}`, and `{{c}}`.
 
 ## Console demo
 TODO...
 
+- Building a comprehensive question based on the template mechanism.
+- Adding ad hoc requirements based on the current context.
+  - Implement the code(default question) and write the comments into Chinese(special requirements).
+
 
 # Features
+
+## Core workflow
+TODO...
+
+Core concepts:
+- register-based template-based question building
+  - Dump and loading registers
+    - Please note that registers like `{{p-}}` are temporary registers and will not be dumped to disk.
+- target to display the response.
+
+## Registers
+
+### A rendering example
+TODO...
+
+Based on this example, we can see that the registers are categorized into two types:
+- vim-native registers
+- special registers
+
+### vim-native registers
+
+| Register | meaning                              |
+| -        | -                                    |
+| t        | The register for the template.       |
+| others   | the variables to render the template |
+
+
+### Supported special registers
+| key             | meaning                                                     |
+| -               | -                                                           |
+| content         | the whole file content                                      |
+| filetype        | the filetype of the file                                    |
+| visual          | the selected lines                                          |
+| context(TODO..) | the nearby context of the selected line(10 lines up & down) |
+
+
 
 ## Shutcuts
 - Dialog shortcuts:
@@ -87,13 +127,16 @@ TODO...
     - `{"C-r"}`: Replace the selected visual text or current line.
 
 - Normal shortcuts start with `<LocalLeader>g`
+  - Register operations
     - `<LocalLeader>gl`: load registers
     - `<LocalLeader>gD`: dump registers
     - `<LocalLeader>ge`: edit registers
+  - Send to target
     - `<LocalLeader>gs`: send question to clipboard
     - `<LocalLeader>gc`: send question to ChatGPT
     - `<LocalLeader>gr`: send to get direct response
     - `<LocalLeader>gd`: send to get response with diff
+  - Other operations
     - `<LocalLeader>gR`: resume last popup
     - `<LocalLeader>gp`: load current file to reg
     - `<LocalLeader>gP`: append current file to reg
@@ -105,14 +148,6 @@ TODO...
     - `<LocalLeader>sg`: Fix (g)rammar
     - `<LocalLeader>sd`: Con(d)ense
     - `<LocalLeader>st`: Con(t)inue
-
-## Supported special registers
-| key             | meaning                                                     |
-| -               | -                                                           |
-| content         | the whole file content                                      |
-| filetype        | the filetype of the file                                    |
-| visual          | the selected lines                                          |
-| context(TODO..) | the nearby context of the selected line(10 lines up & down) |
 
 
 # TODOs
@@ -170,7 +205,8 @@ Flag explanation:
     - [x] Ask inline questions(continue writing)
 
 - Bugs
-  - [ ] Replace only affect one line.
+  - [ ] Replace only affect one line(in the popup target).
+  - [ ] It raises errors when `<c-r>` in popup target.
 
 - More features that may be added in the long future
   - Automatically ask questions based on the current context(Currently we have to manually select and ask the question)
