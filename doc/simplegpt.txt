@@ -1,4 +1,4 @@
-*simplegpt.txt*           For NVIM v0.8.0           Last change: 2024 March 11
+*simplegpt.txt*           For NVIM v0.8.0           Last change: 2024 March 15
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -10,8 +10,9 @@ Table of Contents                                *simplegpt-table-of-contents*
   - Typical workflow & Shortcuts |simplegpt-demo-typical-workflow-&-shortcuts|
   - Console demo                                 |simplegpt-demo-console-demo|
 4. Features                                               |simplegpt-features|
+  - Core workflow                           |simplegpt-features-core-workflow|
+  - Registers                                   |simplegpt-features-registers|
   - Shutcuts                                     |simplegpt-features-shutcuts|
-  - Supported special registers|simplegpt-features-supported-special-registers|
 5. TODOs                                                     |simplegpt-todos|
 6. Development                                         |simplegpt-development|
 7. Limitations                                         |simplegpt-limitations|
@@ -49,7 +50,7 @@ interaction with ChatGPT in the simplest way possible.
 ==============================================================================
 2. Installation                                       *simplegpt-installation*
 
-⚠️ Please follow the installation guide of ChatGPT.nvim
+⚠️Please follow the installation guide of ChatGPT.nvim
 <https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation> to
 make sure your ChatGPT works.
 
@@ -105,52 +106,52 @@ make sure your ChatGPT works.
 TYPICAL WORKFLOW & SHORTCUTS     *simplegpt-demo-typical-workflow-&-shortcuts*
 
 The question is constructed by rendering a template. The 't' register serves as
-the template, encompassing: - Special variables such as {{content}},
-{{filetype}}, and {{visual}}. - Standard registers like {{a}}, {{b}}, and
-{{c}}.
+the template, encompassing: - Special variables such as `{{content}}`,
+`{{filetype}}`, and `{{visual}}`. - Standard registers like `{{a}}`, `{{b}}`,
+and `{{c}}`.
 
 
 CONSOLE DEMO                                     *simplegpt-demo-console-demo*
 
 TODO…
 
+- Building a comprehensive question based on the template mechanism.
+- Adding ad hoc requirements based on the current context.
+    - Implement the code(default question) and write the comments into Chinese(special requirements).
+
 
 ==============================================================================
 4. Features                                               *simplegpt-features*
 
 
-SHUTCUTS                                         *simplegpt-features-shutcuts*
+CORE WORKFLOW                               *simplegpt-features-core-workflow*
 
-- Dialog shortcuts:
-    - For all dialogs
-        - `{"q", "<C-c>", "<esc>"}`: exit the dialog;
-        - `{"C-k"}` Copy code in triple backquotes of current buffer;
-    - For only `ChatDialog` (The dialog that are able to get response)
-        - `{"C-a"}`: Append the response to current meeting.
-        - `{"C-y"}`: Copy the full response to the clipboard.
-        - `{"C-r"}`: Replace the selected visual text or current line.
-- Normal shortcuts start with `<LocalLeader>g`
-    - `<LocalLeader>gl`: load registers
-    - `<LocalLeader>gD`: dump registers
-    - `<LocalLeader>ge`: edit registers
-    - `<LocalLeader>gs`: send question to clipboard
-    - `<LocalLeader>gc`: send question to ChatGPT
-    - `<LocalLeader>gr`: send to get direct response
-    - `<LocalLeader>gd`: send to get response with diff
-    - `<LocalLeader>gR`: resume last popup
-    - `<LocalLeader>gp`: load current file to reg
-    - `<LocalLeader>gP`: append current file to reg
-- Shortcuts for combined actions: Loading template + send to target
-    - By default, they start with `<LocalLeader>s`.
-    - Full list of shortcuts <lua/simplegpt/conf.lua#L25>
-        - `<LocalLeader>sr`: (R)ewrite Text
-        - `<LocalLeader>sc`: (C)omplete Code
-        - `<LocalLeader>sg`: Fix (g)rammar
-        - `<LocalLeader>sd`: Con(d)ense
-        - `<LocalLeader>st`: Con(t)inue
+TODO…
+
+Core concepts: - register-based template-based question building - Dump and
+loading registers - Please note that registers like `{{p-}}` are temporary
+registers and will not be dumped to disk. - target to display the response.
 
 
-SUPPORTED SPECIAL REGISTERS   *simplegpt-features-supported-special-registers*
+REGISTERS                                       *simplegpt-features-registers*
+
+
+A RENDERING EXAMPLE ~
+
+TODO…
+
+Based on this example, we can see that the registers are categorized into two
+types: - vim-native registers - special registers
+
+
+VIM-NATIVE REGISTERS ~
+
+  Register   meaning
+  ---------- --------------------------------------
+  t          The register for the template.
+  others     the variables to render the template
+
+SUPPORTED SPECIAL REGISTERS ~
 
   -----------------------------------------------------------------------
   key                                 meaning
@@ -164,6 +165,40 @@ SUPPORTED SPECIAL REGISTERS   *simplegpt-features-supported-special-registers*
   context(TODO..)                     the nearby context of the selected
                                       line(10 lines up & down)
   -----------------------------------------------------------------------
+
+SHUTCUTS                                         *simplegpt-features-shutcuts*
+
+- Dialog shortcuts:
+    - For all dialogs
+        - `{"q", "<C-c>", "<esc>"}`: exit the dialog;
+        - `{"C-k"}` Copy code in triple backquotes of current buffer;
+    - For only `ChatDialog` (The dialog that are able to get response)
+        - `{"C-a"}`: Append the response to current meeting.
+        - `{"C-y"}`: Copy the full response to the clipboard.
+        - `{"C-r"}`: Replace the selected visual text or current line.
+- Normal shortcuts start with `<LocalLeader>g`
+    - Register operations
+        - `<LocalLeader>gl`: load registers
+        - `<LocalLeader>gD`: dump registers
+        - `<LocalLeader>ge`: edit registers
+    - Send to target
+        - `<LocalLeader>gs`: send question to clipboard
+        - `<LocalLeader>gc`: send question to ChatGPT
+        - `<LocalLeader>gr`: send to get direct response
+        - `<LocalLeader>gd`: send to get response with diff
+    - Other operations
+        - `<LocalLeader>gR`: resume last popup
+        - `<LocalLeader>gp`: load current file to reg
+        - `<LocalLeader>gP`: append current file to reg
+- Shortcuts for combined actions: Loading template + send to target
+    - By default, they start with `<LocalLeader>s`.
+    - Full list of shortcuts <lua/simplegpt/conf.lua#L25>
+        - `<LocalLeader>sr`: (R)ewrite Text
+        - `<LocalLeader>sc`: (C)omplete Code
+        - `<LocalLeader>sg`: Fix (g)rammar
+        - `<LocalLeader>sd`: Con(d)ense
+        - `<LocalLeader>st`: Con(t)inue
+
 
 ==============================================================================
 5. TODOs                                                     *simplegpt-todos*
@@ -220,7 +255,8 @@ Flag explanation: - 🌟: high priority
     - templates design
         - ☒ Ask inline questions(continue writing)
 - Bugs
-    - ☐ Replace only affect one line.
+    - ☐ Replace only affect one line(in the popup target).
+    - ☐ It raises errors when `<c-r>` in popup target.
 - More features that may be added in the long future
     - Automatically ask questions based on the current context(Currently we have to manually select and ask the question)
 
