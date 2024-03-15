@@ -106,7 +106,7 @@ function M.ChatDialog:call(question)
   }
 
   local params = vim.tbl_extend("keep", { stream = true, messages = messages }, require("chatgpt.settings").params)
-  local popup = self.popup -- add it to namespace to support should_stop & cb
+  local popup = self.answer_popup -- add it to namespace to support should_stop & cb
 
   local function should_stop()
     if popup.bufnr == nil then
@@ -153,7 +153,7 @@ function M.ChatDialog:call(question)
 end
 
 function M.ChatDialog:update_full_answer()
-  self.full_answer = vim.api.nvim_buf_get_lines(self.popup.bufnr, 0, -1, false)
+  self.full_answer = vim.api.nvim_buf_get_lines(self.answer_popup.bufnr, 0, -1, false)
 end
 
 function M.ChatDialog:register_keys(exit_callback)
@@ -162,6 +162,7 @@ function M.ChatDialog:register_keys(exit_callback)
   for _, pop in ipairs(self.all_pops) do
     -- Append full answer: append the response to original buffer
     pop:map("n", require"simplegpt.conf".options.dialog.append_keys, function()
+      self:update_full_answer()  -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
 
       vim.cmd("q")  -- callback may open new windows. So we quit the windows before callback
       if exit_callback ~= nil then
@@ -173,13 +174,13 @@ function M.ChatDialog:register_keys(exit_callback)
       -- Get the cursor position in the from_bufnr
       local cursor_pos = vim.api.nvim_win_get_cursor(require"simplegpt.utils".get_win_of_buf(from_bufnr))
       -- Insert `self.full_answer` into from_bufnr after the line of the cursor
-      self:update_full_answer()  -- update the full_answer
       vim.api.nvim_buf_set_lines(from_bufnr, cursor_pos[1], cursor_pos[1], false, self.full_answer)
 
     end, { noremap = true })
 
     -- replace the selected buffer (or current line) with the response
     pop:map("n", require"simplegpt.conf".options.dialog.replace_keys, function()
+      self:update_full_answer()  -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
 
       -- TODO: we can support only inserting the code. It may bring more conveniences.
 
@@ -202,9 +203,7 @@ function M.ChatDialog:register_keys(exit_callback)
         -- If not in visual mode, replace the current line
         start_line, end_line = cursor_pos[1], cursor_pos[1]
       end
-
       -- Replace the lines in from_bufnr with `self.full_answer`
-      self:update_full_answer()  -- update the full_answer
       vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, end_line, false, self.full_answer)
     end, { noremap = true })
 

@@ -28,6 +28,7 @@ function M.Popup:build()
       height = "60%",
     },
   })
+  self.answer_popup = popup
 
   -- mount/open the component
   popup:mount()
@@ -38,7 +39,6 @@ function M.Popup:build()
     popup:unmount()
     -- popup:hide()
   end)
-  self.popup = popup
   -- vim.tbl_extend("force", self.all_pops)
   table.insert(self.all_pops, popup)
   self:register_keys()
@@ -58,7 +58,7 @@ function M.build_q_handler(context)
     -- set the filetype of pp  to mark down to enable highlight
     pp:build()
     -- TODO: copy code with regex
-    vim.api.nvim_buf_set_option(pp.popup.bufnr, 'filetype', 'markdown')
+    vim.api.nvim_buf_set_option(pp.answer_popup.bufnr, 'filetype', 'markdown')
     pp:call(question)
   end
 end

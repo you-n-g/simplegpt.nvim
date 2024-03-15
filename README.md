@@ -94,9 +94,9 @@ Core concepts:
 ### A rendering example
 TODO...
 
-Based on this example, we can see that the registers are categorized into two types:
-- vim-native registers
-- special registers
+In this example, we can observe that the registers are categorized into two categories:
+- Native vim registers
+- Special registers
 
 ### vim-native registers
 
@@ -206,7 +206,7 @@ Flag explanation:
 
 - Bugs
   - [ ] Replace only affect one line(in the popup target).
-  - [ ] It raises errors when `<c-r>` in popup target.
+  - [x] It raises errors when `<c-r>` in popup target.
 
 - More features that may be added in the long future
   - Automatically ask questions based on the current context(Currently we have to manually select and ask the question)
