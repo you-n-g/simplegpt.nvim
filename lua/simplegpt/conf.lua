@@ -66,6 +66,13 @@ M = {
         target = "popup",
         opts = { noremap = true, silent = true, desc = "Con(t)inue" },
       },
+      {
+        mode = { "n", "v" },
+        key = "<LocalLeader>se",
+        tpl = "code_explain.json",
+        target = "popup",
+        opts = { noremap = true, silent = true, desc = "(E)xplain" },
+      },
     }
   }
 }
