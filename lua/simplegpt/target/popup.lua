@@ -68,10 +68,10 @@ function M.resume_popup()
   -- TODO: this is not a elegant way to resume the last popup; research more on popup's hide and show feature(maybe from ChatGPT.nvim).
   -- I just want to hide it. Instead of creating a new one.
   if M.last_pop ~= nil then
-    M.last_pop.popup:mount()
-    vim.api.nvim_buf_set_lines(M.last_pop.popup.bufnr, 0, -1, false, M.last_pop.full_answer)
-    vim.api.nvim_buf_set_option(M.last_pop.popup.bufnr, 'filetype', 'markdown')
-    -- M.last_pop.popup:show()  -- TODO: can't resume
+    M.last_pop.answer_popup:mount()
+    vim.api.nvim_buf_set_lines(M.last_pop.answer_popup.bufnr, 0, -1, false, M.last_pop.full_answer)
+    vim.api.nvim_buf_set_option(M.last_pop.answer_popup.bufnr, 'filetype', 'markdown')
+    -- M.last_pop.answer_popup:show()  -- TODO: can't resume
     M.last_pop:register_keys()
   end
 end
