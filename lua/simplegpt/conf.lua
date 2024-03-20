@@ -73,6 +73,13 @@ M = {
         target = "popup",
         opts = { noremap = true, silent = true, desc = "(E)xplain" },
       },
+      {
+        mode = { "n", "v" },
+        key = "<LocalLeader>sT",
+        tpl = "translate.json",
+        target = "popup",
+        opts = { noremap = true, silent = true, desc = "(T)ranslate" },
+      },
     }
   }
 }

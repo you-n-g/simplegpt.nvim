@@ -1,1 +1,1 @@
-{"t": "You are an expert in translation. \nWe have a file with content:\n```\n{{content}}\n```\nPlease focus on this paragraph.\n```\n{{visual}}\n```\nPlease translate it into Chinese.\n"}
+{"q": "Please translate the it into Chinese.", "t": "You are an expert in translation.\nWe have a file with content:\n```{{filetype}} \n{{content}}\n```\nYou are focusing on following part\n```\n{{visual}}\n```\n{{q}}"}
