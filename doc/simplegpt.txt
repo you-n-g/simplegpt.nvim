@@ -98,6 +98,12 @@ make sure your ChatGPT works.
     })
 <
 
+If you want to customize you `<LocalLeader>`, please use following code:
+
+>lua
+    vim.g.maplocalleader = "\\"  -- change the localleader key to \
+<
+
 
 ==============================================================================
 3. Demo                                                       *simplegpt-demo*
@@ -116,7 +122,8 @@ CONSOLE DEMO                                     *simplegpt-demo-console-demo*
 <https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr> - Building a comprehensive
 question using the template mechanism. - Adding ad hoc requirements based on
 the current context. - Implementing the code (default question) and translating
-the comments into Chinese (special requirements).
+the comments into Chinese (special requirements). - The code that the demo is
+based on is here <tests/demo/demo.py>.
 
 
 ==============================================================================
