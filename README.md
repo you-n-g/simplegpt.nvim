@@ -61,6 +61,11 @@ use({
 })
 ```
 
+If you want to customize you `<LocalLeader>`, please use following code:
+```lua
+vim.g.maplocalleader = "\\"  -- change the localleader key to \
+```
+
 # Demo
 
 ## Typical workflow & Shortcuts
@@ -75,6 +80,7 @@ The question is constructed by rendering a template. The 't' register serves as 
 - Building a comprehensive question using the template mechanism.
 - Adding ad hoc requirements based on the current context.
   - Implementing the code (default question) and translating the comments into Chinese (special requirements).
+- The code that the demo is based on is [here](tests/demo/demo.py).
 
 
 # Features
