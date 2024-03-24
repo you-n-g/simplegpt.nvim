@@ -71,32 +71,47 @@ The question is constructed by rendering a template. The 't' register serves as 
 - Standard registers like `{{a}}`, `{{b}}`, and `{{c}}`.
 
 ## Console demo
-TODO...
-
-- Building a comprehensive question based on the template mechanism.
+[![asciicast](https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr.svg)](https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr)
+- Building a comprehensive question using the template mechanism.
 - Adding ad hoc requirements based on the current context.
-  - Implement the code(default question) and write the comments into Chinese(special requirements).
+  - Implementing the code (default question) and translating the comments into Chinese (special requirements).
 
 
 # Features
 
 ## Core workflow
-TODO...
 
-Core concepts:
-- register-based template-based question building
-  - Dump and loading registers
-    - Please note that registers like `{{p-}}` are temporary registers and will not be dumped to disk.
-- target to display the response.
+The primary concepts that govern the functionality of this plugin are:
+
+- Register-based, template-driven question construction: This approach allows for the dynamic creation of questions by leveraging the power of Vim registers. The registers serve as placeholders within the template, which are then replaced with the appropriate content during the question construction process.
+
+- Dumping and loading of registers: This feature enables the preservation of register content across different sessions. It's important to note that temporary registers, denoted by `{{p-}}`, are exempt from this process and their content is not saved to disk.
+
+- Response display targets: This refers to the destination where the response from ChatGPT is displayed. The plugin offers flexibility in choosing the target, allowing for a more tailored user experience.
 
 ## Registers
 
-### A rendering example
-TODO...
+### An Example of Template Rendering
 
-In this example, we can observe that the registers are categorized into two categories:
-- Native vim registers
-- Special registers
+To illustrate the core template rendering mechanism of SimpleGPT, consider the following example. We have a template in the 't' register:
+
+"I am currently working on a {{filetype}} file. The content of the file is: {{content}}. I have selected the following lines: {{visual}}. My question is: {{q}}."
+
+The register values are:
+
+- `{{filetype}}` is 'markdown'
+- `{{content}}` is 'This is a sample markdown file.'
+- `{{visual}}` is 'This is a selected.'
+- `{{q}}` is 'How can I improve this line?'
+
+The constructed question becomes:
+
+"I am currently working on a markdown file. The content of the file is: This is a sample markdown file. I have selected the following lines: This is a selected line. My question is: How can I improve this line?"
+
+Registers are of two types:
+
+- Native vim registers: Standard Vim registers like 't', 'a', 'b', 'c', etc. used for storing and retrieving text.
+- Special registers: Specific to SimpleGPT, including `{{content}}`, `{{filetype}}`, `{{visual}}`, and `{{q}}`. They store special values used in the template process. The `{{q}}` register allows for an editable question when rendering the whole content.
 
 ### vim-native registers
 
@@ -190,7 +205,9 @@ Flag explanation:
   - Docs: try panvimdoc
     - [x] 🌟Normal vim doc(generating from README.md).
     - [x] 🌟One picture docs.
-    - [ ] Recording Demo
+    - [X] Recording Demo
+    - features demonstration:
+      - repository-level QA building:
   - Open source routine
     - Vim CI
       - [X] Add linting CI

@@ -25,7 +25,7 @@ M = {
     q_build = {
       -- repository-level configs
       repo = {
-        reg = "p", -- the register to inject repository-level infos
+        reg = "p", -- the register to inject re(p)ository-level infos
         header = "Below are some relavant files", -- the header for multiple files
       }
     },
