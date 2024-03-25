@@ -226,6 +226,16 @@ Flag explanation:
         - [X] 🌟packer.nvim
   - templates design
     - [x] Ask inline questions(continue writing)
+    - [ ] Simplify the template design (merge templates)
+    - [ ] Disable the back quotes in the template. Even though I add following content, it still does not work.
+      ```
+      ---- Example focused part ----
+      def plus(a, b):
+          # TODO: plus them and return
+      ---- Example output part ----
+      def plus(a, b):
+          return a + b
+      ```
 
 - Bugs
   - [ ] Replace only affect one line(in the popup target).

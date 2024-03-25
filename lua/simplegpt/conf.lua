@@ -47,6 +47,13 @@ M = {
       },
       {
         mode = { "n", "v" },
+        key = "<LocalLeader>sC",
+        tpl = "code_complete_no_explain.json",
+        target = "diff",
+        opts = { noremap = true, silent = true, desc = "(C)omplete Code no explain" },
+      },
+      {
+        mode = { "n", "v" },
         key = "<LocalLeader>sg",
         tpl = "fix_grammar.json",
         target = "diff",
