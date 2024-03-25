@@ -1,4 +1,4 @@
-*simplegpt.txt*           For NVIM v0.8.0           Last change: 2024 March 24
+*simplegpt.txt*           For NVIM v0.8.0           Last change: 2024 March 25
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -290,6 +290,17 @@ Flag explanation: - 🌟: high priority
                 - ☒ 🌟packer.nvim
     - templates design
         - ☒ Ask inline questions(continue writing)
+        - ☐ Simplify the template design (merge templates)
+        - ☐ Disable the back quotes in the template. Even though I add following
+            content, it still does not work.
+            >
+                ---- Example focused part ----
+                def plus(a, b):
+                    # TODO: plus them and return
+                ---- Example output part ----
+                def plus(a, b):
+                    return a + b
+            <
 - Bugs
     - ☐ Replace only affect one line(in the popup target).
     - ☒ It raises errors when `<c-r>` in popup target.
