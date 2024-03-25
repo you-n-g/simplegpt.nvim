@@ -2,9 +2,9 @@
 [![Mega-Linter](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg)](https://github.com/marketplace/actions/mega-linter)
 [![panvimdoc](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg)](https://github.com/kdheepak/panvimdoc)
 
-🤏SimpleGPT is a vim plugin designed to provide the simplest method for:
-- Constructing and sending questions to ChatGPT
-- Presenting the response in the most convenient manner.
+🤏SimpleGPT is a Vim plugin designed to provide a simple yet flexible way to:
+- Construct and send questions to ChatGPT
+- Present the response in the most convenient manner.
 
 ## Motivation of this plugin
 Though we have [a lot of ChatGPT plugins](#related-projects) to leverage the power of ChatGPT in Vim, I still find it hard to locate a handy one that completely fits my workflow.
@@ -67,20 +67,22 @@ vim.g.maplocalleader = "\\"  -- change the localleader key to \
 ```
 
 # Demo
-
-## Typical workflow & Shortcuts
-![Workflow](https://i.imgur.com/bPx6C1D.png)
-
-The question is constructed by rendering a template. The 't' register serves as the template, encompassing:
-- Special variables such as `{{content}}`, `{{filetype}}`, and `{{visual}}`.
-- Standard registers like `{{a}}`, `{{b}}`, and `{{c}}`.
-
 ## Console demo
 [![asciicast](https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr.svg)](https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr)
 - Building a comprehensive question using the template mechanism.
 - Adding ad hoc requirements based on the current context.
   - Implementing the code (default question) and translating the comments into Chinese (special requirements).
 - The code that the demo is based on is [here](tests/demo/demo.py).
+
+
+## Typical workflow & Shortcuts
+I have attempted to summarize the key concepts and manual in one image.
+
+![Workflow](https://i.imgur.com/bPx6C1D.png)
+
+The question is constructed by rendering a template. The 't' register serves as the template, encompassing:
+- Special variables such as `{{content}}`, `{{filetype}}`, and `{{visual}}`.
+- Standard registers like `{{a}}`, `{{b}}`, and `{{c}}`.
 
 
 # Features
