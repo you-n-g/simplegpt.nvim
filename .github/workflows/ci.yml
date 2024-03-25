@@ -7,12 +7,24 @@ permissions:
   contents: write
   pull-requests: write
 
-name: release-please
+name: CI
 
 jobs:
+  docs:
+    runs-on: ubuntu-latest
+    name: pandoc to vimdoc
+    steps:
+      - uses: actions/checkout@v2
+      - uses: kdheepak/panvimdoc@main
+        with:
+          vimdoc: simplegpt
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Auto generate docs"
+          branch: ${{ github.head_ref }}
   release-please:
-    # needs:
-    #   - docs
+    needs:
+      - docs
     #   # - tests
     runs-on: ubuntu-latest
     steps:
