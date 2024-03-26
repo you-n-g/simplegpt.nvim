@@ -1,31 +1,21 @@
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["panvimdoc"]
+    types: 
+      - completed
 
 permissions:
   contents: write
   pull-requests: write
 
-name: CI
+
+name: release
 
 jobs:
-  docs:
-    runs-on: ubuntu-latest
-    name: pandoc to vimdoc
-    steps:
-      - uses: actions/checkout@v2
-      - uses: kdheepak/panvimdoc@main
-        with:
-          vimdoc: simplegpt
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "Auto generate docs"
-          branch: ${{ github.head_ref }}
   release-please:
-    needs:
-      - docs
-    #   # - tests
+    # needs:
+    #   - docs
+    #   - tests
     runs-on: ubuntu-latest
     steps:
       - uses: google-github-actions/release-please-action@v4
