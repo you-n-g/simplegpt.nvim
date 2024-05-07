@@ -73,7 +73,7 @@ function M.BaseDialog:register_keys(exit_callback)
       local full_cont = table.concat(vim.api.nvim_buf_get_lines(pop.bufnr, 0, -1, false), "\n")
       local code = extract_code(full_cont)
       if code then
-        vim.fn.setreg("+", code)
+        require"simplegpt.utils".set_reg("+", code)
         print("Code Yanked")
       end
     end, { noremap = true })
@@ -209,7 +209,7 @@ function M.ChatDialog:register_keys(exit_callback)
 
     -- Yank keys
     pop:map("n", require"simplegpt.conf".options.dialog.yank_keys, function()
-      vim.fn.setreg("+", table.concat(self.full_answer, "\n"))
+      require"simplegpt.utils".set_reg(table.concat(self.full_answer, "\n"))
       print("answer Yanked")
     end, { noremap = true })
   end
