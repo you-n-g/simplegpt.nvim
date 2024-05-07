@@ -1,4 +1,4 @@
-*simplegpt.txt*           For NVIM v0.8.0           Last change: 2024 March 26
+*simplegpt.txt*            For NVIM v0.8.0            Last change: 2024 May 07
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -17,6 +17,7 @@ Table of Contents                                *simplegpt-table-of-contents*
 6. Development                                         |simplegpt-development|
 7. Limitations                                         |simplegpt-limitations|
 8. Related Projects                               |simplegpt-related-projects|
+9. Links                                                     |simplegpt-links|
 
 ==============================================================================
 1. 🤏 SimpleGPT                                   *simplegpt-🤏-simplegpt*
