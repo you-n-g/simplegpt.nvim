@@ -73,7 +73,7 @@ function M.BaseDialog:register_keys(exit_callback)
       local full_cont = table.concat(vim.api.nvim_buf_get_lines(pop.bufnr, 0, -1, false), "\n")
       local code = extract_code(full_cont)
       if code then
-        require"simplegpt.utils".set_reg("+", code)
+        require"simplegpt.utils".set_reg(code)
         print("Code Yanked")
       end
     end, { noremap = true })
