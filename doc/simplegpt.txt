@@ -1,4 +1,4 @@
-*simplegpt.txt*            For NVIM v0.8.0            Last change: 2024 May 10
+*simplegpt.txt*            For NVIM v0.8.0            Last change: 2024 May 15
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -199,7 +199,7 @@ SUPPORTED SPECIAL REGISTERS ~
 
   visual                              the selected lines
 
-  context(TODO..)                     the nearby context of the selected
+  context                             the nearby context of the selected
                                       line(10 lines up & down)
   -----------------------------------------------------------------------
 
@@ -281,19 +281,20 @@ Flag explanation: - 🌟: high priority
         - ☒ Recording Demo
         - features demonstration:
             - repository-level QA building:
+        - ☐ Document about the config
     - Open source routine
         - Vim CI
             - ☒ Add linting CI
             - ☐ Fix Linting errors
                 - Switching to Mega-Linter <https://github.com/nvuillam/npm-groovy-lint/pull/109/files> may help.
-        - ☐ Automatic releasing (maybe tagging is included)
+        - ☒ Automatic releasing (maybe tagging is included)
         - Tests:
             - Add test initialization configs for fast debugging and testing.
                 - ☒ lazy.nvim
                 - ☒ 🌟packer.nvim
     - templates design
         - ☒ Ask inline questions(continue writing)
-        - ☐ Simplify the template design (merge templates)
+        - ☒ Simplify the template design (merge templates)
         - ☐ Disable the back quotes in the template. Even though I add following
             content, it still does not work.
             >
@@ -305,7 +306,7 @@ Flag explanation: - 🌟: high priority
                     return a + b
             <
 - Bugs
-    - ☐ Replace only affect one line(in the popup target).
+    - ☒ Replace only affect one line(in the popup target).
     - ☒ It raises errors when `<c-r>` in popup target.
 - More features that may be added in the long future
     - Automatically ask questions based on the current context(Currently we have to manually select and ask the question)
