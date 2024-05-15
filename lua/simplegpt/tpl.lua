@@ -174,8 +174,17 @@ function M.RegQAUI:get_special()
   -- Now 'lines' is a table containing all selected lines
   res["visual"] = table.concat(lines, "\n")
 
-  -- Get the filetype of the current buffer
+  -- 3) Get the filetype of the current buffer
   res["filetype"] = vim.bo.filetype
+
+  -- 4) Get the context of current line (the line under the cursor). Including 10 lines before and 10 lines after
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  start_line = math.max(cursor_pos[1] - 10 - 1, 0) -- Lua indexing is 0-based
+  end_line = math.min(cursor_pos[1] + 10, line_count)
+  -- Get the context lines
+  local context_lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
+  -- Now 'context_lines' is a table containing all context lines
+  res["context"] = table.concat(context_lines, "\n")
   return res
 end
 

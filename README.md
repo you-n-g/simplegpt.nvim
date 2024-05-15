@@ -130,12 +130,12 @@ Registers are of two types:
 
 
 ### Supported special registers
-| key             | meaning                                                     |
-| -               | -                                                           |
-| content         | the whole file content                                      |
-| filetype        | the filetype of the file                                    |
-| visual          | the selected lines                                          |
-| context(TODO..) | the nearby context of the selected line(10 lines up & down) |
+| key      | meaning                                                     |
+| -        | -                                                           |
+| content  | the whole file content                                      |
+| filetype | the filetype of the file                                    |
+| visual   | the selected lines                                          |
+| context  | the nearby context of the selected line(10 lines up & down) |
 
 
 
@@ -216,19 +216,20 @@ Flag explanation:
     - [X] Recording Demo
     - features demonstration:
       - repository-level QA building:
+    - [ ] Document about the config
   - Open source routine
     - Vim CI
       - [X] Add linting CI
       - [ ] Fix Linting errors
         - [Switching to Mega-Linter](https://github.com/nvuillam/npm-groovy-lint/pull/109/files) may help.
-    - [ ] Automatic releasing (maybe tagging is included)
+    - [x] Automatic releasing (maybe tagging is included)
     - Tests:
       - Add test initialization configs for fast debugging and testing.
         - [X] lazy.nvim
         - [X] 🌟packer.nvim
   - templates design
     - [x] Ask inline questions(continue writing)
-    - [ ] Simplify the template design (merge templates)
+    - [x] Simplify the template design (merge templates)
     - [ ] Disable the back quotes in the template. Even though I add following content, it still does not work.
       ```
       ---- Example focused part ----
@@ -240,7 +241,7 @@ Flag explanation:
       ```
 
 - Bugs
-  - [ ] Replace only affect one line(in the popup target).
+  - [x] Replace only affect one line(in the popup target).
   - [x] It raises errors when `<c-r>` in popup target.
 
 - More features that may be added in the long future

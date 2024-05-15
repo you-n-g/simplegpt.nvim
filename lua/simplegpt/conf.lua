@@ -82,6 +82,13 @@ M = {
       },
       {
         mode = { "n", "v" },
+        key = "<LocalLeader>sE",
+        tpl = "explain_text.json",
+        target = "popup",
+        opts = { noremap = true, silent = true, desc = "(E)xplain Text" },
+      },
+      {
+        mode = { "n", "v" },
         key = "<LocalLeader>sT",
         tpl = "translate.json",
         target = "popup",
