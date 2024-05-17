@@ -222,6 +222,7 @@ Flag explanation:
       - [X] Add linting CI
       - [ ] Fix Linting errors
         - [Switching to Mega-Linter](https://github.com/nvuillam/npm-groovy-lint/pull/109/files) may help.
+        - Maybe Refining code by evolving framework.
     - [x] Automatic releasing (maybe tagging is included)
     - Tests:
       - Add test initialization configs for fast debugging and testing.
