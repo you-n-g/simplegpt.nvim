@@ -247,7 +247,9 @@ Flag explanation: - 🌟: high priority
         - ☒ Resume last answer.
         - ☒ Diff mode
         - ☒ Fast copy code in backquotes
-        - ☐ Answering in the background(it will stop the answering streaming if we exit the QA UI)
+        - ☐ async Answering in the background(it will stop the answering streaming if we exit the QA UI)
+            - It would boots the writing workflow.
+                - We can create a new tab and ask the question further
         - ☒ Temporary register(without saving to disk)
         - Repository level context
             - Add file content to context
@@ -255,8 +257,8 @@ Flag explanation: - 🌟: high priority
             - ☒ Ask repository-level question
         - Shortcuts
             - ☐ Telescope to run shortcuts.
-            - ☐ Directly ask error information (load + do!)
-                - ☐ while remain the original information.
+            - ☒ Directly ask error information (load + do!)
+                - ☒ while remain the original information.
         - Utils:
             - ☐ get the buffer number where you are from; It is helpful to accurate control the content in different windows.
     - Targets:
@@ -276,8 +278,8 @@ Flag explanation: - 🌟: high priority
             - ☒ remembering the filename in the background.
         - ☒ Better Preview of the documents
     - Docs: try panvimdoc
-        - ☒ 🌟Normal vim doc(generating from README.md).
-        - ☒ 🌟One picture docs.
+        - ☒ Normal vim doc(generating from README.md).
+        - ☒ One picture docs.
         - ☒ Recording Demo
         - features demonstration:
             - repository-level QA building:
@@ -292,7 +294,7 @@ Flag explanation: - 🌟: high priority
         - Tests:
             - Add test initialization configs for fast debugging and testing.
                 - ☒ lazy.nvim
-                - ☒ 🌟packer.nvim
+                - ☒ packer.nvim
     - templates design
         - ☒ Ask inline questions(continue writing)
         - ☒ Simplify the template design (merge templates)
