@@ -78,14 +78,21 @@ M = {
         key = "<LocalLeader>se",
         tpl = "code_explain.json",
         target = "popup",
-        opts = { noremap = true, silent = true, desc = "(E)xplain" },
+        opts = { noremap = true, silent = true, desc = "(E)xplain or Question" },
+      },
+      {
+        mode = { "n", "v" },
+        key = "<LocalLeader>sf",
+        tpl = "fix_bug_with_err.json",
+        target = "popup",
+        opts = { noremap = true, silent = true, desc = "(F)ix errors" },
       },
       {
         mode = { "n", "v" },
         key = "<LocalLeader>sE",
         tpl = "explain_text.json",
         target = "popup",
-        opts = { noremap = true, silent = true, desc = "(E)xplain Text" },
+        opts = { noremap = true, silent = true, desc = "(E)xplain Text with Trans" },
       },
       {
         mode = { "n", "v" },

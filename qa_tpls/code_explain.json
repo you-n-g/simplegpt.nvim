@@ -1,1 +1,1 @@
-{"q": "This github action is not triggered.  Why does it fail?", "t": "You are an expert in programming.\n{{p-}}\nWe have a file with content:\n```{{filetype}} \n{{content}}\n```\nYou are focusing on following part\n```\n{{visual}}\n```\n{{q}}"}
+{"q": "Please explain the part you are focusing.", "t": "You are an expert in programming.\n{{p-}}\nWe have a file with content:\n```{{filetype}} \n{{content}}\n```\nYou are focusing on following part\n```\n{{visual}}\n```\n{{q}}"}
