@@ -1,6 +1,7 @@
 M = {
   options  = {},
   defaults = {
+    new_tab = false,  -- should we open new tab for QA (for supporting async QA)
     dialog = {
       -- Dialog shortcuts
       -- - close a dialog
@@ -101,6 +102,10 @@ M = {
         target = "popup",
         opts = { noremap = true, silent = true, desc = "(T)ranslate" },
       },
+    },
+    tpl_conf = {
+      context_len = 10,  -- the number of lines before and after the current line as context
+      content_max_len = 100, -- the max number of lines to show as full content
     }
   }
 }

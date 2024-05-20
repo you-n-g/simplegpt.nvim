@@ -182,7 +182,9 @@ Flag explanation:
     - [x] Resume last answer.
     - [X] Diff mode
     - [x] Fast copy code in backquotes
-    - [ ] Answering in the background(it will stop the answering streaming if we exit the QA UI)
+    - [ ] async Answering in the background(it will stop the answering streaming if we exit the QA UI)
+      - It would boots the writing workflow.
+        - We can create a new tab and ask the question further
     - [x] Temporary register(without saving to disk)
     - Repository level context
       - Add file content to context
@@ -190,8 +192,8 @@ Flag explanation:
       - [x] Ask repository-level question
     - Shortcuts
       - [ ] Telescope to run shortcuts.
-      - [ ] Directly ask error information (load + do!)
-        - [ ] while remain the original information.
+      - [x] Directly ask error information (load + do!)
+        - [x] while remain the original information.
     - Utils:
       - [ ] get the buffer number where you are from; It is helpful to accurate control the content in different windows.
   - Targets:
@@ -211,8 +213,8 @@ Flag explanation:
       - [x] remembering the filename in the background.
     - [x] Better Preview of the documents
   - Docs: try panvimdoc
-    - [x] 🌟Normal vim doc(generating from README.md).
-    - [x] 🌟One picture docs.
+    - [x] Normal vim doc(generating from README.md).
+    - [x] One picture docs.
     - [X] Recording Demo
     - features demonstration:
       - repository-level QA building:
@@ -227,7 +229,7 @@ Flag explanation:
     - Tests:
       - Add test initialization configs for fast debugging and testing.
         - [X] lazy.nvim
-        - [X] 🌟packer.nvim
+        - [X] packer.nvim
   - templates design
     - [x] Ask inline questions(continue writing)
     - [x] Simplify the template design (merge templates)

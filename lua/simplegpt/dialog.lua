@@ -12,6 +12,11 @@ function M.BaseDialog:ctor(context)
   -- self.quit_action = "quit"
 end
 
+function M.BaseDialog:quit()
+  -- Quit the dialog window
+  vim.cmd("q")
+end
+
 --- Extracts the last code block from a given text.
 -- This function was originally located in `lua/chatgpt/flows/chat/base.lua` within the ChatGPT.nvim project,
 -- but has been copied and adapted for use within this module.
@@ -45,9 +50,7 @@ function M.BaseDialog:register_keys(exit_callback)
   for _, pop in ipairs(all_pops) do
     pop:map("n", require"simplegpt.conf".options.dialog.exit_keys, function()
 
-      -- if self.quit_action == "quit" then
-      vim.cmd("q")  -- callback may open new windows. So we quit the windows before callback
-      -- end
+      self:quit() -- callback may open new windows. So we quit the windows before callback
 
       if exit_callback ~= nil then
         exit_callback()
@@ -89,6 +92,14 @@ function M.ChatDialog:ctor(...)
   self.answer_popup = nil  -- the popup to display the answer
   self.full_answer = {}
   -- self.quit_action = "hide"
+end
+
+function M.ChatDialog:quit() 
+  M.ChatDialog.super.quit(self)
+  if require"simplegpt.conf".options.new_tab then
+    -- TODO: close current tab
+    vim.api.nvim_command('tabclose')
+  end
 end
 
 function M.ChatDialog:call(question)
@@ -164,7 +175,7 @@ function M.ChatDialog:register_keys(exit_callback)
     pop:map("n", require"simplegpt.conf".options.dialog.append_keys, function()
       self:update_full_answer()  -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
 
-      vim.cmd("q")  -- callback may open new windows. So we quit the windows before callback
+      self:quit()  -- callback may open new windows. So we quit the windows before callback
       if exit_callback ~= nil then
         exit_callback()
       end
@@ -184,7 +195,7 @@ function M.ChatDialog:register_keys(exit_callback)
 
       -- TODO: we can support only inserting the code. It may bring more conveniences.
 
-      vim.cmd("q")  -- callback may open new windows. So we quit the windows before callback
+      self:quit()  -- callback may open new windows. So we quit the windows before callback
       if exit_callback ~= nil then
         exit_callback()
       end

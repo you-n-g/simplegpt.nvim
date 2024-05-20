@@ -62,8 +62,9 @@ end
 
 
 function M.set_reg(content)
-  -- for _, reg in ipairs({"1", "*", "+", "\""}) do
-  for _, reg in ipairs({"\""}) do
+  -- for _, reg in ipairs({"\""}) do
+  -- print(content)
+  for _, reg in ipairs({"1", "\"", "*", "+"}) do
     vim.fn.setreg(reg, content)
   end
 end

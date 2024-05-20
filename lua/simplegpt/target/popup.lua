@@ -34,11 +34,13 @@ function M.Popup:build()
   popup:mount()
 
   -- unmount component when cursor leaves buffer
+  -- Dont' do this. It will stop the QA if we run it on another tab.
   -- TODO: I just want to hide the popup for future resuming
-  popup:on(event.BufLeave, function()
-    popup:unmount()
-    -- popup:hide()
-  end)
+  -- popup:on(event.BufLeave, function()
+  --   popup:unmount()
+  --   -- popup:hide()
+  -- end)
+
   -- vim.tbl_extend("force", self.all_pops)
   table.insert(self.all_pops, popup)
   self:register_keys()

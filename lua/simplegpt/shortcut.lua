@@ -10,11 +10,18 @@ function M.build_func(target)
   return function()
     local rqa = require("simplegpt.tpl").RegQAUI()
     -- the context when building the QA builder
+    -- TODO: open a new tab and load current buffer
     local context = {
       filetype = vim.bo.filetype,
       rqa = rqa,
       from_bufnr = vim.api.nvim_get_current_buf(),
     }
+
+    if require"simplegpt.conf".options.new_tab then
+      -- open a new tab and load current buffer
+      vim.api.nvim_command('tabedit #' .. context.from_bufnr) -- open a new tab and switch to the buffer
+    end
+
     -- rqa will build the question and send to the target
     rqa:build(require("simplegpt.target." .. target).build_q_handler(context))
   end

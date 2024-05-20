@@ -10,8 +10,8 @@ M.RegQAUI = utils.class("RegQAUI", dialog.BaseDialog) -- register-based QA UI
 
 function M.RegQAUI:ctor(...)
   M.RegQAUI.super.ctor(self, ...)
-  self.pop_dict = {} -- a dict of register to popup
-  self.tpl_pop = nil -- the popup of template
+  self.pop_dict = {}                     -- a dict of register to popup
+  self.tpl_pop = nil                     -- the popup of template
   self.special_dict = self:get_special() -- we have to get special dict before editing the quesiton.. Ohterwise we'll lose the file and visual selection
   if "" == vim.fn.getreg("t") then
     vim.fn.setreg("t", [[Context:```{{c}}```, {{q}}, {{i}}, Please input your answer:```]])
@@ -31,7 +31,8 @@ function M.get_placeholders(key_reg)
   local template = M.get_tpl()
 
   if key_reg == nil then
-    key_reg = ".%-?" -- {{q-}} means that the q register will not be dumped into the permanent storage; vim will only use the first letter when operating on registers.
+    key_reg =
+    ".%-?"           -- {{q-}} means that the q register will not be dumped into the permanent storage; vim will only use the first letter when operating on registers.
   end
   local reg = "%{%{(" .. key_reg .. ")%}%}"
 
@@ -155,14 +156,19 @@ end
 
 function M.RegQAUI:get_special()
   local res = {}
-  --
+
+  -- shared variables
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+
   -- 1) all file content
   -- Get the current buffer
   local buf = vim.api.nvim_get_current_buf()
   -- Get the number of lines in the buffer
   local line_count = vim.api.nvim_buf_line_count(buf)
+  local content_max_len = require "simplegpt.conf".options.tpl_conf.content_max_len;
   -- Get all lines
-  local lines = vim.api.nvim_buf_get_lines(buf, 0, line_count, false)
+  local lines = vim.api.nvim_buf_get_lines(buf, math.max(cursor_pos[1] - content_max_len - 1, 0),
+    math.min(cursor_pos[1] + content_max_len, line_count), false)
   res["content"] = table.concat(lines, "\n")
 
   -- 2) get the visual content
@@ -178,9 +184,9 @@ function M.RegQAUI:get_special()
   res["filetype"] = vim.bo.filetype
 
   -- 4) Get the context of current line (the line under the cursor). Including 10 lines before and 10 lines after
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  start_line = math.max(cursor_pos[1] - 10 - 1, 0) -- Lua indexing is 0-based
-  end_line = math.min(cursor_pos[1] + 10, line_count)
+  local context_len = require "simplegpt.conf".options.tpl_conf.context_len;
+  start_line = math.max(cursor_pos[1] - context_len - 1, 0) -- Lua indexing is 0-based
+  end_line = math.min(cursor_pos[1] + context_len, line_count)
   -- Get the context lines
   local context_lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
   -- Now 'context_lines' is a table containing all context lines
