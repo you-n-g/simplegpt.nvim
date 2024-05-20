@@ -1,4 +1,4 @@
-*simplegpt.txt*            For NVIM v0.8.0            Last change: 2024 May 15
+*simplegpt.txt*            For NVIM v0.8.0            Last change: 2024 May 20
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -287,6 +287,7 @@ Flag explanation: - 🌟: high priority
             - ☒ Add linting CI
             - ☐ Fix Linting errors
                 - Switching to Mega-Linter <https://github.com/nvuillam/npm-groovy-lint/pull/109/files> may help.
+                - Maybe Refining code by evolving framework.
         - ☒ Automatic releasing (maybe tagging is included)
         - Tests:
             - Add test initialization configs for fast debugging and testing.
