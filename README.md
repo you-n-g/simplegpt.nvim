@@ -66,6 +66,9 @@ If you want to customize you `<LocalLeader>`, please use following code:
 vim.g.maplocalleader = "\\"  -- change the localleader key to \
 ```
 
+More detailed [configuration](lua/simplegpt/conf.lua) are listed here.
+You can find my latest and preferred configuration [here](https://github.com/you-n-g/deploy/blob/master/configs/lazynvim/lua/plugins/gpt.lua) as an example.
+
 # Demo
 ## Console demo
 [![asciicast](https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr.svg)](https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr)
@@ -182,7 +185,7 @@ Flag explanation:
     - [x] Resume last answer.
     - [X] Diff mode
     - [x] Fast copy code in backquotes
-    - [ ] async Answering in the background(it will stop the answering streaming if we exit the QA UI)
+    - [x] async Answering in the background(it will stop the answering streaming if we exit the QA UI)
       - It would boots the writing workflow.
         - We can create a new tab and ask the question further
     - [x] Temporary register(without saving to disk)
@@ -199,10 +202,13 @@ Flag explanation:
   - Targets:
     - Run from targets;
       - Dialog targets ==>  Supporting edit in place.
+      - [ ] 🌟🐞 When we goto tex Diffpop for the second time. It will prompt to select the b:vimtex_main
+        - If you don't abort it. It will not appear again.
     - Followup actions;
       - [X] Replace the text
       - [X] Append the text
       - [X] Yank the text
+      - [x] 🌟🐞The action line may is wrong when we enable new tab.
   - UI:
     - short cuts
     - [ ] Help function: You can press `?` to see the help menu for shortcuts.

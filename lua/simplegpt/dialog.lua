@@ -183,7 +183,7 @@ function M.ChatDialog:register_keys(exit_callback)
       local from_bufnr = self.context["from_bufnr"]
 
       -- Get the cursor position in the from_bufnr
-      local cursor_pos = vim.api.nvim_win_get_cursor(require"simplegpt.utils".get_win_of_buf(from_bufnr))
+      local cursor_pos = self.context["cursor_pos"]
       -- Insert `self.full_answer` into from_bufnr after the line of the cursor
       vim.api.nvim_buf_set_lines(from_bufnr, cursor_pos[1], cursor_pos[1], false, self.full_answer)
 
@@ -203,13 +203,13 @@ function M.ChatDialog:register_keys(exit_callback)
       local from_bufnr = self.context["from_bufnr"]
 
       -- Get the cursor position in the from_bufnr
-      local cursor_pos = vim.api.nvim_win_get_cursor(require"simplegpt.utils".get_win_of_buf(from_bufnr))
+      local cursor_pos = self.context["cursor_pos"]
 
       -- Get the range of lines to replace
       local start_line, end_line
       if vim.fn.visualmode() ~= "" then -- NOTE: This will return to the status of the origianl window seems beyond the expectation of me..
         -- If in visual mode, replace the selected lines; 
-        start_line, end_line = unpack(vim.fn.getpos("'<"), 2, 3), unpack(vim.fn.getpos("'>"), 2, 3)
+        start_line, end_line = self.context.visual_selection.start.row, self.context.visual_selection["end"].row
       else
         -- If not in visual mode, replace the current line
         start_line, end_line = cursor_pos[1], cursor_pos[1]

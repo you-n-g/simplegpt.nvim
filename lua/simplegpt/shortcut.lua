@@ -16,6 +16,8 @@ function M.build_func(target)
       rqa = rqa,
       from_bufnr = vim.api.nvim_get_current_buf(),
     }
+    context.cursor_pos = vim.api.nvim_win_get_cursor(require"simplegpt.utils".get_win_of_buf(context.from_bufnr))
+    context.visual_selection = require"simplegpt.utils".get_visual_selection()
 
     if require"simplegpt.conf".options.new_tab then
       -- open a new tab and load current buffer

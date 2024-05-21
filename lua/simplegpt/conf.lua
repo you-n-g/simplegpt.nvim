@@ -103,7 +103,7 @@ M = {
         opts = { noremap = true, silent = true, desc = "(T)ranslate" },
       },
     },
-    tpl_conf = {
+    tpl_conf = {  -- configure that will affect the rendering of the templates.
       context_len = 10,  -- the number of lines before and after the current line as context
       content_max_len = 100, -- the max number of lines to show as full content
     }
