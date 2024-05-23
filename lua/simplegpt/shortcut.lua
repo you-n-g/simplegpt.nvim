@@ -20,8 +20,16 @@ function M.build_func(target)
     context.visual_selection = require"simplegpt.utils".get_visual_selection()
 
     if require"simplegpt.conf".options.new_tab then
-      -- open a new tab and load current buffer
-      vim.api.nvim_command('tabedit #' .. context.from_bufnr) -- open a new tab and switch to the buffer
+      -- NOTE: it will fail to run tabedit if we are in a unnamed buffer
+      -- Attempt to execute the command in a protected call
+      local success, errmsg = pcall(vim.api.nvim_command, 'tabedit #' .. context.from_bufnr)
+
+      -- Check if the command failed
+      if not success then
+        -- If an error occurred, print the error message (optional) and open a new tab
+        print("Error opening tab with buffer: " .. errmsg)  -- Optional: for debugging
+        vim.api.nvim_command('tabnew')  -- Open a new tab without specifying a buffer
+      end
     end
 
     -- rqa will build the question and send to the target

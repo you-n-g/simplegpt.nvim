@@ -202,13 +202,15 @@ Flag explanation:
   - Targets:
     - Run from targets;
       - Dialog targets ==>  Supporting edit in place.
-      - [ ] 🌟🐞 When we goto tex Diffpop for the second time. It will prompt to select the b:vimtex_main
+      - [-] 🌟🐞 When we goto tex Diffpop for the second time. It will prompt to select the b:vimtex_main
+          - Stop setting `b:vimtex_main` in my config solve this problem.
         - If you don't abort it. It will not appear again.
     - Followup actions;
       - [X] Replace the text
       - [X] Append the text
       - [X] Yank the text
       - [x] 🌟🐞The action line may is wrong when we enable new tab.
+      - [x] 🌟🐞For visual selection, the append action will append content after the first line.
   - UI:
     - short cuts
     - [ ] Help function: You can press `?` to see the help menu for shortcuts.

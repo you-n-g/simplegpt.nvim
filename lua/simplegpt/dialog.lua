@@ -181,11 +181,9 @@ function M.ChatDialog:register_keys(exit_callback)
       end
 
       local from_bufnr = self.context["from_bufnr"]
-
-      -- Get the cursor position in the from_bufnr
-      local cursor_pos = self.context["cursor_pos"]
-      -- Insert `self.full_answer` into from_bufnr after the line of the cursor
-      vim.api.nvim_buf_set_lines(from_bufnr, cursor_pos[1], cursor_pos[1], false, self.full_answer)
+      local last_line = self.context.visual_selection["end"].row
+      -- Insert `self.full_answer` into from_bufnr after the last line
+      vim.api.nvim_buf_set_lines(from_bufnr, last_line, last_line, false, self.full_answer)
 
     end, { noremap = true })
 
@@ -202,18 +200,9 @@ function M.ChatDialog:register_keys(exit_callback)
 
       local from_bufnr = self.context["from_bufnr"]
 
-      -- Get the cursor position in the from_bufnr
-      local cursor_pos = self.context["cursor_pos"]
-
       -- Get the range of lines to replace
       local start_line, end_line
-      if vim.fn.visualmode() ~= "" then -- NOTE: This will return to the status of the origianl window seems beyond the expectation of me..
-        -- If in visual mode, replace the selected lines; 
-        start_line, end_line = self.context.visual_selection.start.row, self.context.visual_selection["end"].row
-      else
-        -- If not in visual mode, replace the current line
-        start_line, end_line = cursor_pos[1], cursor_pos[1]
-      end
+      start_line, end_line = self.context.visual_selection.start.row, self.context.visual_selection["end"].row
       -- Replace the lines in from_bufnr with `self.full_answer`
       vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, end_line, false, self.full_answer)
     end, { noremap = true })

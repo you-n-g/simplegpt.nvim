@@ -41,6 +41,7 @@ end
 ---
 --- Get the visual selection in vim.
 -- This function returns a table with the start and end positions of the visual selection.
+-- If it is not in visual mode, it will return the range of current cursor
 --
 -- We don't use  vim.fn.getpos("'<") because:
 -- - https://www.reddit.com/r/neovim/comments/13mfta8/reliably_get_the_visual_selection_range/
