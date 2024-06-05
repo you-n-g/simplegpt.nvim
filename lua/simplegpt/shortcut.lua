@@ -22,13 +22,16 @@ function M.build_func(target)
     if require"simplegpt.conf".options.new_tab then
       -- NOTE: it will fail to run tabedit if we are in a unnamed buffer
       -- Attempt to execute the command in a protected call
-      local success, errmsg = pcall(vim.api.nvim_command, 'tabedit #' .. context.from_bufnr)
-
-      -- Check if the command failed
-      if not success then
-        -- If an error occurred, print the error message (optional) and open a new tab
-        print("Error opening tab with buffer: " .. errmsg)  -- Optional: for debugging
-        vim.api.nvim_command('tabnew')  -- Open a new tab without specifying a buffer
+      -- open a new tab and load current buffer
+      local bufname = vim.api.nvim_buf_get_name(context.from_bufnr)
+      if bufname == "" then
+        vim.api.nvim_command('tabnew')
+        local cur_buf = vim.api.nvim_get_current_buf() -- Close the newly created empty buffer
+        vim.api.nvim_command('b ' .. context.from_bufnr)
+        vim.api.nvim_command('bdelete ' .. cur_buf)
+      else
+        -- Open a new tab and switch to the buffer
+        vim.api.nvim_command('tabnew ' .. bufname)
       end
     end
 
