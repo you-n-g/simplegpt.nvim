@@ -1,4 +1,4 @@
-*simplegpt.txt*            For NVIM v0.8.0            Last change: 2024 May 21
+*simplegpt.txt*            For NVIM v0.8.0           Last change: 2024 June 05
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -269,13 +269,15 @@ Flag explanation: - 🌟: high priority
     - Targets:
         - Run from targets;
             - Dialog targets ==> Supporting edit in place.
-            - ☐ 🌟🐞 When we goto tex Diffpop for the second time. It will prompt to select the b:vimtex_main
+            - [-] 🌟🐞 When we goto tex Diffpop for the second time. It will prompt to select the b:vimtex_main
+                - Stop setting `b:vimtex_main` in my config solve this problem.
                 - If you don’t abort it. It will not appear again.
         - Followup actions;
             - ☒ Replace the text
             - ☒ Append the text
             - ☒ Yank the text
             - ☒ 🌟🐞The action line may is wrong when we enable new tab.
+            - ☒ 🌟🐞For visual selection, the append action will append content after the first line.
     - UI:
         - short cuts
         - ☐ Help function: You can press `?` to see the help menu for shortcuts.
