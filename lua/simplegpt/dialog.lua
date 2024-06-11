@@ -75,9 +75,14 @@ function M.BaseDialog:register_keys(exit_callback)
     pop:map("n", {"<C-k>"}, function()
       local full_cont = table.concat(vim.api.nvim_buf_get_lines(pop.bufnr, 0, -1, false), "\n")
       local code = extract_code(full_cont)
+      -- TODO: get a simmarization of the code (e.g. numbre of lines and charactors)
       if code then
         require"simplegpt.utils".set_reg(code)
-        print("Code Yanked")
+
+        -- Get a summary of the code
+        local num_lines = #vim.split(code, "\n")
+        local num_chars = #code
+        print(string.format("Yanked Code Summary: %d lines, %d characters", num_lines, num_chars))
       end
     end, { noremap = true })
   end
