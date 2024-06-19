@@ -45,12 +45,13 @@ function M.DiffPopup:build()
     table.insert(self.all_pops, p)
   end
 
+  local conf_size = require"simplegpt.conf".options.ui.layout.size
   local layout = Layout({
     relative = "editor",
     position = "50%",
     size = {
-      width = "90%",
-      height = "90%",
+      width = conf_size.width,
+      height = conf_size.height
     },
   }, Layout.Box(boxes, { dir = "row" }))
   -- mount/open the component

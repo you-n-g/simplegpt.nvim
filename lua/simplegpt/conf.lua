@@ -1,7 +1,15 @@
 M = {
   options  = {},
   defaults = {
-    new_tab = false,  -- should we open new tab for QA (for supporting async QA)
+    new_tab = true,  -- should we open new tab for QA (for supporting async QA)
+    ui = {
+      layout = {
+        size = {
+          width = "95%",
+          height = "95%",
+        },
+      },
+    },
     dialog = {
       -- Dialog shortcuts
       -- - close a dialog

@@ -181,6 +181,9 @@ Flag explanation:
 - 🌟: high priority
 
 - TODOs
+  - Basic:
+    - [ ] Supporting multi-rounds conversation (I think it would be easier to control the output by multi-rounds demonstration)
+    - [ ] Anonymous register to avoid confliction;
   - Misc
     - [x] Resume last answer.
     - [X] Diff mode

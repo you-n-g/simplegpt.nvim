@@ -14,6 +14,7 @@ function M.Popup:ctor(...)
 end
 
 function M.Popup:build()
+  local conf_size = require"simplegpt.conf".options.ui.layout.size
   local popup = Popup({
     relative = "editor",
     enter = true,
@@ -24,8 +25,8 @@ function M.Popup:build()
     },
     position = "50%",
     size = {
-      width = "80%",
-      height = "60%",
+      width = conf_size.width,
+      height = conf_size.height,
     },
   })
   self.answer_popup = popup
