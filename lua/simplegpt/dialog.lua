@@ -96,13 +96,13 @@ function M.ChatDialog:ctor(...)
   M.ChatDialog.super.ctor(self, ...)
   self.answer_popup = nil  -- the popup to display the answer
   self.full_answer = {}
+  self.open_in_new_tab = require"simplegpt.conf".options.new_tab
   -- self.quit_action = "hide"
 end
 
 function M.ChatDialog:quit() 
   M.ChatDialog.super.quit(self)
-  if require"simplegpt.conf".options.new_tab then
-    -- TODO: close current tab
+  if self.open_in_new_tab then
     vim.api.nvim_command('tabclose')
   end
 end

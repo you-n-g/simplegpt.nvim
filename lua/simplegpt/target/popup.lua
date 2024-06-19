@@ -76,6 +76,7 @@ function M.resume_popup()
     vim.api.nvim_buf_set_option(M.last_pop.answer_popup.bufnr, 'filetype', 'markdown')
     -- M.last_pop.answer_popup:show()  -- TODO: can't resume
     M.last_pop:register_keys()
+    M.last_pop.open_in_new_tab = false
   end
 end
 
