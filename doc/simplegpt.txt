@@ -1,4 +1,4 @@
-*simplegpt.txt*            For NVIM v0.8.0           Last change: 2024 June 19
+*simplegpt.txt*            For NVIM v0.8.0           Last change: 2024 July 02
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -249,7 +249,9 @@ Flag explanation: - 🌟: high priority
 
 - TODOs
     - Basic:
-        - ☐ Supporting multi-rounds conversation (I think it would be easier to control the output by multi-rounds demonstration)
+        - ☐ Conversations
+            - ☐ Supporting multi-rounds conversation (I think it would be easier to control the output by multi-rounds demonstration)
+            - ☐ Converting current response to a new conversation.
         - ☐ Anonymous register to avoid confliction;
     - Misc
         - ☒ Resume last answer.
