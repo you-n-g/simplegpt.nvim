@@ -182,7 +182,9 @@ Flag explanation:
 
 - TODOs
   - Basic:
-    - [ ] Supporting multi-rounds conversation (I think it would be easier to control the output by multi-rounds demonstration)
+    - [ ] Conversations
+      - [ ] Supporting multi-rounds conversation (I think it would be easier to control the output by multi-rounds demonstration)
+      - [ ] Converting current response to a new conversation.
     - [ ] Anonymous register to avoid confliction;
   - Misc
     - [x] Resume last answer.
