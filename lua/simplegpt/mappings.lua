@@ -74,9 +74,9 @@ function M.setup()
   -- TODO: if `which-key` is installed
   local ok, which_key = pcall(require, "which-key")
   if ok then
-    which_key.register({
-      ["<LocalLeader>s"] = { name = "+Shortcuts" },
-      ["<LocalLeader>g"] = { name = "+SimpleGPT" },
+    which_key.add({
+      { "<LocalLeader>g", group = "SimpleGPT" },
+      { "<LocalLeader>s", group = "Shortcuts" },
     })
   end
 end
