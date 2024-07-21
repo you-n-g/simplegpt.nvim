@@ -185,6 +185,7 @@ Flag explanation:
     - [ ] Conversations
       - [ ] Supporting multi-rounds conversation (I think it would be easier to control the output by multi-rounds demonstration)
       - [ ] Converting current response to a new conversation.
+        - Quick thought: we can build a ChatGPT session directly.
     - [ ] Anonymous register to avoid confliction;
   - Misc
     - [x] Resume last answer.
