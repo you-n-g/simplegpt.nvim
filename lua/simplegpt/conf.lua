@@ -49,6 +49,16 @@ M = {
       },
       {
         mode = { "n", "v" },
+        key = "<LocalLeader>sR",
+        tpl = "complete_writing_replace.json",
+        target = "diff",
+        reg = {
+          r = "Do not give extra explanations. Don't quote the text. Just output the rewritten text.",
+        },
+        opts = { noremap = true, silent = true, desc = "(R)ewrite Text in Diff" },
+      },
+      {
+        mode = { "n", "v" },
         key = "<LocalLeader>sc",
         tpl = "code_complete.json",
         target = "popup",

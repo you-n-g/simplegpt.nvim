@@ -44,6 +44,13 @@ M.register_shortcuts = function()
   for _, s in ipairs(require"simplegpt.conf".options.shortcuts) do
     vim.keymap.set(s.mode, s.key, function()
       loader.load_reg(s.tpl)
+
+      -- Support setting extra reg when loading template
+      if s.reg ~= nil then 
+        for reg, value in pairs(s.reg) do
+          vim.fn.setreg(reg, value)
+        end
+      end
       M.build_func(s.target)()
     end, s.opts)
   end
