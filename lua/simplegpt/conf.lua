@@ -53,7 +53,7 @@ M = {
         tpl = "complete_writing_replace.json",
         target = "diff",
         reg = {
-          r = "Do not give extra explanations. Don't quote the text. Just output the rewritten text.",
+          r = "No extra explanations. No block quotes. Output only the rewritten text. Maintain prefix spaces and indentations.",
         },
         opts = { noremap = true, silent = true, desc = "(R)ewrite Text in Diff" },
       },
@@ -76,6 +76,9 @@ M = {
         key = "<LocalLeader>sg",
         tpl = "fix_grammar.json",
         target = "diff",
+        reg = {
+          r = "No extra explanations. No block quotes. Output only the rewritten text. Maintain prefix spaces and indentations.",
+        },
         opts = { noremap = true, silent = true, desc = "Fix (g)rammar" },
       },
       {
