@@ -123,6 +123,13 @@ M = {
         target = "popup",
         opts = { noremap = true, silent = true, desc = "(T)ranslate" },
       },
+      {
+        mode = { "n", "v" },
+        key = "<LocalLeader>sq",
+        tpl = "question.json",
+        target = "chat",
+        opts = { noremap = true, silent = true, desc = "Ask (q)uestion with content" },
+      },
     },
     tpl_conf = {  -- configure that will affect the rendering of the templates.
       context_len = 10,  -- the number of lines before and after the current line as context
