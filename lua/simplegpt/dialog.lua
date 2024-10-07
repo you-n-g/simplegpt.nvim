@@ -205,11 +205,15 @@ function M.ChatDialog:register_keys(exit_callback)
 
       local from_bufnr = self.context["from_bufnr"]
 
-      -- Get the range of lines to replace
-      local start_line, end_line
-      start_line, end_line = self.context.visual_selection.start.row, self.context.visual_selection["end"].row
-      -- Replace the lines in from_bufnr with `self.full_answer`
-      vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, end_line, false, self.full_answer)
+      if self.context.replace_target == "visual" then
+        -- Get the range of lines to replace
+        local start_line, end_line
+        start_line, end_line = self.context.visual_selection.start.row, self.context.visual_selection["end"].row
+        -- Replace the lines in from_bufnr with `self.full_answer`
+        vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, end_line, false, self.full_answer)
+      elseif self.context.replace_target == "file" then
+        vim.api.nvim_buf_set_lines(from_bufnr, 0, -1, false, self.full_answer)
+      end
     end, { noremap = true })
 
     -- Yank keys

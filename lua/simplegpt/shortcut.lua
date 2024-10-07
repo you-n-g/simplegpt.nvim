@@ -7,7 +7,7 @@ local loader = require("simplegpt.loader")
 M = {}
 
 function M.build_func(target)
-  return function()
+  return function(context_extra)
     local rqa = require("simplegpt.tpl").RegQAUI()
     -- the context when building the QA builder
     -- TODO: open a new tab and load current buffer
@@ -15,7 +15,12 @@ function M.build_func(target)
       filetype = vim.bo.filetype,
       rqa = rqa,
       from_bufnr = vim.api.nvim_get_current_buf(),
+      replace_target = "visual", -- what the response is expected to replace (visual, file)
     }
+    if context_extra ~= nil then
+      context = vim.tbl_extend("force", context, context_extra)
+    end
+
     context.cursor_pos = vim.api.nvim_win_get_cursor(require"simplegpt.utils".get_win_of_buf(context.from_bufnr))
     context.visual_selection = require"simplegpt.utils".get_visual_selection()
 
@@ -51,7 +56,7 @@ M.register_shortcuts = function()
           vim.fn.setreg(reg, value)
         end
       end
-      M.build_func(s.target)()
+      M.build_func(s.target)(s.context)
     end, s.opts)
   end
 end

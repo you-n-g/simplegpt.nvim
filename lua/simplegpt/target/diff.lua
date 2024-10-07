@@ -73,7 +73,8 @@ function M.build_q_handler(context)
     for _, p in ipairs(dp.all_pops) do
       vim.api.nvim_buf_set_option(p.bufnr, "filetype", context["filetype"]) -- todo set to current filetype
     end
-    vim.api.nvim_buf_set_lines(dp.orig_popup.bufnr, 0, -1, false, vim.split(context.rqa.special_dict["visual"], "\n"))  -- set conttn
+    local key_map = {visual="visual", file="full_content"}
+    vim.api.nvim_buf_set_lines(dp.orig_popup.bufnr, 0, -1, false, vim.split(context.rqa.special_dict[key_map[context.replace_target]], "\n"))  -- set conttn
     -- -- TODO: put dp.orig_popup.bufnr and dp.answer_popup.bufnr into diff mode
 
     for _, pop in ipairs(dp.all_pops) do

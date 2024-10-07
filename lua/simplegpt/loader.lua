@@ -58,6 +58,7 @@ function M.input_dump_name()
     on_submit = function(value)
       local fname = value .. ".json"
       M.dump_reg(fname)
+      M.last_tpl_name = fname
       print("Saved: " .. fname)
     end,
   })

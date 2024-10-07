@@ -21,7 +21,7 @@ M = {
       append_keys = {
         "<C-a>"
       },
-      -- - replace the selected buffer (or current line) with the response
+      -- - replace the target(selected buffer, current line or entire file) with the response
       replace_keys = {
         "<C-r>"
       },
@@ -104,7 +104,7 @@ M = {
       },
       {
         mode = { "n", "v" },
-        key = "<LocalLeader>sf",
+        key = "<LocalLeader>sF",
         tpl = "fix_bug_with_err.json",
         target = "popup",
         opts = { noremap = true, silent = true, desc = "(F)ix errors" },
@@ -129,6 +129,14 @@ M = {
         tpl = "question.json",
         target = "chat",
         opts = { noremap = true, silent = true, desc = "Ask (q)uestion with content" },
+      },
+      {
+        mode = { "n", "v" },
+        key = "<LocalLeader>sf",
+        tpl = "file_edit.json",
+        target = "diff",
+        opts = { noremap = true, silent = true, desc = "Edit Entire (F)ile" },
+        context = {replace_target = "file"}
       },
     },
     tpl_conf = {  -- configure that will affect the rendering of the templates.

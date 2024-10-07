@@ -171,6 +171,7 @@ function M.RegQAUI:get_special()
   local lines = vim.api.nvim_buf_get_lines(buf, math.max(cursor_pos[1] - content_max_len - 1, 0),
     math.min(cursor_pos[1] + content_max_len, line_count), false)
   res["content"] = table.concat(lines, "\n")
+  res["full_content"] = table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), "\n")
 
   -- 2) get the visual content
   local select_pos = require("simplegpt.utils").get_visual_selection()
