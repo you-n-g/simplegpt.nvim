@@ -22,19 +22,41 @@ end
 -- but has been copied and adapted for use within this module.
 -- @param text: The input text from which the last code block is to be extracted.
 -- @return : Returns the extracted code block. If no code block is found within the text, the function returns nil.
-local function extract_code(text)
+local function extract_code(text, cur_line)
+
+  -- Get every line position of the text.
+  local cur_pos = 1
+  if cur_line ~= nil then
+    local line_pos_l = {1}
+    for next_line_pos in text:gmatch("[^\n]*\n()") do
+      table.insert(line_pos_l, next_line_pos)
+    end
+    cur_pos = line_pos_l[cur_line]
+  end
+
   -- Iterate through all code blocks in the message using a regular expression pattern
-  local lastCodeBlock
-  for codeBlock in text:gmatch("```.-```%s*") do
-    lastCodeBlock = codeBlock
+  local recentCodeBlock
+  local distance = math.huge
+  local cur_dis
+  for start_pos, codeBlock, end_pos in text:gmatch("()(```.-```%s*)()") do
+    if start_pos <= cur_pos and cur_pos < end_pos then
+      cur_dis = 0  -- cur_pos is in range
+    else
+      -- (end_pos - 1) to make the right boundary of the code block inclusive
+      cur_dis = math.min(math.abs(cur_pos - start_pos), math.abs(cur_pos - (end_pos - 1)))
+    end
+    if cur_dis < distance then
+      distance = cur_dis
+      recentCodeBlock = codeBlock
+    end
   end
   -- If a code block was found, strip the delimiters and return the code
-  if lastCodeBlock then
-    local index = string.find(lastCodeBlock, "\n")
+  if recentCodeBlock then
+    local index = string.find(recentCodeBlock, "\n")
     if index ~= nil then
-      lastCodeBlock = string.sub(lastCodeBlock, index + 1)
+      recentCodeBlock = string.sub(recentCodeBlock, index + 1)
     end
-    return lastCodeBlock:gsub("```\n", ""):gsub("```", ""):match("^%s*(.-)%s*$")
+    return recentCodeBlock:gsub("```\n", ""):gsub("```", ""):match("^%s*(.-)%s*$")
   end
   return nil
 end
@@ -70,11 +92,11 @@ function M.BaseDialog:register_keys(exit_callback)
     pop:map("n", { "<S-Tab>" }, _closure_func(i, -1), { noremap = true })
   end
 
-  -- - yank code
+  -- - yank (c)ode
   for _, pop in ipairs(all_pops) do
-    pop:map("n", {"<C-k>"}, function()
+    pop:map("n", {"<C-c>"}, function()
       local full_cont = table.concat(vim.api.nvim_buf_get_lines(pop.bufnr, 0, -1, false), "\n")
-      local code = extract_code(full_cont)
+      local code = extract_code(full_cont, vim.api.nvim_win_get_cursor(pop.winid)[1])
       -- TODO: get a simmarization of the code (e.g. numbre of lines and charactors)
       if code then
         require"simplegpt.utils".set_reg(code)
@@ -83,6 +105,20 @@ function M.BaseDialog:register_keys(exit_callback)
         local num_lines = #vim.split(code, "\n")
         local num_chars = #code
         print(string.format("Yanked Code Summary: %d lines, %d characters", num_lines, num_chars))
+      end
+    end, { noremap = true })
+  end
+
+  -- Add <C-k> as a shortcut to replace the `pop.bufnr` with the code block that is closest to the cursor
+  for _, pop in ipairs(all_pops) do
+    pop:map("n", {"<C-k>"}, function()
+      local full_cont = table.concat(vim.api.nvim_buf_get_lines(pop.bufnr, 0, -1, false), "\n")
+      local code = extract_code(full_cont, vim.api.nvim_win_get_cursor(pop.winid)[1])
+      if code then
+        vim.api.nvim_buf_set_lines(pop.bufnr, 0, -1, false, vim.split(code, "\n"))
+        print("Replaced buffer content with the closest code block.")
+      else
+        print("No code block found near the cursor.")
       end
     end, { noremap = true })
   end
