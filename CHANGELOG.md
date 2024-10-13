@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.0.1...v1.1.0) (2024-10-13)
+
+
+### Features
+
+* improve translate ([38a3698](https://github.com/you-n-g/simplegpt.nvim/commit/38a369824b87b6cae95b8b8d1946bc3b4300fe98))
+
 ## [1.0.1](https://github.com/you-n-g/simplegpt.nvim/compare/v1.0.0...v1.0.1) (2024-08-02)
 
 
