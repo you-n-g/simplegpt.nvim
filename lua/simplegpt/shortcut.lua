@@ -53,7 +53,15 @@ M.register_shortcuts = function()
       -- Support setting extra reg when loading template
       if s.reg ~= nil then 
         for reg, value in pairs(s.reg) do
-          vim.fn.setreg(reg, value)
+          -- Check if `vim.fn.getreg(reg)` contains `value` then skip setting it.
+          -- Substring indicates contains. We do not need an exact match.
+          local current_value = vim.fn.getreg(reg)
+          if not string.find(current_value, value, 1, true) then
+            vim.fn.setreg(reg, value)
+          else
+            -- NOTE: In case of overwriting user's customized information;
+            print("Register `" .. reg .. "` already contains the value, skip setting")
+          end
         end
       end
       M.build_func(s.target)(s.context)
