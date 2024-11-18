@@ -121,21 +121,6 @@ function M.RegQAUI:build(callback)
     table.insert(self.all_pops, v)
   end
 
-  self:register_keys(function()
-    -- exit callback
-    self:update_reg()
-    if callback ~= nil then
-      callback(self:get_q())
-    end
-  end)
-  -- - save the registers: This applies to only the register template
-  -- TODO: auto update register
-  for _, pop in ipairs(self.all_pops) do
-    pop:map("n", { "<c-s>" }, function()
-      self:update_reg()
-    end, { noremap = true })
-  end
-
   -- create boxes and layout
   local boxes = { Layout.Box(self.tpl_pop, { ["size"] = size .. "%" }) }
 
@@ -152,7 +137,25 @@ function M.RegQAUI:build(callback)
       height = conf_size.height,
     },
   }, Layout.Box(boxes, { dir = "col" }))
+
   layout:mount()
+
+  -- register keys after mount. Thus we can get the winid to set winbar
+  self:register_keys(function()
+    -- exit callback
+    self:update_reg()
+    if callback ~= nil then
+      callback(self:get_q())
+    end
+  end)
+  -- - save the registers: This applies to only the register template
+  -- TODO: auto update register
+  for _, pop in ipairs(self.all_pops) do
+    pop:map("n", { "<c-s>" }, function()
+      self:update_reg()
+    end, { noremap = true })
+  end
+
 end
 
 function M.RegQAUI:get_special()

@@ -10,24 +10,37 @@ M = {
         },
       },
     },
+    ui_map = {
+      exit_keys = "exit",
+      append_keys = "append",
+      replace_keys = "replace",
+      yank_keys = "yank",
+    },
+    base_dialog = {
+       key_table = {
+        exit_keys = {"q", "<c-c>", "<esc>"},
+        cycle_next = { "<tab>" },
+        cycle_prev = { "<S-Tab>" },
+        yank_code = { "<C-c>" },
+        extract_code = { "<C-k>" }
+      }
+    },
     dialog = {
       -- Dialog shortcuts
-      -- - close a dialog
-      exit_keys = {
-        "q", "<c-c>", "<esc>"
-      },
-      -- QA Dialog shortcuts
-      -- - append the response to original buffer
-      append_keys = {
-        "<C-a>"
-      },
-      -- - replace the target(selected buffer, current line or entire file) with the response
-      replace_keys = {
-        "<C-r>"
-      },
-      -- - yank the response to clipboard
-      yank_keys = {
-        "<C-y>"
+      key_table = {
+        -- QA Dialog shortcuts
+        -- - append the response to original buffer
+        append_keys = {
+          "<C-a>"
+        },
+        -- - replace the target(selected buffer, current line or entire file) with the response
+        replace_keys = {
+          "<C-r>"
+        },
+        -- - yank the response to clipboard
+        yank_keys = {
+          "<C-y>"
+        },
       },
     },
     -- config about building (q)uestions
