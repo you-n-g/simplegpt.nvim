@@ -196,6 +196,18 @@ function M.RegQAUI:get_special()
   local context_lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
   -- Now 'context_lines' is a table containing all context lines
   res["context"] = table.concat(context_lines, "\n")
+
+  -- 5) Get content in all buffers that have corresponding files on disk; use get_buf_cont
+  local all_buf = {conf.options.q_build.repo.header}
+  for _, _buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(_buf) and vim.api.nvim_buf_get_option(_buf, "buflisted") then
+      local file_path = vim.api.nvim_buf_get_name(_buf)
+      if file_path ~= "" and vim.loop.fs_stat(file_path) then
+        table.insert(all_buf, M.get_buf_cont(_buf))
+      end
+    end
+  end
+  res["all_buf"] = table.concat(all_buf, "\n")
   return res
 end
 
@@ -212,8 +224,10 @@ function M.RegQAUI:get_q()
   return interp(M.get_tpl(), vim.tbl_extend("force", ph_keys, self.special_dict))
 end
 
-function M.get_current_cont()
-  local buf = 0
+function M.get_buf_cont(buf)
+  if buf == nil then
+    buf = 0 -- current buffer
+  end
 
   -- Get all lines
   local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
@@ -231,13 +245,13 @@ end
 -- some utils functions
 function M.repo_load_file()
   -- Set the content into the register `repo_reg`
-  vim.fn.setreg(conf.options.q_build.repo.reg, conf.options.q_build.repo.header .. "\n" .. M.get_current_cont())
+  vim.fn.setreg(conf.options.q_build.repo.reg, conf.options.q_build.repo.header .. "\n" .. M.get_buf_cont())
   print("Load file content to reg.")
 end
 
 function M.repo_append_file()
   local repo_reg = conf.options.q_build.repo.reg
-  vim.fn.setreg(repo_reg, vim.fn.getreg(repo_reg) .. M.get_current_cont())
+  vim.fn.setreg(repo_reg, vim.fn.getreg(repo_reg) .. M.get_buf_cont())
   print("Append file content to reg.")
 end
 
