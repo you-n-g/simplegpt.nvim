@@ -139,6 +139,7 @@ function M.RegQAUI:build(callback)
   }, Layout.Box(boxes, { dir = "col" }))
 
   layout:mount()
+  self.nui_obj = layout
 
   -- register keys after mount. Thus we can get the winid to set winbar
   self:register_keys(function()

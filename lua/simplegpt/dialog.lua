@@ -9,13 +9,27 @@ M.BaseDialog = utils.class("BaseDialog")
 -- @param context: The context in which the dialog is being created.
 function M.BaseDialog:ctor(context)
   self.context = context
+  self.nui_obj = nil  -- subclass should assign this object
   self.all_pops = {}  -- all_popups will be a list table
   -- self.quit_action = "quit"
 end
 
 function M.BaseDialog:quit()
   -- Quit the dialog window
-  vim.cmd("q")
+  -- vim.cmd("q")
+  -- self.nui_obj:unmount() -- you can't use umount here. It will make the buffer disappear
+  self.nui_obj:hide()
+  require"simplegpt.target".set_last_dialog(self)
+end
+
+function M.BaseDialog:show()
+  self.nui_obj:show()
+  -- resume some special options (I expect nui take care of it)
+  M.add_winbar(self.all_pops[1].winid, options.base_dialog.key_table)  -- add winbar to the first popup
+end
+
+function M.BaseDialog:hide()
+  self.nui_obj:hide()
 end
 
 --- Extracts the last code block from a given text.
@@ -138,15 +152,21 @@ function M.ChatDialog:ctor(...)
   self.answer_popup = nil  -- the popup to display the answer
   self.full_answer = {}
   self.open_in_new_tab = require"simplegpt.conf".options.new_tab
-  -- self.quit_action = "hide"
 end
 
-function M.ChatDialog:quit() 
+function M.ChatDialog:quit()
   M.ChatDialog.super.quit(self)
   if self.open_in_new_tab then
     vim.api.nvim_command('tabclose')
   end
 end
+
+function M.ChatDialog:show()
+  M.ChatDialog.super.show(self)
+  -- resume some special options (I expect nui take care of it)
+  M.add_winbar(self.all_pops[#(self.all_pops)].winid, options.dialog.key_table)  -- add winbar to the last pop
+end
+
 
 function M.ChatDialog:call(question)
 
@@ -236,9 +256,6 @@ function M.ChatDialog:register_keys(exit_callback)
 
   M.add_winbar(self.all_pops[#(self.all_pops)].winid, options.dialog.key_table)  -- add winbar to the last pop
   for _, pop in ipairs(self.all_pops) do
-    -- require"snacks".debug(pop)
-    -- M.add_winbar(pop.winid, options.dialog)
-
     -- Append full answer: append the response to original buffer
     pop:map("n", options.dialog.key_table.append_keys, function()
       self:update_full_answer()  -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.

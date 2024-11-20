@@ -256,6 +256,8 @@ Flag explanation:
       def plus(a, b):
           return a + b
       ```
+  - Code Design:
+    - [x] use `show` an `hide` to ctrl the conversation dialog
 
 - Bugs
   - [x] Replace only affect one line(in the popup target).

@@ -12,7 +12,7 @@ function M.class(className, super)
         cls.ctor(self, ...)
       end
       return self
-    end
+    end,
   }
   if super then
     -- 设置类的元表，此类中没有的，可以查找父类是否含有
@@ -22,7 +22,17 @@ function M.class(className, super)
   return clazz
 end
 
-
+-- Check if an object is an instance of a class or its superclasses
+function M.isinstance(obj, cls)
+  local cur_cls = getmetatable(obj).__index
+  while cur_cls do
+    if cur_cls == cls then
+      return true
+    end
+    cur_cls = cur_cls.super
+  end
+  return false
+end
 
 -- Fast get the windows id of a buffer to support features like below.
 --  local wid = M.get_win_of_buf(vim.api.nvim_get_current_buf())
@@ -30,13 +40,12 @@ end
 function M.get_win_of_buf(bufnr) -- get the window of the buffer
   local tabpage = vim.api.nvim_get_current_tabpage()
   local wins = vim.api.nvim_tabpage_list_wins(tabpage)
-  for _, win in ipairs(wins) do  -- walk all windows in the current tabpage to get the preview window
+  for _, win in ipairs(wins) do -- walk all windows in the current tabpage to get the preview window
     if vim.api.nvim_win_get_buf(win) == bufnr then
       return win
     end
   end
 end
-
 
 ---
 --- Get the visual selection in vim.
@@ -54,21 +63,19 @@ function M.get_visual_selection()
   local begin_pos = { row = pos[2], col = pos[3] }
   pos = vim.fn.getpos(".")
   local end_pos = { row = pos[2], col = pos[3] }
-  if ((begin_pos.row < end_pos.row) or ((begin_pos.row == end_pos.row) and (begin_pos.col <= end_pos.col))) then
+  if (begin_pos.row < end_pos.row) or ((begin_pos.row == end_pos.row) and (begin_pos.col <= end_pos.col)) then
     return { start = begin_pos, ["end"] = end_pos }
   else
     return { start = end_pos, ["end"] = begin_pos }
   end
 end
 
-
 function M.set_reg(content)
   -- for _, reg in ipairs({"\""}) do
   -- print(content)
-  for _, reg in ipairs({"1", "\"", "*", "+"}) do
+  for _, reg in ipairs({ "1", '"', "*", "+" }) do
     vim.fn.setreg(reg, content)
   end
 end
-
 
 return M

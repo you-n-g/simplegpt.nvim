@@ -1,7 +1,10 @@
 M = {
   options  = {},
   defaults = {
-    new_tab = true,  -- should we open new tab for QA (for supporting async QA)
+    -- TODO: remove the new tab feature if it is not necessary
+    -- should we open new tab for QA (for supporting async QA);
+    -- We have hidding feature now. So we don't need QA now.
+    new_tab = false,
     ui = {
       layout = {
         size = {
@@ -150,6 +153,17 @@ M = {
         target = "diff",
         opts = { noremap = true, silent = true, desc = "Edit Entire (F)ile" },
         context = {replace_target = "file"}
+      },
+      {
+        mode = { "n", "v" },
+        key = "<LocalLeader>s<m-r>",
+        tpl = "file_edit.json",
+        target = "diff",
+        opts = { noremap = true, silent = true, desc = "Refine Entire (F)ile" },
+        context = {replace_target = "file"},
+        reg = {
+          r = "Please refine the code. Make it more consistent (e.g. consistency among the code, document, annotation, variable naming) and readable(e.g. fix typo, creating meaningful functions) ",
+        },
       },
     },
     tpl_conf = {  -- configure that will affect the rendering of the templates.

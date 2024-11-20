@@ -51,8 +51,8 @@ function M.setup_main_mappings()
   vim.keymap.set(
     { "n", "v" },
     "<LocalLeader>gR",
-    target.resume_popup,
-    { noremap = true, silent = true, desc = "resume last popup" }
+    target.resume_last_dialog,
+    { noremap = true, silent = true, desc = "resume last dialog" }
   )
   vim.keymap.set(
     { "n", "v" },

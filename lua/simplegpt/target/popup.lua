@@ -1,6 +1,4 @@
 local M = {
-  init = false, -- if it is initialized
-  last_pop = nil,
 }
 local utils = require("simplegpt.utils")
 local dialog = require("simplegpt.dialog")
@@ -33,6 +31,7 @@ function M.Popup:build()
 
   -- mount/open the component
   popup:mount()
+  self.nui_obj = popup
 
   -- unmount component when cursor leaves buffer
   -- Dont' do this. It will stop the QA if we run it on another tab.
@@ -47,17 +46,9 @@ function M.Popup:build()
   self:register_keys()
 end
 
-function M.update_last_pop(pop)
-  if M.last_pop ~= nil then
-    -- M.last_pop:unmount()
-  end
-  M.last_pop = pop
-end
-
 function M.build_q_handler(context)
   return function (question)
     local pp = M.Popup(context)
-    M.update_last_pop(pp)
     -- set the filetype of pp  to mark down to enable highlight
     pp:build()
     -- TODO: copy code with regex
@@ -66,18 +57,5 @@ function M.build_q_handler(context)
   end
 end
 
-
-function M.resume_popup()
-  -- TODO: this is not a elegant way to resume the last popup; research more on popup's hide and show feature(maybe from ChatGPT.nvim).
-  -- I just want to hide it. Instead of creating a new one.
-  if M.last_pop ~= nil then
-    M.last_pop.answer_popup:mount()
-    vim.api.nvim_buf_set_lines(M.last_pop.answer_popup.bufnr, 0, -1, false, M.last_pop.full_answer)
-    vim.api.nvim_buf_set_option(M.last_pop.answer_popup.bufnr, 'filetype', 'markdown')
-    -- M.last_pop.answer_popup:show()  -- TODO: can't resume
-    M.last_pop:register_keys()
-    M.last_pop.open_in_new_tab = false
-  end
-end
 
 return M
