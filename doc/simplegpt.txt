@@ -1,4 +1,4 @@
-*simplegpt.txt*          For NVIM v0.8.0         Last change: 2024 November 20
+*simplegpt.txt*          For NVIM v0.8.0         Last change: 2024 November 21
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -71,6 +71,7 @@ make sure your ChatGPT works.
             "nvim-telescope/telescope.nvim",
           },
         },
+        "you-n-g/jinja-engine.nvim",
       },
       config = true,
     },
@@ -95,6 +96,7 @@ make sure your ChatGPT works.
             "nvim-telescope/telescope.nvim",
           },
         },
+        "you-n-g/jinja-engine.nvim",
       },
     })
 <
