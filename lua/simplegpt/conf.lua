@@ -1,4 +1,10 @@
-M = {
+-- (intention design principle) we try to handle
+-- - the output format and context building (main structure) in the conf file (because it is less variable)
+-- - the intention in the varibables/registers
+local intentions = {
+  refine = "Please refine the code. Make it more consistent (e.g., consistency among the code, document, annotation, variable naming), readable (e.g., fix typos), and standard (e.g., follow the coding linting)."
+}
+local M = {
   options  = {},
   defaults = {
     -- TODO: remove the new tab feature if it is not necessary
@@ -155,14 +161,24 @@ M = {
         context = {replace_target = "file"}
       },
       {
-        mode = { "n", "v" },
+        mode = { "n" },
         key = "<LocalLeader>s<m-r>",
         tpl = "file_edit.json",
         target = "diff",
-        opts = { noremap = true, silent = true, desc = "Refine Entire (F)ile" },
+        opts = { noremap = true, silent = true, desc = "(R)efine Entire File" },
         context = {replace_target = "file"},
         reg = {
-          r = "Please refine the code. Make it more consistent (e.g. consistency among the code, document, annotation, variable naming) and readable(e.g. fix typo, creating meaningful functions) ",
+          q = intentions.refine,
+        },
+      },
+      {
+        mode = { "v" },
+        key = "<LocalLeader>s<m-r>",
+        tpl = "file_edit.json",
+        target = "diff",
+        opts = { noremap = true, silent = true, desc = "(R)efine selection" },
+        reg = {
+          q = intentions.refine,
         },
       },
     },

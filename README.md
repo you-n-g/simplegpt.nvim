@@ -33,6 +33,7 @@ This repository is designed to offer a highly customizable and extensible QA int
         "nvim-telescope/telescope.nvim",
       },
     },
+    "you-n-g/jinja-engine.nvim",
   },
   config = true,
 },
@@ -57,6 +58,7 @@ use({
         "nvim-telescope/telescope.nvim",
       },
     },
+    "you-n-g/jinja-engine.nvim",
   },
 })
 ```

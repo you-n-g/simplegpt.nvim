@@ -32,6 +32,7 @@ local plugins = {
           "nvim-telescope/telescope.nvim",
         },
       },
+      "you-n-g/jinja-engine.nvim",
     },
     config = true,
   },

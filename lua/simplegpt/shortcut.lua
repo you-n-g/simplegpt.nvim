@@ -22,7 +22,7 @@ function M.build_func(target)
     end
 
     context.cursor_pos = vim.api.nvim_win_get_cursor(require"simplegpt.utils".get_win_of_buf(context.from_bufnr))
-    context.visual_selection = require"simplegpt.utils".get_visual_selection()
+    context.visual_selection_or_cur_line = require"simplegpt.utils".get_visual_selection()
 
     if require"simplegpt.conf".options.new_tab then
       -- NOTE: it will fail to run tabedit if we are in a unnamed buffer

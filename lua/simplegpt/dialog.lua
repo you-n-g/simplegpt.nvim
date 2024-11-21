@@ -266,7 +266,7 @@ function M.ChatDialog:register_keys(exit_callback)
       end
 
       local from_bufnr = self.context["from_bufnr"]
-      local last_line = self.context.visual_selection["end"].row
+      local last_line = self.context.visual_selection_or_cur_line_or_cur_line["end"].row
       -- Insert `self.full_answer` into from_bufnr after the last line
       vim.api.nvim_buf_set_lines(from_bufnr, last_line, last_line, false, self.full_answer)
 
@@ -288,7 +288,7 @@ function M.ChatDialog:register_keys(exit_callback)
       if self.context.replace_target == "visual" then
         -- Get the range of lines to replace
         local start_line, end_line
-        start_line, end_line = self.context.visual_selection.start.row, self.context.visual_selection["end"].row
+        start_line, end_line = self.context.visual_selection_or_cur_line_or_cur_line.start.row, self.context.visual_selection_or_cur_line_or_cur_line["end"].row
         -- Replace the lines in from_bufnr with `self.full_answer`
         vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, end_line, false, self.full_answer)
       elseif self.context.replace_target == "file" then

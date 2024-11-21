@@ -26,7 +26,7 @@ end
 --- Placeholders are defined as any text enclosed in double curly braces, e.g., "{{placeholder}}".
 --- For example, if the template is "Hello, {{name}}!", the function will return a table containing "name".
 ---@param key_reg : for matching the placeholder name (e.g. ".-", ".", "%l")
----@return table : A table containing all placeholders found in the template.
+---@return table : A table containing all placeholders found in the template(e.g. "q-", "all_buf").
 function M.get_placeholders(key_reg)
   local template = M.get_tpl()
 
@@ -178,13 +178,16 @@ function M.RegQAUI:get_special()
   res["full_content"] = table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), "\n")
 
   -- 2) get the visual content
-  local select_pos = require("simplegpt.utils").get_visual_selection()
-  local start_line = select_pos["start"]["row"] - 1 -- Lua indexing is 0-based
-  local end_line = select_pos["end"]["row"]
-  -- Get the selected lines
-  lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
-  -- Now 'lines' is a table containing all selected lines
-  res["visual"] = table.concat(lines, "\n")
+  local select_pos = require("simplegpt.utils").get_visual_selection(true)
+
+  if select_pos ~= nil then
+    local start_line = select_pos["start"]["row"] - 1 -- Lua indexing is 0-based
+    local end_line = select_pos["end"]["row"]
+    -- Get the selected lines
+    lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
+    -- Now 'lines' is a table containing all selected lines
+    res["visual"] = table.concat(lines, "\n")
+  end
 
   -- 3) Get the filetype of the current buffer
   res["filetype"] = vim.bo.filetype
@@ -214,12 +217,19 @@ end
 
 function M.RegQAUI:get_q()
   local function interp(s, tab)
-    return (s:gsub("({{.-}})", function(w)
-      return tab[w:sub(3, -3)] or w
-    end))
+    -- return (s:gsub("({{.-}})", function(w)
+    --   return tab[w:sub(3, -3)] or w
+    -- end))
+    -- replace all {{%l-}} to {{%l}} in s: e.g. '{{q-}}' -> '{{q}}' to make it suitable for standard jinja template engine
+    s = s:gsub("({{%l-}})", function(w)
+      return w:gsub("-", "")
+    end)
+    return require('jinja').lupa.expand(s, tab)
   end
+
   local ph_keys = {}
   for _, k in ipairs(M.get_placeholders()) do
+    k = k:gsub("-", "") -- when rendering the template, we should remove the "-" in the placeholder
     ph_keys[k] = vim.fn.getreg(k)
   end
   return interp(M.get_tpl(), vim.tbl_extend("force", ph_keys, self.special_dict))

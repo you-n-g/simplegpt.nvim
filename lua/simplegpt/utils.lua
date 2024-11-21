@@ -58,7 +58,11 @@ end
 --
 -- @return table containing the start and end positions of the visual selection
 -- For example, it might return: { start = { row = 1, col = 5 }, ["end"] = { row = 3, col = 20 } }
-function M.get_visual_selection()
+function M.get_visual_selection(return_nil_if_not_visual)
+  if return_nil_if_not_visual and vim.fn.mode() ~= 'v' and vim.fn.mode() ~= 'V' and vim.fn.mode() ~= '' then
+    return nil
+  end
+
   local pos = vim.fn.getpos("v")
   local begin_pos = { row = pos[2], col = pos[3] }
   pos = vim.fn.getpos(".")

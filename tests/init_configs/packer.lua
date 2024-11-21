@@ -28,6 +28,7 @@ require("packer").startup(function()
           "nvim-telescope/telescope.nvim",
         },
       },
+      "you-n-g/jinja-engine.nvim",
     },
   })
 end)
