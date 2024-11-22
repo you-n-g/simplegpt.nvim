@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.0.1...v1.1.0) (2024-11-22)
+
+
+### Features
+
+* improve translate ([38a3698](https://github.com/you-n-g/simplegpt.nvim/commit/38a369824b87b6cae95b8b8d1946bc3b4300fe98))
+* support all buffer ([2dcaef6](https://github.com/you-n-g/simplegpt.nvim/commit/2dcaef68d182bc57a10e859c1b36459b09a46b67))
+* support template engine ([fd79869](https://github.com/you-n-g/simplegpt.nvim/commit/fd7986915b35220d48676e6a5277740e9fe60b82))
+
+
+### Bug Fixes
+
+* use show and hide control the text ([19556d9](https://github.com/you-n-g/simplegpt.nvim/commit/19556d9a9955f3756c6c01f7fc11aa39672d6975))
+* variable naming bug ([7baca7a](https://github.com/you-n-g/simplegpt.nvim/commit/7baca7a41730040b57ca83fa05e230d1d4385999))
+
 ## [1.0.1](https://github.com/you-n-g/simplegpt.nvim/compare/v1.0.0...v1.0.1) (2024-08-02)
 
 
