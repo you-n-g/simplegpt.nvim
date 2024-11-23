@@ -1,5 +1,6 @@
 local utils = require("simplegpt.utils")
-local options = require("simplegpt.conf").options
+local conf = require"simplegpt.conf"
+local options = conf.options
 
 local M = {
   init = false, -- if it is initialized
@@ -25,7 +26,7 @@ end
 function M.BaseDialog:show()
   self.nui_obj:show()
   -- resume some special options (I expect nui take care of it)
-  M.add_winbar(self.all_pops[1].winid, options.base_dialog.key_table)  -- add winbar to the first popup
+  M.add_winbar(self.all_pops[1].winid, conf.get_base_dialog_keymaps())  -- add winbar to the first popup
 end
 
 function M.BaseDialog:hide()
@@ -82,14 +83,14 @@ end
 function M.BaseDialog:register_keys(exit_callback)
   local all_pops = self.all_pops
 
-  local key_table = options.base_dialog.key_table
+  local keymaps = conf.get_base_dialog_keymaps()
 
-  M.add_winbar(self.all_pops[1].winid, key_table)  -- add winbar to the first popup
+  M.add_winbar(self.all_pops[1].winid, keymaps)  -- add winbar to the first popup
 
   -- set keys to escape for all popups
   -- - Quit
   for _, pop in ipairs(all_pops) do
-    pop:map("n", key_table.exit_keys, function()
+    pop:map("n", keymaps.exit_keys, function()
 
       self:quit() -- callback may open new windows. So we quit the windows before callback
 
@@ -107,13 +108,13 @@ function M.BaseDialog:register_keys(exit_callback)
     end
   end
   for i, pop in ipairs(all_pops) do
-    pop:map("n", key_table.cycle_next, _closure_func(i, 1), { noremap = true })
-    pop:map("n", key_table.cycle_prev, _closure_func(i, -1), { noremap = true })
+    pop:map("n", keymaps.cycle_next, _closure_func(i, 1), { noremap = true })
+    pop:map("n", keymaps.cycle_prev, _closure_func(i, -1), { noremap = true })
   end
 
   -- - yank (c)ode
   for _, pop in ipairs(all_pops) do
-    pop:map("n", key_table.yank_code, function()
+    pop:map("n", keymaps.yank_code, function()
       local full_cont = table.concat(vim.api.nvim_buf_get_lines(pop.bufnr, 0, -1, false), "\n")
       local code = extract_code(full_cont, vim.api.nvim_win_get_cursor(pop.winid)[1])
       -- TODO: get a summary of the code (e.g. number of lines and characters)
@@ -130,7 +131,7 @@ function M.BaseDialog:register_keys(exit_callback)
 
   -- Add <C-k> as a shortcut to replace the `pop.bufnr` with the code block that is closest to the cursor
   for _, pop in ipairs(all_pops) do
-    pop:map("n", key_table.extract_code, function()
+    pop:map("n", keymaps.extract_code, function()
       local full_cont = table.concat(vim.api.nvim_buf_get_lines(pop.bufnr, 0, -1, false), "\n")
       local code = extract_code(full_cont, vim.api.nvim_win_get_cursor(pop.winid)[1])
       if code then
@@ -164,7 +165,7 @@ end
 function M.ChatDialog:show()
   M.ChatDialog.super.show(self)
   -- resume some special options (I expect nui take care of it)
-  M.add_winbar(self.all_pops[#(self.all_pops)].winid, options.dialog.key_table)  -- add winbar to the last pop
+  M.add_winbar(self.all_pops[#(self.all_pops)].winid, conf.get_qa_dialog_keymaps())  -- add winbar to the last pop
 end
 
 
@@ -233,7 +234,7 @@ function M.ChatDialog:update_full_answer()
   self.full_answer = vim.api.nvim_buf_get_lines(self.answer_popup.bufnr, 0, -1, false)
 end
 
-function M.add_winbar(winid, key_table)
+function M.add_winbar(winid, keymaps)
     -- Add a winbar to the popup window to display additional information
     if vim.fn.has('nvim-0.8') == 1 then  -- Ensure the version supports winbar
 
@@ -244,8 +245,8 @@ function M.add_winbar(winid, key_table)
       else
         winbar_content = "🎹: "
       end
-      for k, v in pairs(key_table) do
-        winbar_content = winbar_content .. string.format("%s %s|", options.ui_map[k] or k, table.concat(v, ","))
+      for k, v in pairs(keymaps) do
+        winbar_content = winbar_content .. string.format("%s %s|", options.ui.name_map[k] or k, table.concat(v, ","))
       end
       vim.api.nvim_win_set_option(winid, 'winbar', winbar_content)
     end
@@ -254,10 +255,10 @@ end
 function M.ChatDialog:register_keys(exit_callback)
   M.ChatDialog.super.register_keys(self, exit_callback)
 
-  M.add_winbar(self.all_pops[#(self.all_pops)].winid, options.dialog.key_table)  -- add winbar to the last pop
+  M.add_winbar(self.all_pops[#(self.all_pops)].winid, conf.get_qa_dialog_keymaps())  -- add winbar to the last pop
   for _, pop in ipairs(self.all_pops) do
     -- Append full answer: append the response to original buffer
-    pop:map("n", options.dialog.key_table.append_keys, function()
+    pop:map("n", options.dialog.keymaps.append_keys, function()
       self:update_full_answer()  -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
 
       self:quit()  -- callback may open new windows. So we quit the windows before callback
@@ -273,7 +274,7 @@ function M.ChatDialog:register_keys(exit_callback)
     end, { noremap = true })
 
     -- replace the selected buffer (or current line) with the response
-    pop:map("n", options.dialog.key_table.replace_keys, function()
+    pop:map("n", options.dialog.keymaps.replace_keys, function()
       self:update_full_answer()  -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
 
       -- TODO: we can support only inserting the code. It may bring more conveniences.
@@ -297,7 +298,7 @@ function M.ChatDialog:register_keys(exit_callback)
     end, { noremap = true })
 
     -- Yank keys
-    pop:map("n", options.dialog.key_table.yank_keys, function()
+    pop:map("n", options.dialog.keymaps.yank_keys, function()
       require"simplegpt.utils".set_reg(table.concat(self.full_answer, "\n"))
       print("answer Yanked")
     end, { noremap = true })

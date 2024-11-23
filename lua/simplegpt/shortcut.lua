@@ -46,7 +46,11 @@ function M.build_func(target)
 end
 
 M.register_shortcuts = function()
-  for _, s in ipairs(require"simplegpt.conf".options.shortcuts) do
+  local shortcuts = require"simplegpt.conf".options.keymaps.shortcuts
+  for _, s in ipairs(shortcuts.list) do
+    if s.key == nil then
+      s.key = shortcuts.prefix .. s.suffix
+    end
     vim.keymap.set(s.mode, s.key, function()
       loader.load_reg(s.tpl)
 
