@@ -41,6 +41,8 @@ function M.get_placeholders(key_reg)
   for key in template:gmatch(reg) do
     table.insert(keys, key)
   end
+  -- Sort keys lexically
+  table.sort(keys)
   return keys
 end
 
@@ -84,6 +86,23 @@ function M.RegQAUI:update_reg()
 end
 
 function M.RegQAUI:build(callback)
+
+  self.tpl_pop = Popup({
+    enter = true,
+    border = {
+      style = "double",
+      text = {
+        top = "Prompt template:",
+        top_align = "center",
+      },
+    },
+  })
+  vim.api.nvim_buf_set_text(self.tpl_pop.bufnr, 0, 0, 0, 0, vim.split(vim.fn.getreg("t"), "\n"))
+  vim.api.nvim_buf_set_option(self.tpl_pop.bufnr, "filetype", "jinja")
+
+  -- merge self.pop_dict and pop_dict
+  self.all_pops = { self.tpl_pop }
+
   self.pop_dict = {}
   local reg_cnt = 0
   for _, k in ipairs(M.get_placeholders()) do
@@ -98,33 +117,14 @@ function M.RegQAUI:build(callback)
     })
     reg_cnt = reg_cnt + 1
     vim.api.nvim_buf_set_text(self.pop_dict[k].bufnr, 0, 0, 0, 0, vim.split(vim.fn.getreg(k), "\n"))
-  end
-
-  local size = math.floor(100 / (reg_cnt + 1))
-
-  self.tpl_pop = Popup({
-    enter = true,
-    border = {
-      style = "double",
-      text = {
-        top = "Prompt template:",
-        top_align = "center",
-      },
-    },
-  })
-
-  vim.api.nvim_buf_set_text(self.tpl_pop.bufnr, 0, 0, 0, 0, vim.split(vim.fn.getreg("t"), "\n"))
-
-  -- merge self.pop_dict and pop_dict
-  self.all_pops = { self.tpl_pop }
-  for _, v in pairs(self.pop_dict) do
-    table.insert(self.all_pops, v)
+    table.insert(self.all_pops, self.pop_dict[k])
   end
 
   -- create boxes and layout
+  local size = math.floor(100 / (#self.all_pops))
   local boxes = { Layout.Box(self.tpl_pop, { ["size"] = size .. "%" }) }
 
-  for _, v in pairs(self.pop_dict) do
+  for _, v in ipairs({unpack(self.all_pops, 2, #self.all_pops)}) do  -- FIXME: it will not work in lua 5.2
     table.insert(boxes, Layout.Box(v, { ["size"] = size .. "%" }))
   end
 
