@@ -267,7 +267,7 @@ function M.ChatDialog:register_keys(exit_callback)
       end
 
       local from_bufnr = self.context["from_bufnr"]
-      local last_line = self.context.visual_selection_or_cur_line_or_cur_line["end"].row
+      local last_line = self.context.visual_selection_or_cur_line["end"].row
       -- Insert `self.full_answer` into from_bufnr after the last line
       vim.api.nvim_buf_set_lines(from_bufnr, last_line, last_line, false, self.full_answer)
 
@@ -299,6 +299,7 @@ function M.ChatDialog:register_keys(exit_callback)
 
     -- Yank keys
     pop:map("n", options.dialog.keymaps.yank_keys, function()
+      self:update_full_answer()  -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
       require"simplegpt.utils".set_reg(table.concat(self.full_answer, "\n"))
       print("answer Yanked")
     end, { noremap = true })
