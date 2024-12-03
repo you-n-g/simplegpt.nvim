@@ -11,6 +11,7 @@ local BASE_DIALOG_KEYMAPS = {
 	"cycle_prev",
 	"yank_code",
 	"extract_code",
+  "show_value",
 }
 local LOCAL_QA_DIALOG_KEYMAPS = {
 	"append_keys",
@@ -42,6 +43,7 @@ local M = {
 		dialog = {
 			-- Dialog keymaps
 			keymaps = {
+				show_value = { "K" }, -- Default key for showing special value
 				-- Base Dialog shortcuts
 				exit_keys = { "q", "<c-c>", "<esc>" },
 				cycle_next = { "<tab>" },
