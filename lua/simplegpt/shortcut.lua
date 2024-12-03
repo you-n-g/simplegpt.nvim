@@ -55,7 +55,7 @@ M.register_shortcuts = function()
       loader.load_reg(s.tpl)
 
       -- Support setting extra reg when loading template
-      if s.reg ~= nil then 
+      if s.reg ~= nil then
         for reg, value in pairs(s.reg) do
           -- Check if `vim.fn.getreg(reg)` contains `value` then skip setting it.
           -- Substring indicates contains. We do not need an exact match.
