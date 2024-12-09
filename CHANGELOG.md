@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.2.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.1.0...v1.2.0) (2024-12-09)
+
+
+### Features
+
+* add condition for error fixing ([2248e1e](https://github.com/you-n-g/simplegpt.nvim/commit/2248e1e9fd6a53aa1f8b9fcb6ed59beffaf3049c))
+* Add show_value keymap and functionality for special value display ([97f4baa](https://github.com/you-n-g/simplegpt.nvim/commit/97f4baa561c71dd3de2c00e19d00a5f9c18548ca))
+* improved translate ([da049f3](https://github.com/you-n-g/simplegpt.nvim/commit/da049f386dbc8b24b23650ece2b01d0e3c22fc65))
+* refactor shortcuts ([5b7b6a3](https://github.com/you-n-g/simplegpt.nvim/commit/5b7b6a3a3dd34d4d11dad8b12eefc7e0d73e2e43))
+
+
+### Bug Fixes
+
+* append naming error ([f546967](https://github.com/you-n-g/simplegpt.nvim/commit/f5469677ded447033a732c66672a1bdd9788345f))
+
 ## [1.1.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.0.1...v1.1.0) (2024-11-22)
 
 
