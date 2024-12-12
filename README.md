@@ -190,6 +190,7 @@ Flag explanation:
         - Quick thought: we can build a ChatGPT session directly.
     - [ ] Anonymous register to avoid confliction;
   - Misc
+    - [ ] Inline selection & following operators
     - [x] Resume last answer.
     - [X] Diff mode
     - [x] Fast copy code in backquotes
@@ -221,7 +222,7 @@ Flag explanation:
       - [x] 🌟🐞For visual selection, the append action will append content after the first line.
   - UI:
     - short cuts
-    - [ ] Help function: You can press `?` to see the help menu for shortcuts.
+    - [x] Help function: You can press `?` to see the help menu for shortcuts.
       - Alternative implementation: [ ] Add shortcuts prompt around the box
     - Add preview of the place holders inline
   - Navigation
