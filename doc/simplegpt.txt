@@ -1,4 +1,4 @@
-*simplegpt.txt*          For NVIM v0.8.0         Last change: 2024 December 09
+*simplegpt.txt*          For NVIM v0.8.0         Last change: 2024 December 12
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -257,6 +257,7 @@ Flag explanation: - 🌟: high priority
                 - Quick thought: we can build a ChatGPT session directly.
         - ☐ Anonymous register to avoid confliction;
     - Misc
+        - ☐ Inline selection & following operators
         - ☒ Resume last answer.
         - ☒ Diff mode
         - ☒ Fast copy code in backquotes
@@ -288,7 +289,7 @@ Flag explanation: - 🌟: high priority
             - ☒ 🌟🐞For visual selection, the append action will append content after the first line.
     - UI:
         - short cuts
-        - ☐ Help function: You can press `?` to see the help menu for shortcuts.
+        - ☒ Help function: You can press `?` to see the help menu for shortcuts.
             - Alternative implementation: [ ] Add shortcuts prompt around the box
         - Add preview of the place holders inline
     - Navigation
