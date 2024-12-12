@@ -102,13 +102,19 @@ local M = {
 						suffix = "c",
 						tpl = "code_complete.json",
 						target = "popup",
+						reg = {
+							q = "Please fix all the errors and complete all the missing feature in the focused part.\nYou don't have to output the complete code. You can output the key part with some extra context."
+						},
 						opts = { noremap = true, silent = true, desc = "(C)omplete Code" },
 					},
 					{
 						mode = { "n", "v" },
 						suffix = "C",
-						tpl = "code_complete_no_explain.json",
+						tpl = "code_complete.json",
 						target = "diff",
+						reg = {
+							q = "Please fix all the errors and complete all the missing feature in the focused part.\nNo extra explanations.\nNo block quotes. DO NOT include three backticks ``` in the code. Try to keep all the comments (You can modify them to make it better).\nKeep original indent so that we can replace the original code with the newly generated one."
+						},
 						opts = { noremap = true, silent = true, desc = "(C)omplete Code no explain" },
 					},
 					{
