@@ -71,7 +71,8 @@ local M = {
         },
       },
     },
-    -- config about building (q)uestions
+    -- custom data path for loading and dumping files
+    custom_template_path = nil,
     q_build = {
       -- repository-level configs
       repo = {

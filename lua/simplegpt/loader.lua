@@ -8,23 +8,50 @@ local previewers = require('telescope.previewers')
 
 local script_path = (debug.getinfo(1, "S").source:sub(2))
 local script_dir = vim.fn.fnamemodify(script_path, ":h")
-local data_path = script_dir .. "/../../qa_tpls/"
+local conf = require("simplegpt.conf")
+local custom_template_path = conf.options.custom_template_path and vim.fn.expand(conf.options.custom_template_path)
 
--- Dump the contents of multiple registers to a file
+if custom_template_path and not vim.loop.fs_stat(custom_template_path) then
+  vim.loop.fs_mkdir(custom_template_path, 493)  -- 493 is the octal representation of 0755
+end
+
+local template_path = script_dir .. "/../../qa_tpls/"
+
 local M = {last_tpl_name = nil}
+
+-- Open the first existing file.
+-- If not exist, return io.open in customized file
+local function try_open_file(fname, mode)
+  local file_path = template_path .. fname
+  local is_new_file = not vim.loop.fs_stat(file_path)
+  local source = "default"
+
+  if is_new_file and custom_template_path then
+    file_path = custom_template_path .. fname
+    is_new_file = not vim.loop.fs_stat(file_path)
+    source = "custom"
+  end
+
+  local file = io.open(file_path, mode)
+  print(file_path, is_new_file)
+  return file, file_path, source, is_new_file
+end
 
 function M.dump_reg(fname)
   local reg_values = {}
-  local registers = tpl_api.get_placeholders("%l") -- only dump the registers with single letter. Placehodlers like {{q-}} will not be dumped
+  local registers = tpl_api.get_placeholders("%l")
   table.insert(registers, "t")
   for _, reg in ipairs(registers) do
     reg_values[reg] = vim.fn.getreg(reg)
   end
-  local file = io.open(data_path .. fname, "w")
-  if file ~= nil then
-    file:write(vim.fn.json_encode(reg_values)) -- {indent = true} does not work...
+
+  local file, file_path, source = try_open_file(fname, "w")
+  if file then
+    file:write(vim.fn.json_encode(reg_values))
     file:close()
-    print("Registers dumped successfully")
+    print("Registers dumped successfully to " .. source)
+  else
+    print("Failed to open file for writing: " .. fname)
   end
 end
 
@@ -75,17 +102,19 @@ end
 -- Load the contents from a file into multiple registers
 function M.load_reg(fname)
   M.last_tpl_name = fname:gsub("%.json$", "")
-  local file = io.open(data_path .. fname, "r")
-  if file ~= nil then
+  local file, file_path, source = try_open_file(fname, "r")
+  if file then
     local contents = file:read("*all")
     file:close()
     local reg_values = vim.fn.json_decode(contents)
-    if reg_values ~= nil then
+    if reg_values then
       for reg, value in pairs(reg_values) do
         vim.fn.setreg(reg, value)
       end
-      print("Registers loaded successfully")
+      print("Registers loaded successfully from " .. source)
     end
+  else
+    print("Failed to open file for reading: " .. fname)
   end
 end
 
@@ -102,7 +131,7 @@ function M.tele_load_reg()
     end,
     preview_fn = function(self, entry, status)
       -- preview function
-      local file_path = data_path .. entry.value
+      local file_path = template_path .. entry.value
       local file = io.open(file_path, "r")
       if file ~= nil then
         local contents = file:read("*all")
@@ -141,7 +170,7 @@ function M.tele_load_reg()
   })
 
   require("telescope.builtin").find_files({
-    cwd = data_path,
+    cwd = template_path,
     -- previewer = true,
     previewer = my_custom_previewer,
 
