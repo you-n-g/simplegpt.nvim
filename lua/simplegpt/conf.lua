@@ -81,6 +81,7 @@ local M = {
     },
     keymaps = { -- these are keymap that does not belong to a specific conponent like dialog.
       -- shortcuts to actions: directly loading specific template and sent to target(they are often concrete applications)
+      -- Default shortcuts
       shortcuts = {
         -- prefix = "<m-g>", -- I think this would be more convenient.
         prefix = "<LocalLeader>s",
@@ -214,6 +215,18 @@ local M = {
         },
       },
 
+      -- customized shortcuts
+      custom_shortcuts = {
+        -- An exmaple of shorcuts
+        -- ["<LocalLeader>sQ"] = {
+        --   mode = { "n", "v" },
+        --   tpl = "question.json",
+        --   target = "chat",
+        --   opts = { noremap = true, silent = true, desc = "Ask (q)uestion with content" },
+        -- },
+      },
+
+      -- basic features's key
       prefix = "<LocalLeader>g",
       load_reg = {
         suffix = "l",
