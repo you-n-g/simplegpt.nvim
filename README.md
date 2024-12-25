@@ -92,6 +92,41 @@ The question is constructed by rendering a template. The 't' register serves as 
 
 # Features
 
+## Custom Template Path
+
+You can specify a custom template path for loading and dumping files by setting the `custom_template_path` option in your configuration. If the specified path does not exist, it will be created automatically.
+
+Example configuration:
+```lua
+require("simplegpt").setup({
+  custom_template_path = "~/my_custom_templates/"
+})
+```
+
+This will ensure that templates are loaded from and dumped to the specified custom path if it exists. If the custom path is not specified or the file does not exist in the custom path, the default path will be used.
+
+### Registering Custom Shortcuts
+
+You can register custom shortcuts to use templates from the custom template path. Here is an example of how to configure custom shortcuts:
+
+```lua
+require("simplegpt").setup({
+  custom_template_path = "~/my_custom_templates/",
+  keymaps = {
+    custom_shortcuts = {
+      ["<LocalLeader>sq"] = {
+        mode = { "n", "v" },
+        tpl = "my_custom_template.json",
+        target = "popup",
+        opts = { noremap = true, silent = true, desc = "Use custom template" },
+      },
+    },
+  },
+})
+```
+
+In this example, pressing `<LocalLeader>sq` in normal or visual mode will load the `my_custom_template.json` from the custom template path and send it to the popup target.
+
 ## Core workflow
 
 The primary concepts that govern the functionality of this plugin are:
@@ -176,6 +211,19 @@ Registers are of two types:
     - `<LocalLeader>sg`: Fix (g)rammar
     - `<LocalLeader>sd`: Con(d)ense
     - `<LocalLeader>st`: Con(t)inue
+
+## Custom Template Path
+
+You can specify a custom template path for loading and dumping files by setting the `custom_template_path` option in your configuration. If the specified path does not exist, it will be created automatically.
+
+Example configuration:
+```lua
+require("simplegpt").setup({
+  custom_template_path = "~/my_custom_templates/"
+})
+```
+
+This will ensure that templates are loaded from and dumped to the specified custom path if it exists. If the custom path is not specified or the file does not exist in the custom path, the default path will be used.
 
 
 # TODOs

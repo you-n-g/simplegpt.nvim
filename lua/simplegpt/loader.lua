@@ -33,7 +33,6 @@ local function try_open_file(fname, mode)
   end
 
   local file = io.open(file_path, mode)
-  print(file_path, is_new_file)
   return file, file_path, source, is_new_file
 end
 
