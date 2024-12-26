@@ -1,4 +1,4 @@
-*simplegpt.txt*          For NVIM v0.8.0         Last change: 2024 December 21
+*simplegpt.txt*          For NVIM v0.8.0         Last change: 2024 December 26
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -10,9 +10,11 @@ Table of Contents                                *simplegpt-table-of-contents*
   - Console demo                                 |simplegpt-demo-console-demo|
   - Typical workflow & Shortcuts |simplegpt-demo-typical-workflow-&-shortcuts|
 4. Features                                               |simplegpt-features|
+  - Custom Template Path             |simplegpt-features-custom-template-path|
   - Core workflow                           |simplegpt-features-core-workflow|
   - Registers                                   |simplegpt-features-registers|
   - Shutcuts                                     |simplegpt-features-shutcuts|
+  - Custom Template Path             |simplegpt-features-custom-template-path|
 5. TODOs                                                     |simplegpt-todos|
 6. Development                                         |simplegpt-development|
 7. Limitations                                         |simplegpt-limitations|
@@ -68,10 +70,11 @@ make sure your ChatGPT works.
             "MunifTanjim/nui.nvim",
             "nvim-lua/plenary.nvim",
             "folke/trouble.nvim",
-            "ibhagwan/fzf-lua",
+            "nvim-telescope/telescope.nvim",
           },
         },
         "you-n-g/jinja-engine.nvim",
+        "ibhagwan/fzf-lua",
       },
       config = true,
     },
@@ -93,10 +96,11 @@ make sure your ChatGPT works.
             "MunifTanjim/nui.nvim",
             "nvim-lua/plenary.nvim",
             "folke/trouble.nvim",
-            "ibhagwan/fzf-lua",
+            "nvim-telescope/telescope.nvim",
           },
         },
         "you-n-g/jinja-engine.nvim",
+        "ibhagwan/fzf-lua",
       },
     })
 <
@@ -138,6 +142,51 @@ and `{{c}}`.
 
 ==============================================================================
 4. Features                                               *simplegpt-features*
+
+
+CUSTOM TEMPLATE PATH                 *simplegpt-features-custom-template-path*
+
+You can specify a custom template path for loading and dumping files by setting
+the `custom_template_path` option in your configuration. If the specified path
+does not exist, it will be created automatically.
+
+Example configuration:
+
+>lua
+    require("simplegpt").setup({
+      custom_template_path = "~/my_custom_templates/"
+    })
+<
+
+This will ensure that templates are loaded from and dumped to the specified
+custom path if it exists. If the custom path is not specified or the file does
+not exist in the custom path, the default path will be used.
+
+
+REGISTERING CUSTOM SHORTCUTS ~
+
+You can register custom shortcuts to use templates from the custom template
+path. Here is an example of how to configure custom shortcuts:
+
+>lua
+    require("simplegpt").setup({
+      custom_template_path = "~/my_custom_templates/",
+      keymaps = {
+        custom_shortcuts = {
+          ["<LocalLeader>sQ"] = {
+            mode = { "n", "v" },
+            tpl = "my_custom_template.json",
+            target = "popup",
+            opts = { noremap = true, silent = true, desc = "Use custom template" },
+          },
+        },
+      },
+    })
+<
+
+In this example, pressing `<LocalLeader>sQ` in normal or visual mode will load
+the `my_custom_template.json` from the custom template path and send it to the
+popup target.
 
 
 CORE WORKFLOW                               *simplegpt-features-core-workflow*
@@ -242,6 +291,25 @@ SHUTCUTS                                         *simplegpt-features-shutcuts*
         - `<LocalLeader>sg`: Fix (g)rammar
         - `<LocalLeader>sd`: Con(d)ense
         - `<LocalLeader>st`: Con(t)inue
+
+
+CUSTOM TEMPLATE PATH                 *simplegpt-features-custom-template-path*
+
+You can specify a custom template path for loading and dumping files by setting
+the `custom_template_path` option in your configuration. If the specified path
+does not exist, it will be created automatically.
+
+Example configuration:
+
+>lua
+    require("simplegpt").setup({
+      custom_template_path = "~/my_custom_templates/"
+    })
+<
+
+This will ensure that templates are loaded from and dumped to the specified
+custom path if it exists. If the custom path is not specified or the file does
+not exist in the custom path, the default path will be used.
 
 
 ==============================================================================
