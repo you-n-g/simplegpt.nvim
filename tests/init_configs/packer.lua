@@ -29,6 +29,7 @@ require("packer").startup(function()
         },
       },
       "you-n-g/jinja-engine.nvim",
+      "ibhagwan/fzf-lua",
     },
   })
 end)

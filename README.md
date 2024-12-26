@@ -34,6 +34,7 @@ This repository is designed to offer a highly customizable and extensible QA int
       },
     },
     "you-n-g/jinja-engine.nvim",
+    "ibhagwan/fzf-lua",
   },
   config = true,
 },
@@ -59,6 +60,7 @@ use({
       },
     },
     "you-n-g/jinja-engine.nvim",
+    "ibhagwan/fzf-lua",
   },
 })
 ```

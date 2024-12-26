@@ -16,6 +16,11 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
 vim.g.maplocalleader = "\\" -- Same for `maplocalleader`
 
+-- ChatGPT.nvim has a different naming convention for the environment variable
+if vim.env.OPENAI_BASE_URL then
+  vim.env.OPENAI_API_HOST = vim.env.OPENAI_BASE_URL
+end
+
 local plugins = {
   {
     "you-n-g/simplegpt.nvim",
@@ -33,6 +38,7 @@ local plugins = {
         },
       },
       "you-n-g/jinja-engine.nvim",
+      "ibhagwan/fzf-lua",
     },
     config = true,
   },
