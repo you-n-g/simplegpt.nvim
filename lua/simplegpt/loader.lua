@@ -4,7 +4,6 @@
 -- vim.fn.stdpath("data") .. "/config-local",
 
 local tpl_api = require("simplegpt.tpl")
-local previewers = require('telescope.previewers')
 
 local script_path = (debug.getinfo(1, "S").source:sub(2))
 local script_dir = vim.fn.fnamemodify(script_path, ":h")
@@ -100,8 +99,10 @@ end
 
 -- Load the contents from a file into multiple registers
 function M.load_reg(fname)
+  -- If fname is a path, only keep the last part (e.g. the name)
+  fname = vim.fn.fnamemodify(fname, ":t")
   M.last_tpl_name = fname:gsub("%.json$", "")
-  local file, file_path, source = try_open_file(fname, "r")
+  local file, _, source = try_open_file(fname, "r")
   if file then
     local contents = file:read("*all")
     file:close()
@@ -110,77 +111,57 @@ function M.load_reg(fname)
       for reg, value in pairs(reg_values) do
         vim.fn.setreg(reg, value)
       end
-      print("Registers loaded successfully from " .. source)
+      if source then
+        print("Registers loaded successfully from " .. source)
+      end
     end
   else
     print("Failed to open file for reading: " .. fname)
   end
 end
 
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-
+-- Specialized head previewer
+-- Previewer.head = Previewer.cmd:extend()
+--
+-- function Previewer.head:new(o, opts)
+--   Previewer.head.super.new(self, o, opts)
+--   return self
+-- end
+--
+-- function Previewer.head:cmdline(o)
+--   o = o or {}
+--   o.action = o.action or self:action(o)
+--   local lines = "--lines=-0"
+--   -- print all lines instead
+--   -- if self.opts.line_field_index then
+--   --   lines = string.format("--lines=%s", self.opts.line_field_index)
+--   -- end
+--   return self:format_cmd(self.cmd, self.args, o.action, lines)
+-- end
 
 function M.tele_load_reg()
-  --- preview json as mark down file
-  local my_custom_previewer = previewers.new({
-    -- define your custom previewer here
-    setup = function()
-      -- setup function
-    end,
-    preview_fn = function(self, entry, status)
-      -- preview function
-      local file_path = template_path .. entry.value
-      local file = io.open(file_path, "r")
-      if file ~= nil then
-        local contents = file:read("*all")
-        file:close()
-        local tpl_json = vim.fn.json_decode(contents)
-        if tpl_json ~= nil then
-          -- set the previewer's content
-          local preview_bufnr = status.preview_bufnr
-          local new_content = {}
-          for _, k in ipairs(tpl_api.key_sort(tpl_json)) do  -- TODO: sort the tpl_json by keys, and put T at the first
-            table.insert(new_content, "# " .. k)
-            for _, line in ipairs(vim.split(tpl_json[k], "\n")) do
-              table.insert(new_content, line)
-            end
-            table.insert(new_content, "")  -- insert a new line for each key pair
-          end
-          vim.api.nvim_buf_set_lines(preview_bufnr, 0, -1, false, new_content)
-          vim.api.nvim_buf_set_option(preview_bufnr, 'filetype', 'markdown')
+  --- preview json as markdown file
 
-          -- NOTE: some editor may support conceallevel, you can use it to hide the json syntax
-          -- set the conceallevel of the preview window
-          local tabpage = vim.api.nvim_get_current_tabpage()
-          local wins = vim.api.nvim_tabpage_list_wins(tabpage)
-          for _, win in ipairs(wins) do  -- walk all windows in the current tabpage to get the preview window
-            if vim.api.nvim_win_get_buf(win) == preview_bufnr then
-              vim.api.nvim_win_set_option(win, 'conceallevel', 0)
-              break
-            end
-          end
-        end
-      end
-    end,
-    teardown = function()
-      -- teardown function
-    end,
-  })
+  local search_paths = { string.format("'%s'", template_path) }
+  if custom_template_path then
+    table.insert(search_paths, string.format("'%s'", custom_template_path))
+  end
 
-  require("telescope.builtin").find_files({
-    cwd = template_path,
-    -- previewer = true,
-    previewer = my_custom_previewer,
+  local cmd = "find " .. table.concat(search_paths, " ") .. " -type f"
 
-    attach_mappings = function(_, map)
-      map("i", "<CR>", function(prompt_bufnr)
-        local selection = action_state.get_selected_entry(prompt_bufnr)
-        actions.close(prompt_bufnr)
-        M.load_reg(selection.value)
-      end)
-      return true
-    end,
+  require('fzf-lua').files({
+    search_dirs = search_paths,
+    -- cmd = "ls " .. table.concat(search_paths, " "),
+    cmd = cmd,
+    -- cwd = template_path,
+    -- previewer = my_custom_previewer,
+    -- fzf --preview 'jq -r '\''def to_markdown: . as $in | if type == "object" then to_entries | map("## \(.key)\n" + (if .value | type == "object" then (.value | to_markdown) else "- **\(.key)**: \(.value|tostring)" end)) | .[] else "- **\($in|tostring)**" end; . | to_markdown'\'' {}' --preview-window=right:60%
+    -- previewer = ...,  -- TODO: add json to markdown previewer
+    actions = {
+      ["default"] = function(selected)
+        M.load_reg(selected[1])
+      end,
+    },
   })
 end
 

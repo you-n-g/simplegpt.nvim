@@ -114,7 +114,7 @@ require("simplegpt").setup({
   custom_template_path = "~/my_custom_templates/",
   keymaps = {
     custom_shortcuts = {
-      ["<LocalLeader>sq"] = {
+      ["<LocalLeader>sQ"] = {
         mode = { "n", "v" },
         tpl = "my_custom_template.json",
         target = "popup",
@@ -125,7 +125,7 @@ require("simplegpt").setup({
 })
 ```
 
-In this example, pressing `<LocalLeader>sq` in normal or visual mode will load the `my_custom_template.json` from the custom template path and send it to the popup target.
+In this example, pressing `<LocalLeader>sQ` in normal or visual mode will load the `my_custom_template.json` from the custom template path and send it to the popup target.
 
 ## Core workflow
 
