@@ -72,7 +72,7 @@ local M = {
           "<C-y>",
         },
         -- - chat with current context
-        chat_keys = { "<C-c>" },
+        chat_keys = { "<m-c>" },
       },
     },
     -- custom data path for loading and dumping files

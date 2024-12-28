@@ -185,30 +185,31 @@ Registers are of two types:
 - Dialog shortcuts:
   - For all dialogs
     - `{"q", "<C-c>", "<esc>"}`: exit the dialog;
-    - `{"C-k"}` Copy code in triple backquotes of current buffer;
+    - `{"<C-k>"}` Copy code in triple backquotes of current buffer;
   - For only `ChatDialog` (The dialog that are able to get response)
-    - `{"C-a"}`: Append the response to current meeting.
-    - `{"C-y"}`: Copy the full response to the clipboard.
-    - `{"C-r"}`: Replace the selected visual text or current line.
-    - `{"C-c"}`: 
+    - `{"<C-a>"}`: Append the response to current meeting.
+    - `{"<C-y>"}`: Copy the full response to the clipboard.
+    - `{"<C-r>"}`: Replace the selected visual text or current line.
+    - `{"<m-c>"}`: 
       - Chat with current conversation context.
       - This is a multi-rounds conversation. The new response will replace the current response.
+      - Instruction Editing: Modify instructions in real-time to refine responses.
 - Normal shortcuts start with `<LocalLeader>g`
-  - Register operations
+  - Register operations:
     - `<LocalLeader>gl`: load registers
     - `<LocalLeader>gD`: dump registers
     - `<LocalLeader>ge`: edit registers
-  - Send to target
+  - Send to target:
     - `<LocalLeader>gs`: send question to clipboard
     - `<LocalLeader>gc`: send question to ChatGPT
     - `<LocalLeader>gr`: send to get direct response
     - `<LocalLeader>gd`: send to get response with diff
-  - Other operations
+  - Other operations:
     - `<LocalLeader>gR`: resume last popup
     - `<LocalLeader>gp`: load current file to reg
     - `<LocalLeader>gP`: append current file to reg
 - Shortcuts for combined actions:  Loading template + send to target
-  - By default, they start with `<LocalLeader>s`.
+  - By default, they start with `<LocalLeader>s`
   - [Full list of shortcuts](lua/simplegpt/conf.lua#L25)
     - `<LocalLeader>sr`: (R)ewrite Text
     - `<LocalLeader>sc`: (C)omplete Code

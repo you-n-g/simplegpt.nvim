@@ -1,5 +1,5 @@
 local utils = require("simplegpt.utils")
-local conf = require"simplegpt.conf"
+local conf = require("simplegpt.conf")
 local options = conf.options
 
 local M = {
@@ -251,11 +251,18 @@ function M.add_winbar(winid, keymaps)
         winbar_content = "🎹: "
       end
       for k, v in pairs(keymaps) do
-        winbar_content = winbar_content .. string.format("%s %s|", options.ui.name_map[k] or k, table.concat(v, ","))
+        winbar_content = winbar_content .. string.format("%%#WinBarKey#%s %%#WinBarValue#%s%%#WinBarKey#|", options.ui.name_map[k] or k, table.concat(v, ","))
       end
       vim.api.nvim_win_set_option(winid, 'winbar', winbar_content)
     end
 end
+
+-- Add the following highlight groups in your Neovim configuration to customize the appearance
+vim.cmd([[
+  " highlight WinBarKey guifg=#FFD700 gui=bold
+  highlight link WinBarKey Comment
+  highlight link WinBarValue Function
+]])
 
 function M.ChatDialog:register_keys(exit_callback)
   M.ChatDialog.super.register_keys(self, exit_callback)
@@ -310,7 +317,7 @@ function M.ChatDialog:register_keys(exit_callback)
     end, { noremap = true })
 
     -- Add key mapping for continuing conversation
-    pop:map("n", options.dialog.keymaps.chat_keys or "<C-n>", function()
+    pop:map("n", options.dialog.keymaps.chat_keys, function()
       local Input = require("nui.input")
       local event = require("nui.utils.autocmd").event
 
