@@ -1,4 +1,4 @@
-*simplegpt.txt*          For NVIM v0.8.0         Last change: 2024 December 26
+*simplegpt.txt*          For NVIM v0.8.0         Last change: 2024 December 28
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -269,6 +269,9 @@ SHUTCUTS                                         *simplegpt-features-shutcuts*
         - `{"C-a"}`: Append the response to current meeting.
         - `{"C-y"}`: Copy the full response to the clipboard.
         - `{"C-r"}`: Replace the selected visual text or current line.
+        - `{"C-c"}`:
+            - Chat with current conversation context.
+            - This is a multi-rounds conversation. The new response will replace the current response.
 - Normal shortcuts start with `<LocalLeader>g`
     - Register operations
         - `<LocalLeader>gl`: load registers
@@ -319,9 +322,9 @@ Flag explanation: - 🌟: high priority
 
 - TODOs
     - Basic:
-        - ☐ Conversations
-            - ☐ Supporting multi-rounds conversation (I think it would be easier to control the output by multi-rounds demonstration)
-            - ☐ Converting current response to a new conversation.
+        - ☒ Conversations
+            - ☒ Supporting multi-rounds conversation with context
+            - ☐ Converting current response to a new conversation template
                 - Quick thought: we can build a ChatGPT session directly.
         - ☐ Anonymous register to avoid confliction;
     - Misc
