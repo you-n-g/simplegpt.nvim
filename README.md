@@ -190,7 +190,9 @@ Registers are of two types:
     - `{"C-a"}`: Append the response to current meeting.
     - `{"C-y"}`: Copy the full response to the clipboard.
     - `{"C-r"}`: Replace the selected visual text or current line.
-
+    - `{"C-c"}`: 
+      - Chat with current conversation context.
+      - This is a multi-rounds conversation. The new response will replace the current response.
 - Normal shortcuts start with `<LocalLeader>g`
   - Register operations
     - `<LocalLeader>gl`: load registers
@@ -234,9 +236,9 @@ Flag explanation:
 
 - TODOs
   - Basic:
-    - [ ] Conversations
-      - [ ] Supporting multi-rounds conversation (I think it would be easier to control the output by multi-rounds demonstration)
-      - [ ] Converting current response to a new conversation.
+    - [x] Conversations
+      - [x] Supporting multi-rounds conversation with context
+      - [ ] Converting current response to a new conversation template
         - Quick thought: we can build a ChatGPT session directly.
     - [ ] Anonymous register to avoid confliction;
   - Misc

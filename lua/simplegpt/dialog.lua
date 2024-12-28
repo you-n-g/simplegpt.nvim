@@ -13,6 +13,9 @@ function M.BaseDialog:ctor(context)
   self.nui_obj = nil  -- subclass should assign this object
   self.all_pops = {}  -- all_popups will be a list table
   -- self.quit_action = "quit"
+
+  require"simplegpt.target".set_last_dialog(self)
+  self.conversation = {}
 end
 
 function M.BaseDialog:quit()
@@ -20,7 +23,6 @@ function M.BaseDialog:quit()
   -- vim.cmd("q")
   -- self.nui_obj:unmount() -- you can't use umount here. It will make the buffer disappear
   self.nui_obj:hide()
-  require"simplegpt.target".set_last_dialog(self)
 end
 
 function M.BaseDialog:show()
@@ -170,21 +172,25 @@ end
 
 
 function M.ChatDialog:call(question)
-
   -- NOTE: we have to initial ChatGPT.nvim at least once to make the settings effective
   -- FIXME: But if we put it in target/init.lua, it will not work in packer.
   local Settings = require("chatgpt.settings")
   if not M.init then
-    Settings.get_settings_panel("chat_completions", require("chatgpt.config").options.openai_params) -- call to make  Settings.params exists
+    Settings.get_settings_panel("chat_completions", require("chatgpt.config").options.openai_params) -- call to make Settings.params exists
     M.init = true
   end
 
-  local messages = {
-    { content = question, role = "user" },
-  }
+  -- Save the question to conversation history
+  table.insert(self.conversation, { content = question, role = "user" })
+
+  local messages = vim.deepcopy(self.conversation)  -- Create a copy of the full conversation
 
   local params = vim.tbl_extend("keep", { stream = true, messages = messages }, require("chatgpt.settings").params)
   local popup = self.answer_popup -- add it to namespace to support should_stop & cb
+  local current_answer = "" -- Track the complete answer
+
+  -- Clear the answer popup buffer before starting new response
+  vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, {""})
 
   local function should_stop()
     if popup.bufnr == nil then
@@ -195,22 +201,13 @@ function M.ChatDialog:call(question)
   end
 
   local function cb(answer, state)
-    -- TODO: add processing to title
-    -- if state is START or CONTINUE, append answer to popup.bufnr.
-    -- Please note that a single line may come via multiple times
-
-    -- set self.popup's title to "state"
-    -- self.popup.border.text = {top = state}
-
-    if popup.border.winid ~= nil then
-      popup.border:set_text("top", "State: " .. state, "center")
-      popup:update_layout()
-    end
-
     if state == "START" or state == "CONTINUE" then
+      -- Accumulate the complete answer
+      current_answer = current_answer .. answer
+
       local line_count = vim.api.nvim_buf_line_count(popup.bufnr)
       local last_line = vim.api.nvim_buf_get_lines(popup.bufnr, line_count - 1, line_count, false)[1]
-      -- TODO: if answer contains "\n" or "\r", break it and creat multipe
+      -- if answer contains "\n" or "\r", break it and creat multipe
       local lines = vim.split(answer, "\n")
       for i, line in ipairs(lines) do
         if i == 1 then
@@ -224,6 +221,14 @@ function M.ChatDialog:call(question)
       end
 
       self:update_full_answer()
+    elseif state == "END" then
+      -- Save the complete answer to conversation history
+      table.insert(self.conversation, { content = current_answer, role = "assistant" })
+    end
+
+    if popup.border.winid ~= nil then
+      popup.border:set_text("top", "State: " .. state, "center")
+      popup:update_layout()
     end
   end
 
@@ -303,6 +308,48 @@ function M.ChatDialog:register_keys(exit_callback)
       require"simplegpt.utils".set_reg(table.concat(self.full_answer, "\n"))
       print("answer Yanked")
     end, { noremap = true })
+
+    -- Add key mapping for continuing conversation
+    pop:map("n", options.dialog.keymaps.chat_keys or "<C-n>", function()
+      local Input = require("nui.input")
+      local event = require("nui.utils.autocmd").event
+
+      local input = Input({
+        position = "50%",
+        size = { width = 60 },
+        border = {
+          style = "single",
+          text = {
+            top = "[Chat to Continue Conversation]",
+            top_align = "center",
+          },
+        },
+        win_options = {
+          winhighlight = "Normal:Normal,FloatBorder:Normal",
+        },
+        zindex = 70,  -- Add higher zindex to ensure it appears on top
+      }, {
+        prompt = "> ",
+        on_close = function()
+          print("Input Cancelled")
+        end,
+        on_submit = function(value)
+          if value and value ~= "" then
+            -- Call API with the new input
+            self:call(value)
+          end
+        end,
+      })
+
+      -- mount/open the component
+      input:mount()
+
+      -- unmount component when cursor leaves buffer
+      input:on(event.BufLeave, function()
+        input:unmount()
+      end)
+    end, { noremap = true })
+    
   end
 end
 

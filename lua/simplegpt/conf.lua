@@ -22,6 +22,7 @@ local LOCAL_QA_DIALOG_KEYMAPS = {
   "append_keys",
   "replace_keys",
   "yank_keys",
+  "chat_keys",
 }
 
 local M = {
@@ -43,6 +44,7 @@ local M = {
         append_keys = "append",
         replace_keys = "replace",
         yank_keys = "yank",
+        chat_keys = "chat",
       },
     },
     dialog = {
@@ -69,6 +71,8 @@ local M = {
         yank_keys = {
           "<C-y>",
         },
+        -- - chat with current context
+        chat_keys = { "<C-c>" },
       },
     },
     -- custom data path for loading and dumping files
