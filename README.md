@@ -96,6 +96,7 @@ The question is constructed by rendering a template. The 't' register serves as 
 
 ## Custom Template Path
 
+### Setting a Custom Template Path
 You can specify a custom template path for loading and dumping files by setting the `custom_template_path` option in your configuration. If the specified path does not exist, it will be created automatically.
 
 Example configuration:
@@ -104,9 +105,38 @@ require("simplegpt").setup({
   custom_template_path = "~/my_custom_templates/"
 })
 ```
+When you set a custom_template_path:
+- If a template is specified and it exists in the custom path, it will be loaded from and saved to that path.
+- If the template file doesn't exist in the custom path, a new file will be created there when you save the registers.
 
-This will ensure that templates are loaded from and dumped to the specified custom path if it exists. If the custom path is not specified or the file does not exist in the custom path, the default path will be used.
+### Steps to create a new template
 
+#### Creating the template directly from file
+
+1. **Create a Template File**: Navigate to your custom template path and create a `.json` file.
+
+2. **Define Template Structure**: Add your template with placeholders:
+   ```json
+   {
+     "t": "I am working on a {{filetype}} file. The content is: {{content}}. Selected lines: {{visual}}. Question: {{q}}."
+   }
+   ```
+
+3. **Save**: Save the file in `custom_template_path`.
+
+#### Creating the Template in Vim
+
+1. **Set the 't' Register**: In Vim, set the 't' register:
+   ```vim
+   " setting it with command
+   :let @t = "I am working on a {{filetype}} file. The content is: {{content}}. Selected lines: {{visual}}. Question: {{q}}."
+   " or use `"ty` to copy the content to the 't' register
+   ```
+
+2. **Dump the Register**: Use the shortcut to dump the 't' register:
+   ```vim
+   :<LocalLeader>gD
+   ```
 ### Registering Custom Shortcuts
 
 You can register custom shortcuts to use templates from the custom template path. Here is an example of how to configure custom shortcuts:
@@ -172,29 +202,51 @@ Registers are of two types:
 
 
 ### Supported special registers
-| key      | meaning                                                     |
-| -        | -                                                           |
-| content  | the whole file content                                      |
-| filetype | the filetype of the file                                    |
-| visual   | the selected lines                                          |
-| context  | the nearby context of the selected line(10 lines up & down) |
+| key          | meaning                                                     |
+| -            | -                                                           |
+| content      | Partial file content around cursor (configurable length)    |
+| full_content | The complete file content                                   |
+| filetype     | The filetype of the current buffer                         |
+| visual       | The selected lines in visual mode                          |
+| context      | The nearby context of cursor (configurable lines up/down)  |
+| all_buf      | Content of all loaded buffers with files on disk          |
 
+### Template Engine
 
+SimpleGPT uses a Jinja-like template engine ([jinja-engine.nvim](https://github.com/you-n-g/jinja-engine.nvim)) to power its template system:
+
+- **Variable Interpolation**: Access registers using `{{register_name}}` syntax
+  ```json
+  {
+    "t": "I am working on a {{filetype}} file. The content is: {{content}}. Selected lines: {{visual}}. Question: {{q}}."
+  }
+  ```
+
+- **Control Structures**: Use Jinja-style control flow
+  ```jinja
+  {% if visual %}Selected: {{visual}}{% else %}No selection{% endif %}
+  ```
+
+The template engine provides familiar Jinja-style syntax while being fully integrated with Neovim.
 
 ## Shutcuts
 - Dialog shortcuts:
   - For all dialogs
-    - `{"q", "<C-c>", "<esc>"}`: exit the dialog;
-    - `{"<C-k>"}` Copy code in triple backquotes of current buffer;
-  - For only `ChatDialog` (The dialog that are able to get response)
-    - `{"<C-a>"}`: Append the response to current meeting.
-    - `{"<C-y>"}`: Copy the full response to the clipboard.
-    - `{"<C-r>"}`: Replace the selected visual text or current line.
-    - `{"<m-c>"}`: 
-      - Chat with current conversation context.
-      - This is a multi-rounds conversation. The new response will replace the current response.
-      - Instruction Editing: Modify instructions in real-time to refine responses.
-- Normal shortcuts start with `<LocalLeader>g`
+    - `{"q", "<C-c>", "<esc>"}`: Exit the dialog
+    - `{"<C-k>"}`: Extract code block closest to cursor
+    - `{"<C-j>"}`: Cycle to next window
+    - `{"<C-h>"}`: Cycle to previous window
+    - `{"<C-s>"}`: Save registers (for template editing only)
+    - `K`: Show special value for placeholder under cursor (for template editing only)
+  - For `ChatDialog` (The dialog that can get responses)
+    - `{"<C-a>"}`: Append response to original buffer after selection/current line
+    - `{"<C-y>"}`: Copy full response to clipboard
+    - `{"<C-r>"}`: Replace selected text/current line with response
+    - `{"<m-c>"}`: Instruction Editing:
+      - Continue conversation with current context
+      - Opens input prompt for follow-up questions
+      - New response replaces current response
+- Normal shortcuts start with `<LocalLeader>g` (You can change it by setting `keymaps.prefix` when you setup the plugin)
   - Register operations:
     - `<LocalLeader>gl`: load registers
     - `<LocalLeader>gD`: dump registers
@@ -209,13 +261,30 @@ Registers are of two types:
     - `<LocalLeader>gp`: load current file to reg
     - `<LocalLeader>gP`: append current file to reg
 - Shortcuts for combined actions:  Loading template + send to target
-  - By default, they start with `<LocalLeader>s`
+  - By default, they start with `<LocalLeader>s` (You can change it by setting `keymaps.shortcuts.prefix` when you setup the plugin)
   - [Full list of shortcuts](lua/simplegpt/conf.lua#L25)
     - `<LocalLeader>sr`: (R)ewrite Text
     - `<LocalLeader>sc`: (C)omplete Code
     - `<LocalLeader>sg`: Fix (g)rammar
     - `<LocalLeader>sd`: Con(d)ense
     - `<LocalLeader>st`: Con(t)inue
+
+An example to change the shortcuts prefix in lazy.nvim:
+```lua
+{
+  "you-n-g/simplegpt.nvim",
+  --- ... other configurations
+  opts = {
+    keymaps = {
+      shortcuts = {
+        prefix = "<m-g>",
+      },
+      prefix = "<m-g><m-g>",
+    },
+  },
+  --- ... other configurations
+}
+```
 
 ## Custom Template Path
 
@@ -239,8 +308,9 @@ Flag explanation:
   - Basic:
     - [x] Conversations
       - [x] Supporting multi-rounds conversation with context
-      - [ ] Converting current response to a new conversation template
+      - [/] Converting current response to a new conversation template
         - Quick thought: we can build a ChatGPT session directly.
+        - Chat Conversation is useful enough, so we cancel this feature.
     - [ ] Anonymous register to avoid confliction;
   - Misc
     - [ ] Inline selection & following operators
