@@ -1,14 +1,15 @@
-*simplegpt.txt*          For NVIM v0.8.0         Last change: 2024 December 28
+*simplegpt.txt*          For NVIM v0.8.0         Last change: 2024 December 31
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
 
 1. 🤏 SimpleGPT                                   |simplegpt-🤏-simplegpt|
-  - Motivation of this plugin|simplegpt-🤏-simplegpt-motivation-of-this-plugin|
+  - Design Philosophy             |simplegpt-🤏-simplegpt-design-philosophy|
 2. Installation                                       |simplegpt-installation|
-3. Demo                                                       |simplegpt-demo|
-  - Console demo                                 |simplegpt-demo-console-demo|
-  - Typical workflow & Shortcuts |simplegpt-demo-typical-workflow-&-shortcuts|
+3. Demos                                                     |simplegpt-demos|
+  - Console demo                                |simplegpt-demos-console-demo|
+  - Tools Gallery                              |simplegpt-demos-tools-gallery|
+  - Typical workflow & Shortcuts|simplegpt-demos-typical-workflow-&-shortcuts|
 4. Features                                               |simplegpt-features|
   - Custom Template Path             |simplegpt-features-custom-template-path|
   - Core workflow                           |simplegpt-features-core-workflow|
@@ -27,27 +28,42 @@ Table of Contents                                *simplegpt-table-of-contents*
 <https://github.com/marketplace/actions/mega-linter>
 <https://github.com/kdheepak/panvimdoc>
 
-🤏SimpleGPT is a Vim plugin designed to provide a simple yet flexible way to:
-- Construct and send questions to ChatGPT - Present the response in the most
-convenient manner.
+🤏SimpleGPT is a Vim plugin designed to provide a simple yet flexible way to
+customize your prompts to for your tasks.
+
+- Why 🤏SimpleGPT: **You need customized prompts for your tasks**.
+    - AI Coding Plugins didn’t provide support for every scenario.
+        - General tasks beyond coding:
+            - Article writing.
+            - Reading, notetaking, summarizing.
+            - Translating.
+    - Even for specific tasks that AI Coding supports, using a customized prompt and workflow is often more effective and smooth.
 
 
-MOTIVATION OF THIS PLUGIN *simplegpt-🤏-simplegpt-motivation-of-this-plugin*
+DESIGN PHILOSOPHY                 *simplegpt-🤏-simplegpt-design-philosophy*
 
-Though we have |simplegpt-a-lot-of-chatgpt-plugins| to leverage the power of
-ChatGPT in Vim, I still find it hard to locate a handy one that completely fits
-my workflow.
+🤏SimpleGPT’s efforts can be categorized into the following parts: - Create
+your own prompt templates using a jinja template engine. - Construct questions
+based on the template and the current context followed by multi-round chat
+instruction. - Present the response in the most convenient way (we provide
+options like diff, popup; replace, append).
 
-After thinking about it, I found that the main reason is that the most
-important part of my workflow is missing in existing plugins: **Fast editing of
-questions based on my current status**!!
+This allows you to easily build a LLM-based toolbox with 🤏SimpleGPT.
 
-So, **quickly editing the question template and building the question** is the
-most important part of my workflow. Existing plugins are not convenient enough
-for this and focus more on the Chat UI.
+We provide a tools gallery for basic usage, which also serves as examples for
+further customization.
 
-This repository is designed to offer a highly customizable and extensible QA
-interaction with ChatGPT in the simplest way possible.
+  Tool               Config   Demo
+  ------------------ -------- ------
+  Grammar fixing              
+  Text Rewriting              
+  Code completing             
+  Code Explanation            
+  Bug Fixing                  
+  Translation                 
+  Dictionary                  
+  Reading                     
+TODO：More tools are coming soon.
 
 
 ==============================================================================
@@ -56,6 +72,8 @@ interaction with ChatGPT in the simplest way possible.
 ⚠️Please follow the installation guide of ChatGPT.nvim
 <https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation> to
 make sure your ChatGPT works.
+
+You can use `:ChatGPT` to start a chat and verify if it is working.
 
 >lua
     -- Lazy.nvim
@@ -118,10 +136,10 @@ as an example.
 
 
 ==============================================================================
-3. Demo                                                       *simplegpt-demo*
+3. Demos                                                     *simplegpt-demos*
 
 
-CONSOLE DEMO                                     *simplegpt-demo-console-demo*
+CONSOLE DEMO                                    *simplegpt-demos-console-demo*
 
 <https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr> - Building a comprehensive
 question using the template mechanism. - Adding ad hoc requirements based on
@@ -130,7 +148,12 @@ the comments into Chinese (special requirements). - The code that the demo is
 based on is here <tests/demo/demo.py>.
 
 
-TYPICAL WORKFLOW & SHORTCUTS     *simplegpt-demo-typical-workflow-&-shortcuts*
+TOOLS GALLERY                                  *simplegpt-demos-tools-gallery*
+
+TODO: coming soon…
+
+
+TYPICAL WORKFLOW & SHORTCUTS    *simplegpt-demos-typical-workflow-&-shortcuts*
 
 I have attempted to summarize the key concepts and manual in one image.
 
@@ -146,6 +169,9 @@ and `{{c}}`.
 
 CUSTOM TEMPLATE PATH                 *simplegpt-features-custom-template-path*
 
+
+SETTING A CUSTOM TEMPLATE PATH ~
+
 You can specify a custom template path for loading and dumping files by setting
 the `custom_template_path` option in your configuration. If the specified path
 does not exist, it will be created automatically.
@@ -158,12 +184,56 @@ Example configuration:
     })
 <
 
-This will ensure that templates are loaded from and dumped to the specified
-custom path if it exists. If the custom path is not specified or the file does
-not exist in the custom path, the default path will be used.
+When you set a custom_template_path: - If a template is specified and it exists
+in the custom path, it will be loaded from and saved to that path. - If the
+template file doesn’t exist in the custom path, a new file will be created
+there when you save the registers.
+
+
+STEPS TO CREATE A NEW TEMPLATE ~
+
+
+CREATING THE TEMPLATE DIRECTLY FROM FILE
+
+1. **Create a Template File**: Navigate to your custom template path and create a
+`.json` file.
+
+
+2. **Define Template Structure**: Add your template with placeholders:
+
+>json
+    {
+      "t": "I am working on a {{filetype}} file. The content is: {{content}}. Selected lines: {{visual}}. Question: {{q}}."
+    }
+<
+
+
+3. **Save**: Save the file in `custom_template_path`.
+
+
+
+
+CREATING THE TEMPLATE IN VIM
+
+1. **Set the ‘t’ Register**: In Vim, set the 't' register:
+
+>vim
+    " setting it with command
+    :let @t = "I am working on a {{filetype}} file. The content is: {{content}}. Selected lines: {{visual}}. Question: {{q}}."
+    " or use `"ty` to copy the content to the 't' register
+<
+
+
+2. **Dump the Register**: Use the shortcut to dump the 't' register:
+
+>vim
+    :<LocalLeader>gD
+<
 
 
 REGISTERING CUSTOM SHORTCUTS ~
+
+
 
 You can register custom shortcuts to use templates from the custom template
 path. Here is an example of how to configure custom shortcuts:
@@ -249,31 +319,61 @@ SUPPORTED SPECIAL REGISTERS ~
   -----------------------------------------------------------------------
   key                                 meaning
   ----------------------------------- -----------------------------------
-  content                             the whole file content
+  content                             Partial file content around cursor
+                                      (configurable length)
 
-  filetype                            the filetype of the file
+  full_content                        The complete file content
 
-  visual                              the selected lines
+  filetype                            The filetype of the current buffer
 
-  context                             the nearby context of the selected
-                                      line(10 lines up & down)
+  visual                              The selected lines in visual mode
+
+  context                             The nearby context of cursor
+                                      (configurable lines up/down)
+
+  all_buf                             Content of all loaded buffers with
+                                      files on disk
   -----------------------------------------------------------------------
+
+TEMPLATE ENGINE ~
+
+SimpleGPT uses a Jinja-like template engine (jinja-engine.nvim
+<https://github.com/you-n-g/jinja-engine.nvim>) to power its template system:
+
+- **Variable Interpolation**: Access registers using `{{register_name}}` syntax
+    >json
+        {
+          "t": "I am working on a {{filetype}} file. The content is: {{content}}. Selected lines: {{visual}}. Question: {{q}}."
+        }
+    <
+- **Control Structures**: Use Jinja-style control flow
+    >jinja
+        {% if visual %}Selected: {{visual}}{% else %}No selection{% endif %}
+    <
+
+The template engine provides familiar Jinja-style syntax while being fully
+integrated with Neovim.
+
 
 SHUTCUTS                                         *simplegpt-features-shutcuts*
 
 - Dialog shortcuts:
     - For all dialogs
-        - `{"q", "<C-c>", "<esc>"}`: exit the dialog;
-        - `{"<C-k>"}` Copy code in triple backquotes of current buffer;
-    - For only `ChatDialog` (The dialog that are able to get response)
-        - `{"<C-a>"}`: Append the response to current meeting.
-        - `{"<C-y>"}`: Copy the full response to the clipboard.
-        - `{"<C-r>"}`: Replace the selected visual text or current line.
-        - `{"<m-c>"}`:
-            - Chat with current conversation context.
-            - This is a multi-rounds conversation. The new response will replace the current response.
-            - Instruction Editing: Modify instructions in real-time to refine responses.
-- Normal shortcuts start with `<LocalLeader>g`
+        - `{"q", "<C-c>", "<esc>"}`: Exit the dialog
+        - `{"<C-k>"}`: Extract code block closest to cursor
+        - `{"<C-j>"}`: Cycle to next window
+        - `{"<C-h>"}`: Cycle to previous window
+        - `{"<C-s>"}`: Save registers (for template editing only)
+        - `K`: Show special value for placeholder under cursor (for template editing only)
+    - For `ChatDialog` (The dialog that can get responses)
+        - `{"<C-a>"}`: Append response to original buffer after selection/current line
+        - `{"<C-y>"}`: Copy full response to clipboard
+        - `{"<C-r>"}`: Replace selected text/current line with response
+        - `{"<m-c>"}`: Instruction Editing:
+            - Continue conversation with current context
+            - Opens input prompt for follow-up questions
+            - New response replaces current response
+- Normal shortcuts start with `<LocalLeader>g` (You can change it by setting `keymaps.prefix` when you setup the plugin)
     - Register operations:
         - `<LocalLeader>gl`: load registers
         - `<LocalLeader>gD`: dump registers
@@ -288,13 +388,31 @@ SHUTCUTS                                         *simplegpt-features-shutcuts*
         - `<LocalLeader>gp`: load current file to reg
         - `<LocalLeader>gP`: append current file to reg
 - Shortcuts for combined actions: Loading template + send to target
-    - By default, they start with `<LocalLeader>s`
+    - By default, they start with `<LocalLeader>s` (You can change it by setting `keymaps.shortcuts.prefix` when you setup the plugin)
     - Full list of shortcuts <lua/simplegpt/conf.lua#L25>
         - `<LocalLeader>sr`: (R)ewrite Text
         - `<LocalLeader>sc`: (C)omplete Code
         - `<LocalLeader>sg`: Fix (g)rammar
         - `<LocalLeader>sd`: Con(d)ense
         - `<LocalLeader>st`: Con(t)inue
+
+An example to change the shortcuts prefix in lazy.nvim:
+
+>lua
+    {
+      "you-n-g/simplegpt.nvim",
+      --- ... other configurations
+      opts = {
+        keymaps = {
+          shortcuts = {
+            prefix = "<m-g>",
+          },
+          prefix = "<m-g><m-g>",
+        },
+      },
+      --- ... other configurations
+    }
+<
 
 
 CUSTOM TEMPLATE PATH                 *simplegpt-features-custom-template-path*
@@ -325,8 +443,9 @@ Flag explanation: - 🌟: high priority
     - Basic:
         - ☒ Conversations
             - ☒ Supporting multi-rounds conversation with context
-            - ☐ Converting current response to a new conversation template
+            - [/] Converting current response to a new conversation template
                 - Quick thought: we can build a ChatGPT session directly.
+                - Chat Conversation is useful enough, so we cancel this feature.
         - ☐ Anonymous register to avoid confliction;
     - Misc
         - ☐ Inline selection & following operators
