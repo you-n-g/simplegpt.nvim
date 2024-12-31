@@ -2,21 +2,45 @@
 [![Mega-Linter](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg)](https://github.com/marketplace/actions/mega-linter)
 [![panvimdoc](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg)](https://github.com/kdheepak/panvimdoc)
 
-🤏SimpleGPT is a Vim plugin designed to provide a simple yet flexible way to:
-- Construct and send questions to ChatGPT
-- Present the response in the most convenient manner.
+🤏SimpleGPT is a Vim plugin designed to provide a simple yet flexible way to customize your prompts to for your tasks.
 
-## Motivation of this plugin
-Though we have [a lot of ChatGPT plugins](#related-projects) to leverage the power of ChatGPT in Vim, I still find it hard to locate a handy one that completely fits my workflow.
+- Why 🤏SimpleGPT: **You need customized prompts for your tasks**.
+  - AI Coding Plugins didn't provide support for every scenario.
+    - General tasks beyond coding:
+      - Article writing.
+      - Reading, notetaking, summarizing.
+      - Translating.
+  - Even for specific tasks that AI Coding supports, using a customized prompt and workflow is often more effective and smooth.
 
-After thinking about it, I found that the main reason is that the most important part of my workflow is missing in existing plugins: **Fast editing of questions based on my current status**!!
+## Design Philosophy
 
-So, **quickly editing the question template and building the question** is the most important part of my workflow. Existing plugins are not convenient enough for this and focus more on the Chat UI.
+🤏SimpleGPT's efforts can be categorized into the following parts:
+- Create your own prompt templates using a jinja template engine.
+- Construct questions based on the template and the current context followed by multi-round chat instruction.
+- Present the response in the most convenient way (we provide options like diff, popup; replace, append).
 
-This repository is designed to offer a highly customizable and extensible QA interaction with ChatGPT in the simplest way possible.
+This allows you to easily build a LLM-based toolbox with 🤏SimpleGPT.
+
+We provide a tools gallery for basic usage, which also serves as examples for further customization.
+
+| Tool             | Config | Demo |
+| --               | --     | --   |
+| Grammar fixing   |        |      |
+| Text Rewriting   |        |      |
+| Code completing  |        |      |
+| Code Explanation |        |      |
+| Bug Fixing       |        |      |
+| Translation      |        |      |
+| Dictionary       |        |      |
+| Reading          |        |      |
+
+TODO：More tools are coming soon.
 
 # Installation
 ⚠️Please follow the [installation guide of ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation) to make sure your ChatGPT works.
+
+You can use `:ChatGPT` to start a chat and verify if it is working.
+
 ```lua
 -- Lazy.nvim
 {
@@ -73,13 +97,19 @@ vim.g.maplocalleader = "\\"  -- change the localleader key to \
 More detailed [configuration](lua/simplegpt/conf.lua) are listed here.
 You can find my latest and preferred configuration [here](https://github.com/you-n-g/deploy/blob/master/configs/lazynvim/lua/plugins/gpt.lua) as an example.
 
-# Demo
+# Demos
 ## Console demo
+<!--TODO: core workflow: call tools + instruction editing-->
 [![asciicast](https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr.svg)](https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr)
 - Building a comprehensive question using the template mechanism.
 - Adding ad hoc requirements based on the current context.
   - Implementing the code (default question) and translating the comments into Chinese (special requirements).
 - The code that the demo is based on is [here](tests/demo/demo.py).
+
+
+## Tools Gallery
+
+TODO: coming soon...
 
 
 ## Typical workflow & Shortcuts

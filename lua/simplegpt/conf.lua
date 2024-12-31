@@ -91,16 +91,17 @@ local M = {
         -- prefix = "<m-g>", -- I think this would be more convenient.
         prefix = "<LocalLeader>s",
         list = { -- prefix is not here
+          -- Rewritting does not need giving extra explanations. So we directly send it to diff.
+          -- {
+          --   mode = { "n", "v" },
+          --   suffix = "r",
+          --   tpl = "complete_writing_replace.json",
+          --   target = "popup",
+          --   opts = { noremap = true, silent = true, desc = "(R)ewrite Text" },
+          -- },
           {
             mode = { "n", "v" },
             suffix = "r",
-            tpl = "complete_writing_replace.json",
-            target = "popup",
-            opts = { noremap = true, silent = true, desc = "(R)ewrite Text" },
-          },
-          {
-            mode = { "n", "v" },
-            suffix = "R",
             tpl = "complete_writing_replace.json",
             target = "diff",
             reg = {
@@ -110,7 +111,7 @@ local M = {
           },
           {
             mode = { "n", "v" },
-            suffix = "c",
+            suffix = "C",
             tpl = "code_complete.json",
             target = "popup",
             reg = {
@@ -120,7 +121,7 @@ local M = {
           },
           {
             mode = { "n", "v" },
-            suffix = "C",
+            suffix = "c",
             tpl = "code_complete.json",
             target = "diff",
             reg = {

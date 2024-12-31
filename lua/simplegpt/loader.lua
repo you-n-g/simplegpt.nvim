@@ -81,9 +81,9 @@ function M.input_dump_name()
     prompt = "> ",
     default_value = default_value_fname,
     on_submit = function(value)
+      M.last_tpl_name = value
       local fname = value .. ".json"
       M.dump_reg(fname)
-      M.last_tpl_name = fname
       print("Saved: " .. fname)
     end,
   })
