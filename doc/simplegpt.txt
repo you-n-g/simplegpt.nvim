@@ -25,9 +25,9 @@ Table of Contents                                *simplegpt-table-of-contents*
 <https://github.com/kdheepak/panvimdoc>
 
 🤏SimpleGPT is a Vim plugin designed to provide a simple yet flexible way to
-customize your prompts to for your tasks.
+customize your LLM/ChatGPT prompts to for your tasks.
 
-- Why 🤏SimpleGPT: **You need customized prompts for your tasks**.
+- Why 🤏SimpleGPT: **You need customized LLM/ChatGPT prompts for your tasks**.
     - AI Coding Plugins didn’t provide support for every scenario.
         - General tasks beyond coding:
             - Article writing.
