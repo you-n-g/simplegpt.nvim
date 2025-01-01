@@ -54,23 +54,23 @@ further customization.
   -----------------------------------------------------------------------
   Tool                    Config                  Demo
   ----------------------- ----------------------- -----------------------
-  Grammar fixing                                  
+  Grammar fixing          conf.lua                
 
-  Text Rewriting                                  
+  Text Rewriting          conf.lua                
 
-  Code completing                                 Demo
+  Code completing         conf.lua                Demo
 
-  Code Explanation                                
+  Code Explanation        conf.lua                
 
-  Bug Fixing                                      
+  Bug Fixing              conf.lua                
 
-  Translation with great                          Demo
+  Translation with great  conf.lua                Demo
   formatting                                      
 
-  Dictionary with                                 Demo
+  Dictionary with         conf.lua                Demo
   customized explanation                          
 
-  Reading                                         
+  Reading                 My Config               
   -----------------------------------------------------------------------
 More tools are coming soon.
 
