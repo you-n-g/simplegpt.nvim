@@ -40,7 +40,7 @@ local M = {
         },
       },
       name_map = { -- map the name of features to a more readable name
-        exit_keys = "exit",
+        exit_keys = "exit&continue",
         append_keys = "append",
         replace_keys = "replace",
         yank_keys = "yank",
@@ -77,6 +77,7 @@ local M = {
     },
     -- custom data path for loading and dumping files
     custom_template_path = nil,
+
     q_build = {
       -- repository-level configs
       repo = {
@@ -84,6 +85,7 @@ local M = {
         header = "Below are some relavant files", -- the header for multiple files
       },
     },
+
     keymaps = { -- these are keymap that does not belong to a specific conponent like dialog.
       -- shortcuts to actions: directly loading specific template and sent to target(they are often concrete applications)
       -- Default shortcuts

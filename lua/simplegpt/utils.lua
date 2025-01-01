@@ -50,7 +50,9 @@ end
 ---
 --- Get the visual selection in vim.
 -- This function returns a table with the start and end positions of the visual selection.
--- If it is not in visual mode, it will return the range of current cursor
+-- - In "V" visual mode, it will return the row range of the current cursor along with the current column position.
+-- - In "v" visual mode, it will return the range from the start to the end of the selection.
+-- - In "n" mode, it will return the position of the current cursor.
 --
 -- We don't use  vim.fn.getpos("'<") because:
 -- - https://www.reddit.com/r/neovim/comments/13mfta8/reliably_get_the_visual_selection_range/
@@ -59,7 +61,8 @@ end
 -- @return table containing the start and end positions of the visual selection
 -- For example, it might return: { start = { row = 1, col = 5 }, ["end"] = { row = 3, col = 20 } }
 function M.get_visual_selection(return_nil_if_not_visual)
-  if return_nil_if_not_visual and vim.fn.mode() ~= 'v' and vim.fn.mode() ~= 'V' and vim.fn.mode() ~= '' then
+  local mode = vim.fn.mode()
+  if return_nil_if_not_visual and mode ~= 'v' and mode ~= 'V' and mode ~= '' then
     return nil
   end
 
@@ -68,9 +71,9 @@ function M.get_visual_selection(return_nil_if_not_visual)
   pos = vim.fn.getpos(".")
   local end_pos = { row = pos[2], col = pos[3] }
   if (begin_pos.row < end_pos.row) or ((begin_pos.row == end_pos.row) and (begin_pos.col <= end_pos.col)) then
-    return { start = begin_pos, ["end"] = end_pos }
+    return { start = begin_pos, ["end"] = end_pos, mode = mode}
   else
-    return { start = end_pos, ["end"] = begin_pos }
+    return { start = end_pos, ["end"] = begin_pos, mode = mode}
   end
 end
 

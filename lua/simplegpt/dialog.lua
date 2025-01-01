@@ -70,11 +70,11 @@ local function extract_code(text, cur_line)
   end
   -- If a code block was found, strip the delimiters and return the code
   if recentCodeBlock then
-    local index = string.find(recentCodeBlock, "\n")
+    local index = string.find(recentCodeBlock, "\n")  -- strip the first line
     if index ~= nil then
       recentCodeBlock = string.sub(recentCodeBlock, index + 1)
     end
-    return recentCodeBlock:gsub("```\n", ""):gsub("```", ""):match("^%s*(.-)%s*$")
+    return recentCodeBlock:gsub("```\n", ""):gsub("```", ""):match("^(.-)%s*$")  -- We don't use "^%s*(.-)%s*$", so keep the first indents
   end
   return nil
 end
@@ -300,10 +300,24 @@ function M.ChatDialog:register_keys(exit_callback)
 
       if self.context.replace_target == "visual" then
         -- Get the range of lines to replace
-        local start_line, end_line
-        start_line, end_line = self.context.visual_selection_or_cur_line.start.row, self.context.visual_selection_or_cur_line["end"].row
+        local start_line, end_line, mode
+        start_line, end_line, mode = self.context.visual_selection_or_cur_line.start.row, self.context.visual_selection_or_cur_line["end"].row, self.context.visual_selection_or_cur_line.mode
         -- Replace the lines in from_bufnr with `self.full_answer`
-        vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, end_line, false, self.full_answer)
+        if mode == "V" then
+          -- Replace the entire lines in visual selection with `self.full_answer`
+          vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, end_line, false, self.full_answer)
+        elseif mode == "v" then
+          -- Keep the content before and after visual selection
+          local start_col = self.context.visual_selection_or_cur_line.start.col
+          local end_col = self.context.visual_selection_or_cur_line["end"].col
+          local current_line = vim.api.nvim_buf_get_lines(from_bufnr, start_line - 1, start_line, false)[1]
+          local before_selection = current_line:sub(1, start_col - 1)
+          local after_selection = current_line:sub(end_col + 1)
+          local new_line = before_selection .. table.concat(self.full_answer, "\n") .. after_selection
+          -- Replace the selected text with the new content
+          local new_lines = vim.split(new_line, "\n")  -- Split the new_line into multiple lines if necessary
+          vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, start_line, false, new_lines)
+        end
       elseif self.context.replace_target == "file" then
         vim.api.nvim_buf_set_lines(from_bufnr, 0, -1, false, self.full_answer)
       end
@@ -327,7 +341,7 @@ function M.ChatDialog:register_keys(exit_callback)
         border = {
           style = "single",
           text = {
-            top = "[Chat to Continue Conversation]",
+            top = "[Chat to Continue Conversation/Instruction Edit]",
             top_align = "center",
           },
         },
@@ -347,6 +361,12 @@ function M.ChatDialog:register_keys(exit_callback)
           end
         end,
       })
+      -- register exit keys same as the config
+      for _, key in ipairs(options.dialog.keymaps.exit_keys) do
+        input:map("n", key, function()
+          input:unmount()
+        end, { noremap = true, silent = true })
+      end
 
       -- mount/open the component
       input:mount()

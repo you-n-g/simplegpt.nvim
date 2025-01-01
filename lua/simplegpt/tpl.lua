@@ -266,13 +266,19 @@ function M.RegQAUI:get_special()
   -- 2) get the visual content
   local select_pos = require("simplegpt.utils").get_visual_selection(true)
 
-  if select_pos ~= nil then
-    local start_line = select_pos["start"]["row"] - 1 -- Lua indexing is 0-based
-    local end_line = select_pos["end"]["row"]
+  if select_pos then
+    local start_line = select_pos.start.row - 1 -- Lua indexing is 0-based
+    local end_line = select_pos["end"].row
     -- Get the selected lines
-    lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
-    -- Now 'lines' is a table containing all selected lines
-    res["visual"] = table.concat(lines, "\n")
+    local selected_lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
+    -- Adjust the first and last line based on column selection
+    if #selected_lines > 0 then
+      -- truncating last line must come first
+      selected_lines[#selected_lines] = selected_lines[#selected_lines]:sub(1, select_pos["end"].col)
+      selected_lines[1] = selected_lines[1]:sub(select_pos.start.col + 1)
+    end
+    -- Now 'selected_lines' is a table containing all selected lines
+    res.visual = table.concat(selected_lines, "\n")
   end
 
   -- 3) Get the filetype of the current buffer
