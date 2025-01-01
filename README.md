@@ -25,14 +25,14 @@ We provide a tools gallery for basic usage, which also serves as examples for fu
 
 | Tool             | Config | Demo |
 | --               | --     | --   |
-| Grammar fixing   |        |      |
-| Text Rewriting   |        |      |
-| Code completing  |        | [Demo](#code-completion--instruct-editing) |
-| Code Explanation |        | |
-| Bug Fixing       |        |      |
-| Translation with great formatting      |        | [Demo](#translation-with-great-formatting) |
-| Dictionary with customized explanation       |        | [Demo](#dictionary-with-customized-explanation) |
-| Reading          |        |      |
+| Grammar fixing   |  [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L137)      |      |
+| Text Rewriting   | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L106)       |      |
+| Code completing  | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L126)       | [Demo](#code-completion--instruct-editing) |
+| Code Explanation | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L161)       | |
+| Bug Fixing       | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L168)       |      |
+| Translation with great formatting      |  [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L182)      | [Demo](#translation-with-great-formatting) |
+| Dictionary with customized explanation       |  [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L225)      | [Demo](#dictionary-with-customized-explanation) |
+| Reading          | [My Config](https://github.com/you-n-g/deploy/blob/8535f451758e45b77b073bb65bb6e8e5baafa714/configs/lazynvim/lua/plugins/gpt.lua#L269)       |      |
 
 More tools are coming soon.
 
