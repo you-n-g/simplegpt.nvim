@@ -220,6 +220,13 @@ local M = {
               q = intentions.refine .. "\n" .. format.code_only,
             },
           },
+          {
+            mode = { "v" },
+            suffix = "D",
+            tpl = "dictionary.json",
+            target = "popup",
+            opts = { noremap = true, silent = true, desc = "(D)ictionary" },
+          },
         },
       },
 

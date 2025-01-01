@@ -15,9 +15,9 @@
 ## Design Philosophy
 
 🤏SimpleGPT's efforts can be categorized into the following parts:
-- Create your own prompt templates using a jinja template engine.
-- Construct questions based on the template and the current context followed by multi-round chat instruction.
-- Present the response in the most convenient way (we provide options like diff, popup; replace, append).
+- **Prompt Templates**: Create your own prompt templates using a Jinja template engine. [Details](#custom-jinja-based-prompt-template)
+- **Context-aware Question Building**: Construct questions based on the template and the current context, followed by multi-round chat instruction.
+- **Flexible Response Presenting**: Present the response in the most convenient way (we provide options like diff, popup, replace, append).
 
 This allows you to easily build a LLM-based toolbox with 🤏SimpleGPT.
 
@@ -27,14 +27,14 @@ We provide a tools gallery for basic usage, which also serves as examples for fu
 | --               | --     | --   |
 | Grammar fixing   |        |      |
 | Text Rewriting   |        |      |
-| Code completing  |        |      |
-| Code Explanation |        |      |
+| Code completing  |        | [Demo](#code-completion--instruct-editing) |
+| Code Explanation |        | |
 | Bug Fixing       |        |      |
-| Translation      |        |      |
-| Dictionary       |        |      |
+| Translation with great formatting      |        | [Demo](#translation-with-great-formatting) |
+| Dictionary with customized explanation       |        | [Demo](#dictionary-with-customized-explanation) |
 | Reading          |        |      |
 
-TODO：More tools are coming soon.
+More tools are coming soon.
 
 # Installation
 ⚠️Please follow the [installation guide of ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation) to make sure your ChatGPT works.
@@ -98,18 +98,14 @@ More detailed [configuration](lua/simplegpt/conf.lua) are listed here.
 You can find my latest and preferred configuration [here](https://github.com/you-n-g/deploy/blob/master/configs/lazynvim/lua/plugins/gpt.lua) as an example.
 
 # Demos
-## Console demo
-<!--TODO: core workflow: call tools + instruction editing-->
-[![asciicast](https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr.svg)](https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr)
-- Building a comprehensive question using the template mechanism.
-- Adding ad hoc requirements based on the current context.
-  - Implementing the code (default question) and translating the comments into Chinese (special requirements).
-- The code that the demo is based on is [here](tests/demo/demo.py).
-
 
 ## Tools Gallery
 
-TODO: coming soon...
+### Code Completion & Instruct Editing
+
+### Translation with great formatting 
+
+### Dictionary with customized explanation
 
 
 ## Typical workflow & Shortcuts
@@ -124,7 +120,9 @@ The question is constructed by rendering a template. The 't' register serves as 
 
 # Features
 
-## Custom Template Path
+## Custom Jinja-based Prompt Template
+
+Here is a gif demo that quickly showcases the customization process.
 
 ### Setting a Custom Template Path
 You can specify a custom template path for loading and dumping files by setting the `custom_template_path` option in your configuration. If the specified path does not exist, it will be created automatically.
@@ -189,7 +187,7 @@ require("simplegpt").setup({
 
 In this example, pressing `<LocalLeader>sQ` in normal or visual mode will load the `my_custom_template.json` from the custom template path and send it to the popup target.
 
-## Core workflow
+### Core workflow
 
 The primary concepts that govern the functionality of this plugin are:
 
@@ -199,9 +197,9 @@ The primary concepts that govern the functionality of this plugin are:
 
 - Response display targets: This refers to the destination where the response from ChatGPT is displayed. The plugin offers flexibility in choosing the target, allowing for a more tailored user experience.
 
-## Registers
+### Registers
 
-### An Example of Template Rendering
+#### An Example of Template Rendering
 
 To illustrate the core template rendering mechanism of SimpleGPT, consider the following example. We have a template in the 't' register:
 
@@ -223,7 +221,7 @@ Registers are of two types:
 - Native vim registers: Standard Vim registers like 't', 'a', 'b', 'c', etc. used for storing and retrieving text.
 - Special registers: Specific to SimpleGPT, including `{{content}}`, `{{filetype}}`, `{{visual}}`, and `{{q}}`. They store special values used in the template process. The `{{q}}` register allows for an editable question when rendering the whole content.
 
-### vim-native registers
+#### vim-native registers
 
 | Register | meaning                              |
 | -        | -                                    |
@@ -231,7 +229,7 @@ Registers are of two types:
 | others   | the variables to render the template |
 
 
-### Supported special registers
+#### Supported special registers
 | key          | meaning                                                     |
 | -            | -                                                           |
 | content      | Partial file content around cursor (configurable length)    |
@@ -241,7 +239,7 @@ Registers are of two types:
 | context      | The nearby context of cursor (configurable lines up/down)  |
 | all_buf      | Content of all loaded buffers with files on disk          |
 
-### Template Engine
+#### Template Engine
 
 SimpleGPT uses a Jinja-like template engine ([jinja-engine.nvim](https://github.com/you-n-g/jinja-engine.nvim)) to power its template system:
 
@@ -315,20 +313,6 @@ An example to change the shortcuts prefix in lazy.nvim:
   --- ... other configurations
 }
 ```
-
-## Custom Template Path
-
-You can specify a custom template path for loading and dumping files by setting the `custom_template_path` option in your configuration. If the specified path does not exist, it will be created automatically.
-
-Example configuration:
-```lua
-require("simplegpt").setup({
-  custom_template_path = "~/my_custom_templates/"
-})
-```
-
-This will ensure that templates are loaded from and dumped to the specified custom path if it exists. If the custom path is not specified or the file does not exist in the custom path, the default path will be used.
-
 
 # TODOs
 Flag explanation:
