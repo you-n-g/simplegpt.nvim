@@ -7,15 +7,11 @@ Table of Contents                                *simplegpt-table-of-contents*
   - Design Philosophy             |simplegpt-🤏-simplegpt-design-philosophy|
 2. Installation                                       |simplegpt-installation|
 3. Demos                                                     |simplegpt-demos|
-  - Console demo                                |simplegpt-demos-console-demo|
   - Tools Gallery                              |simplegpt-demos-tools-gallery|
   - Typical workflow & Shortcuts|simplegpt-demos-typical-workflow-&-shortcuts|
 4. Features                                               |simplegpt-features|
-  - Custom Template Path             |simplegpt-features-custom-template-path|
-  - Core workflow                           |simplegpt-features-core-workflow|
-  - Registers                                   |simplegpt-features-registers|
+  - Custom Jinja-based Prompt Template|simplegpt-features-custom-jinja-based-prompt-template|
   - Shutcuts                                     |simplegpt-features-shutcuts|
-  - Custom Template Path             |simplegpt-features-custom-template-path|
 5. TODOs                                                     |simplegpt-todos|
 6. Development                                         |simplegpt-development|
 7. Limitations                                         |simplegpt-limitations|
@@ -42,28 +38,41 @@ customize your prompts to for your tasks.
 
 DESIGN PHILOSOPHY                 *simplegpt-🤏-simplegpt-design-philosophy*
 
-🤏SimpleGPT’s efforts can be categorized into the following parts: - Create
-your own prompt templates using a jinja template engine. - Construct questions
-based on the template and the current context followed by multi-round chat
-instruction. - Present the response in the most convenient way (we provide
-options like diff, popup; replace, append).
+🤏SimpleGPT’s efforts can be categorized into the following parts: -
+**Prompt Templates**: Create your own prompt templates using a Jinja template
+engine. |simplegpt-details| - **Context-aware Question Building**: Construct
+questions based on the template and the current context, followed by
+multi-round chat instruction. - **Flexible Response Presenting**: Present the
+response in the most convenient way (we provide options like diff, popup,
+replace, append).
 
 This allows you to easily build a LLM-based toolbox with 🤏SimpleGPT.
 
 We provide a tools gallery for basic usage, which also serves as examples for
 further customization.
 
-  Tool               Config   Demo
-  ------------------ -------- ------
-  Grammar fixing              
-  Text Rewriting              
-  Code completing             
-  Code Explanation            
-  Bug Fixing                  
-  Translation                 
-  Dictionary                  
-  Reading                     
-TODO：More tools are coming soon.
+  -----------------------------------------------------------------------
+  Tool                    Config                  Demo
+  ----------------------- ----------------------- -----------------------
+  Grammar fixing                                  
+
+  Text Rewriting                                  
+
+  Code completing                                 Demo
+
+  Code Explanation                                
+
+  Bug Fixing                                      
+
+  Translation with great                          Demo
+  formatting                                      
+
+  Dictionary with                                 Demo
+  customized explanation                          
+
+  Reading                                         
+  -----------------------------------------------------------------------
+More tools are coming soon.
 
 
 ==============================================================================
@@ -139,18 +148,16 @@ as an example.
 3. Demos                                                     *simplegpt-demos*
 
 
-CONSOLE DEMO                                    *simplegpt-demos-console-demo*
-
-<https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr> - Building a comprehensive
-question using the template mechanism. - Adding ad hoc requirements based on
-the current context. - Implementing the code (default question) and translating
-the comments into Chinese (special requirements). - The code that the demo is
-based on is here <tests/demo/demo.py>.
-
-
 TOOLS GALLERY                                  *simplegpt-demos-tools-gallery*
 
-TODO: coming soon…
+
+CODE COMPLETION & INSTRUCT EDITING ~
+
+
+TRANSLATION WITH GREAT FORMATTING ~
+
+
+DICTIONARY WITH CUSTOMIZED EXPLANATION ~
 
 
 TYPICAL WORKFLOW & SHORTCUTS    *simplegpt-demos-typical-workflow-&-shortcuts*
@@ -167,7 +174,9 @@ and `{{c}}`.
 4. Features                                               *simplegpt-features*
 
 
-CUSTOM TEMPLATE PATH                 *simplegpt-features-custom-template-path*
+CUSTOM JINJA-BASED PROMPT TEMPLATE*simplegpt-features-custom-jinja-based-prompt-template*
+
+Here is a gif demo that quickly showcases the customization process.
 
 
 SETTING A CUSTOM TEMPLATE PATH ~
@@ -259,7 +268,7 @@ the `my_custom_template.json` from the custom template path and send it to the
 popup target.
 
 
-CORE WORKFLOW                               *simplegpt-features-core-workflow*
+CORE WORKFLOW ~
 
 The primary concepts that govern the functionality of this plugin are:
 
@@ -276,10 +285,10 @@ The primary concepts that govern the functionality of this plugin are:
     target, allowing for a more tailored user experience.
 
 
-REGISTERS                                       *simplegpt-features-registers*
+REGISTERS ~
 
 
-AN EXAMPLE OF TEMPLATE RENDERING ~
+AN EXAMPLE OF TEMPLATE RENDERING
 
 To illustrate the core template rendering mechanism of SimpleGPT, consider the
 following example. We have a template in the 't' register:
@@ -307,14 +316,14 @@ Registers are of two types:
 - Special registers: Specific to SimpleGPT, including `{{content}}`, `{{filetype}}`, `{{visual}}`, and `{{q}}`. They store special values used in the template process. The `{{q}}` register allows for an editable question when rendering the whole content.
 
 
-VIM-NATIVE REGISTERS ~
+VIM-NATIVE REGISTERS
 
   Register   meaning
   ---------- --------------------------------------
   t          The register for the template.
   others     the variables to render the template
 
-SUPPORTED SPECIAL REGISTERS ~
+SUPPORTED SPECIAL REGISTERS
 
   -----------------------------------------------------------------------
   key                                 meaning
@@ -335,7 +344,7 @@ SUPPORTED SPECIAL REGISTERS ~
                                       files on disk
   -----------------------------------------------------------------------
 
-TEMPLATE ENGINE ~
+TEMPLATE ENGINE
 
 SimpleGPT uses a Jinja-like template engine (jinja-engine.nvim
 <https://github.com/you-n-g/jinja-engine.nvim>) to power its template system:
@@ -413,25 +422,6 @@ An example to change the shortcuts prefix in lazy.nvim:
       --- ... other configurations
     }
 <
-
-
-CUSTOM TEMPLATE PATH                 *simplegpt-features-custom-template-path*
-
-You can specify a custom template path for loading and dumping files by setting
-the `custom_template_path` option in your configuration. If the specified path
-does not exist, it will be created automatically.
-
-Example configuration:
-
->lua
-    require("simplegpt").setup({
-      custom_template_path = "~/my_custom_templates/"
-    })
-<
-
-This will ensure that templates are loaded from and dumped to the specified
-custom path if it exists. If the custom path is not specified or the file does
-not exist in the custom path, the default path will be used.
 
 
 ==============================================================================
@@ -558,8 +548,7 @@ tests/init_configs/packer.lua -U NONE -N -i NONE`
 
 1. *Mega-Linter*: https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg
 2. *panvimdoc*: https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg
-3. *asciicast*: https://asciinema.org/a/zACiIRbgl0F6duRR8aJgtWbqr.svg
-4. *Workflow*: https://i.imgur.com/bPx6C1D.png
+3. *Workflow*: https://i.imgur.com/bPx6C1D.png
 
 Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
 
