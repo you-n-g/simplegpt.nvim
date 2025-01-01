@@ -102,10 +102,13 @@ You can find my latest and preferred configuration [here](https://github.com/you
 ## Tools Gallery
 
 ### Code Completion & Instruct Editing
+[![image](https://github.com/user-attachments/assets/f8d3b4e5-0e0b-42f1-a716-78a10e0fc3a7)](https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2Fbrybs5bnheae1.gif)
 
 ### Translation with great formatting 
+[![image](https://github.com/user-attachments/assets/b83bc78f-e125-4a39-9e38-6125eee41467)](https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2Fjsusuibnheae1.gif)
 
 ### Dictionary with customized explanation
+[![image](https://github.com/user-attachments/assets/9d52a367-76fe-4337-91d5-0eeb247c1c9e)](https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2F1pigeebnheae1.gif)
 
 
 ## Typical workflow & Shortcuts
@@ -123,6 +126,8 @@ The question is constructed by rendering a template. The 't' register serves as 
 ## Custom Jinja-based Prompt Template
 
 Here is a gif demo that quickly showcases the customization process.
+[![image](https://github.com/user-attachments/assets/7469b4e3-6058-4a9c-b83f-6bd9536ba03e)](https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2Fb1ne4nt6ubae1.gif)
+
 
 ### Setting a Custom Template Path
 You can specify a custom template path for loading and dumping files by setting the `custom_template_path` option in your configuration. If the specified path does not exist, it will be created automatically.
