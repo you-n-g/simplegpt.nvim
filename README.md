@@ -2,9 +2,9 @@
 [![Mega-Linter](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg)](https://github.com/marketplace/actions/mega-linter)
 [![panvimdoc](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg)](https://github.com/kdheepak/panvimdoc)
 
-🤏SimpleGPT is a Vim plugin designed to provide a simple yet flexible way to customize your prompts to for your tasks.
+🤏SimpleGPT is a Vim plugin designed to provide a simple yet flexible way to customize your LLM/ChatGPT prompts to for your tasks.
 
-- Why 🤏SimpleGPT: **You need customized prompts for your tasks**.
+- Why 🤏SimpleGPT: **You need customized LLM/ChatGPT prompts for your tasks**.
   - AI Coding Plugins didn't provide support for every scenario.
     - General tasks beyond coding:
       - Article writing.
