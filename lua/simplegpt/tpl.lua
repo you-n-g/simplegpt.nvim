@@ -272,10 +272,12 @@ function M.RegQAUI:get_special()
     -- Get the selected lines
     local selected_lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
     -- Adjust the first and last line based on column selection
-    if #selected_lines > 0 then
-      -- truncating last line must come first
-      selected_lines[#selected_lines] = selected_lines[#selected_lines]:sub(1, select_pos["end"].col)
-      selected_lines[1] = selected_lines[1]:sub(select_pos.start.col + 1)
+    if select_pos.mode == "v" then
+      if #selected_lines > 0 then
+        -- truncating last line must come first
+        selected_lines[#selected_lines] = selected_lines[#selected_lines]:sub(1, select_pos["end"].col)
+        selected_lines[1] = selected_lines[1]:sub(select_pos.start.col)
+      end
     end
     -- Now 'selected_lines' is a table containing all selected lines
     res.visual = table.concat(selected_lines, "\n")
