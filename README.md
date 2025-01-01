@@ -114,7 +114,7 @@ You can find my latest and preferred configuration [here](https://github.com/you
 ## Typical workflow & Shortcuts
 I have attempted to summarize the key concepts and manual in one image.
 
-![Workflow](https://i.imgur.com/bPx6C1D.png)
+![image](https://github.com/user-attachments/assets/bf3db252-2679-4c45-a307-774754492134)
 
 The question is constructed by rendering a template. The 't' register serves as the template, encompassing:
 - Special variables such as `{{content}}`, `{{filetype}}`, and `{{visual}}`.
