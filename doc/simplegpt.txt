@@ -1,4 +1,4 @@
-*simplegpt.txt*          For NVIM v0.8.0          Last change: 2025 January 01
+*simplegpt.txt*          For NVIM v0.8.0          Last change: 2025 January 02
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -11,7 +11,7 @@ Table of Contents                                *simplegpt-table-of-contents*
   - Typical workflow & Shortcuts|simplegpt-demos-typical-workflow-&-shortcuts|
 4. Features                                               |simplegpt-features|
   - Custom Jinja-based Prompt Template|simplegpt-features-custom-jinja-based-prompt-template|
-  - Shutcuts                                     |simplegpt-features-shutcuts|
+  - Shortcuts                                   |simplegpt-features-shortcuts|
 5. TODOs                                                     |simplegpt-todos|
 6. Development                                         |simplegpt-development|
 7. Limitations                                         |simplegpt-limitations|
@@ -371,7 +371,7 @@ The template engine provides familiar Jinja-style syntax while being fully
 integrated with Neovim.
 
 
-SHUTCUTS                                         *simplegpt-features-shutcuts*
+SHORTCUTS                                       *simplegpt-features-shortcuts*
 
 - Dialog shortcuts:
     - For all dialogs
