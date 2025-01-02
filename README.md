@@ -262,7 +262,7 @@ SimpleGPT uses a Jinja-like template engine ([jinja-engine.nvim](https://github.
 
 The template engine provides familiar Jinja-style syntax while being fully integrated with Neovim.
 
-## Shutcuts
+## Shortcuts
 - Dialog shortcuts:
   - For all dialogs
     - `{"q", "<C-c>", "<esc>"}`: Exit the dialog
