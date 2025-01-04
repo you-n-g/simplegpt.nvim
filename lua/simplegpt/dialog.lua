@@ -10,11 +10,11 @@ M.BaseDialog = utils.class("BaseDialog")
 -- @param context: The context in which the dialog is being created.
 function M.BaseDialog:ctor(context)
   self.context = context
-  self.nui_obj = nil  -- subclass should assign this object
-  self.all_pops = {}  -- all_popups will be a list table
+  self.nui_obj = nil -- subclass should assign this object
+  self.all_pops = {} -- all_popups will be a list table
   -- self.quit_action = "quit"
 
-  require"simplegpt.target".set_last_dialog(self)
+  require("simplegpt.target").set_last_dialog(self)
   self.conversation = {}
 end
 
@@ -28,7 +28,7 @@ end
 function M.BaseDialog:show()
   self.nui_obj:show()
   -- resume some special options (I expect nui take care of it)
-  M.add_winbar(self.all_pops[1].winid, conf.get_base_dialog_keymaps())  -- add winbar to the first popup
+  M.add_winbar(self.all_pops[1].winid, conf.get_base_dialog_keymaps()) -- add winbar to the first popup
 end
 
 function M.BaseDialog:hide()
@@ -41,11 +41,10 @@ end
 -- @param text: The input text from which the last code block is to be extracted.
 -- @return : Returns the extracted code block. If no code block is found within the text, the function returns nil.
 local function extract_code(text, cur_line)
-
   -- Get every line position of the text.
   local cur_pos = 1
   if cur_line ~= nil then
-    local line_pos_l = {1}
+    local line_pos_l = { 1 }
     for next_line_pos in text:gmatch("[^\n]*\n()") do
       table.insert(line_pos_l, next_line_pos)
     end
@@ -58,7 +57,7 @@ local function extract_code(text, cur_line)
   local cur_dis
   for start_pos, codeBlock, end_pos in text:gmatch("()(```.-```%s*)()") do
     if start_pos <= cur_pos and cur_pos < end_pos then
-      cur_dis = 0  -- cur_pos is in range
+      cur_dis = 0 -- cur_pos is in range
     else
       -- (end_pos - 1) to make the right boundary of the code block inclusive
       cur_dis = math.min(math.abs(cur_pos - start_pos), math.abs(cur_pos - (end_pos - 1)))
@@ -70,15 +69,14 @@ local function extract_code(text, cur_line)
   end
   -- If a code block was found, strip the delimiters and return the code
   if recentCodeBlock then
-    local index = string.find(recentCodeBlock, "\n")  -- strip the first line
+    local index = string.find(recentCodeBlock, "\n") -- strip the first line
     if index ~= nil then
       recentCodeBlock = string.sub(recentCodeBlock, index + 1)
     end
-    return recentCodeBlock:gsub("```\n", ""):gsub("```", ""):match("^(.-)%s*$")  -- We don't use "^%s*(.-)%s*$", so keep the first indents
+    return recentCodeBlock:gsub("```\n", ""):gsub("```", ""):match("^(.-)%s*$") -- We don't use "^%s*(.-)%s*$", so keep the first indents
   end
   return nil
 end
-
 
 --- register common keys for dialogs
 ---@param exit_callback
@@ -87,13 +85,12 @@ function M.BaseDialog:register_keys(exit_callback)
 
   local keymaps = conf.get_base_dialog_keymaps()
 
-  M.add_winbar(self.all_pops[1].winid, keymaps)  -- add winbar to the first popup
+  M.add_winbar(self.all_pops[1].winid, keymaps) -- add winbar to the first popup
 
   -- set keys to escape for all popups
   -- - Quit
   for _, pop in ipairs(all_pops) do
     pop:map("n", keymaps.exit_keys, function()
-
       self:quit() -- callback may open new windows. So we quit the windows before callback
 
       if exit_callback ~= nil then
@@ -121,7 +118,7 @@ function M.BaseDialog:register_keys(exit_callback)
       local code = extract_code(full_cont, vim.api.nvim_win_get_cursor(pop.winid)[1])
       -- TODO: get a summary of the code (e.g. number of lines and characters)
       if code then
-        require"simplegpt.utils".set_reg(code)
+        require("simplegpt.utils").set_reg(code)
 
         -- Get a summary of the code
         local num_lines = #vim.split(code, "\n")
@@ -146,30 +143,28 @@ function M.BaseDialog:register_keys(exit_callback)
   end
 end
 
-
 -- The dialog that are able to get response to a specific PopUps
 M.ChatDialog = utils.class("ChatDialog", M.BaseDialog)
 
 function M.ChatDialog:ctor(...)
   M.ChatDialog.super.ctor(self, ...)
-  self.answer_popup = nil  -- the popup to display the answer
+  self.answer_popup = nil -- the popup to display the answer
   self.full_answer = {}
-  self.open_in_new_tab = require"simplegpt.conf".options.new_tab
+  self.open_in_new_tab = require("simplegpt.conf").options.new_tab
 end
 
 function M.ChatDialog:quit()
   M.ChatDialog.super.quit(self)
   if self.open_in_new_tab then
-    vim.api.nvim_command('tabclose')
+    vim.api.nvim_command("tabclose")
   end
 end
 
 function M.ChatDialog:show()
   M.ChatDialog.super.show(self)
   -- resume some special options (I expect nui take care of it)
-  M.add_winbar(self.all_pops[#(self.all_pops)].winid, conf.get_qa_dialog_keymaps())  -- add winbar to the last pop
+  M.add_winbar(self.all_pops[#self.all_pops].winid, conf.get_qa_dialog_keymaps()) -- add winbar to the last pop
 end
-
 
 function M.ChatDialog:call(question)
   -- NOTE: we have to initial ChatGPT.nvim at least once to make the settings effective
@@ -183,14 +178,14 @@ function M.ChatDialog:call(question)
   -- Save the question to conversation history
   table.insert(self.conversation, { content = question, role = "user" })
 
-  local messages = vim.deepcopy(self.conversation)  -- Create a copy of the full conversation
+  local messages = vim.deepcopy(self.conversation) -- Create a copy of the full conversation
 
   local params = vim.tbl_extend("keep", { stream = true, messages = messages }, require("chatgpt.settings").params)
   local popup = self.answer_popup -- add it to namespace to support should_stop & cb
   local current_answer = "" -- Track the complete answer
 
   -- Clear the answer popup buffer before starting new response
-  vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, {""})
+  vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, { "" })
 
   local function should_stop()
     if popup.bufnr == nil then
@@ -240,21 +235,25 @@ function M.ChatDialog:update_full_answer()
 end
 
 function M.add_winbar(winid, keymaps)
-    -- Add a winbar to the popup window to display additional information
-    if vim.fn.has('nvim-0.8') == 1 then  -- Ensure the version supports winbar
-
-      local winbar_content
-      local current_winbar = vim.api.nvim_win_get_option(winid, 'winbar')
-      if current_winbar and current_winbar ~= "" then
-        winbar_content = current_winbar
-      else
-        winbar_content = "🎹: "
-      end
-      for k, v in pairs(keymaps) do
-        winbar_content = winbar_content .. string.format("%%#WinBarKey#%s %%#WinBarValue#%s%%#WinBarKey#|", options.ui.name_map[k] or k, table.concat(v, ","))
-      end
-      vim.api.nvim_win_set_option(winid, 'winbar', winbar_content)
+  -- Add a winbar to the popup window to display additional information
+  if vim.fn.has("nvim-0.8") == 1 then -- Ensure the version supports winbar
+    local winbar_content
+    local current_winbar = vim.api.nvim_win_get_option(winid, "winbar")
+    if current_winbar and current_winbar ~= "" then
+      winbar_content = current_winbar
+    else
+      winbar_content = "🎹: "
     end
+    for k, v in pairs(keymaps) do
+      winbar_content = winbar_content
+        .. string.format(
+          "%%#WinBarKey#%s %%#WinBarValue#%s%%#WinBarKey#|",
+          options.ui.name_map[k] or k,
+          table.concat(v, ",")
+        )
+    end
+    vim.api.nvim_win_set_option(winid, "winbar", winbar_content)
+  end
 end
 
 -- Add the following highlight groups in your Neovim configuration to customize the appearance
@@ -264,34 +263,75 @@ vim.cmd([[
   highlight link WinBarValue Function
 ]])
 
+--- Appends content to a terminal buffer if the specified buffer is a terminal.
+-- This function handles the special case of terminal buffers which require different handling
+-- than regular buffers. It uses Neovim's paste mode and register manipulation to safely
+-- insert content into the terminal.
+--
+-- @param bufnr number The buffer number to check and append to
+-- @param content table A table of strings representing the content to append
+-- @return boolean Returns true if the content was appended to a terminal buffer,
+--         false if the buffer is not a terminal
+local function append_to_terminal(bufnr, content)
+  -- Check if buffer is a terminal and append content if it is
+  if vim.api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
+    -- Convert the content table into a single string with newlines
+    local content_str = table.concat(content, "\n")
+
+    -- Save the original value of register 'z' to restore it later
+    local original_z = vim.fn.getreg("z")
+
+    -- Enable paste mode to prevent terminal from interpreting special characters
+    vim.api.nvim_buf_set_option(bufnr, "paste", true)
+
+    -- Store the content in register 'z' for pasting
+    vim.fn.setreg("z", content_str)
+
+    -- Use the "zp command to paste the content into the terminal
+    vim.api.nvim_feedkeys('"zp', "n", true)
+
+    -- Disable paste mode after pasting
+    vim.api.nvim_buf_set_option(bufnr, "paste", false)
+
+    -- Restore the original value of register 'z' (currently commented out)
+    -- vim.fn.setreg('z', original_z)
+
+    return true
+  end
+  return false
+end
+
 function M.ChatDialog:register_keys(exit_callback)
   M.ChatDialog.super.register_keys(self, exit_callback)
 
-  M.add_winbar(self.all_pops[#(self.all_pops)].winid, conf.get_qa_dialog_keymaps())  -- add winbar to the last pop
+  M.add_winbar(self.all_pops[#self.all_pops].winid, conf.get_qa_dialog_keymaps()) -- add winbar to the last pop
   for _, pop in ipairs(self.all_pops) do
     -- Append full answer: append the response to original buffer
     pop:map("n", options.dialog.keymaps.append_keys, function()
-      self:update_full_answer()  -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
+      self:update_full_answer() -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
 
-      self:quit()  -- callback may open new windows. So we quit the windows before callback
+      self:quit() -- callback may open new windows. So we quit the windows before callback
       if exit_callback ~= nil then
         exit_callback()
       end
 
       local from_bufnr = self.context["from_bufnr"]
       local last_line = self.context.visual_selection_or_cur_line["end"].row
-      -- Insert `self.full_answer` into from_bufnr after the last line
-      vim.api.nvim_buf_set_lines(from_bufnr, last_line, last_line, false, self.full_answer)
 
+      -- Handle terminal or normal buffer
+      if not append_to_terminal(from_bufnr, self.full_answer) then
+        -- For normal buffers, insert the lines
+        vim.api.nvim_buf_set_lines(from_bufnr, last_line, last_line, false, self.full_answer)
+      end
     end, { noremap = true })
 
     -- replace the selected buffer (or current line) with the response
     pop:map("n", options.dialog.keymaps.replace_keys, function()
-      self:update_full_answer()  -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
+      self:update_full_answer() -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
 
       -- TODO: we can support only inserting the code. It may bring more conveniences.
 
-      self:quit()  -- callback may open new windows. So we quit the windows before callback
+      self:quit() -- callback may open new windows. So we quit the windows before callback
       if exit_callback ~= nil then
         exit_callback()
       end
@@ -301,7 +341,10 @@ function M.ChatDialog:register_keys(exit_callback)
       if self.context.replace_target == "visual" then
         -- Get the range of lines to replace
         local start_line, end_line, mode
-        start_line, end_line, mode = self.context.visual_selection_or_cur_line.start.row, self.context.visual_selection_or_cur_line["end"].row, self.context.visual_selection_or_cur_line.mode
+        start_line, end_line, mode =
+          self.context.visual_selection_or_cur_line.start.row,
+          self.context.visual_selection_or_cur_line["end"].row,
+          self.context.visual_selection_or_cur_line.mode
         -- Replace the lines in from_bufnr with `self.full_answer`
         if mode == "V" then
           -- Replace the entire lines in visual selection with `self.full_answer`
@@ -315,7 +358,7 @@ function M.ChatDialog:register_keys(exit_callback)
           local after_selection = current_line:sub(end_col + 1)
           local new_line = before_selection .. table.concat(self.full_answer, "\n") .. after_selection
           -- Replace the selected text with the new content
-          local new_lines = vim.split(new_line, "\n")  -- Split the new_line into multiple lines if necessary
+          local new_lines = vim.split(new_line, "\n") -- Split the new_line into multiple lines if necessary
           vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, start_line, false, new_lines)
         end
       elseif self.context.replace_target == "file" then
@@ -325,8 +368,8 @@ function M.ChatDialog:register_keys(exit_callback)
 
     -- Yank keys
     pop:map("n", options.dialog.keymaps.yank_keys, function()
-      self:update_full_answer()  -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
-      require"simplegpt.utils".set_reg(table.concat(self.full_answer, "\n"))
+      self:update_full_answer() -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
+      require("simplegpt.utils").set_reg(table.concat(self.full_answer, "\n"))
       print("answer Yanked")
     end, { noremap = true })
 
@@ -348,7 +391,7 @@ function M.ChatDialog:register_keys(exit_callback)
         win_options = {
           winhighlight = "Normal:Normal,FloatBorder:Normal",
         },
-        zindex = 70,  -- Add higher zindex to ensure it appears on top
+        zindex = 70, -- Add higher zindex to ensure it appears on top
       }, {
         prompt = "> ",
         on_close = function()
@@ -376,7 +419,6 @@ function M.ChatDialog:register_keys(exit_callback)
         input:unmount()
       end)
     end, { noremap = true })
-    
   end
 end
 

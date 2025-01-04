@@ -54,7 +54,7 @@ function M.setup_main_keymaps()
   )
   -- utils
   vim.keymap.set(
-    { "n", "v" },
+    { "n", "v", "t" },
     keymaps.resume_dialog.key or prefix .. keymaps.resume_dialog.suffix,
     target.resume_last_dialog,
     { noremap = true, silent = true, desc = "resume last dialog" }
