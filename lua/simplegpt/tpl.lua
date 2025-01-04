@@ -42,7 +42,7 @@ function M.get_placeholders(key_reg)
     table.insert(keys, key)
   end
   -- Sort keys lexically
-  table.sort(keys)
+  -- table.sort(keys)
   return keys
 end
 
@@ -88,7 +88,7 @@ end
 function M.RegQAUI:build(callback)
 
   self.tpl_pop = Popup({
-    enter = true,
+    enter = false,
     border = {
       style = "double",
       text = {
@@ -105,8 +105,10 @@ function M.RegQAUI:build(callback)
 
   self.pop_dict = {}
   local reg_cnt = 0
-  for _, k in ipairs(M.get_placeholders()) do
+  local placeholders = M.get_placeholders()
+  for _, k in ipairs(placeholders) do
     self.pop_dict[k] = Popup({
+      enter = #self.all_pops == #placeholders,  -- Counting a dict is complex, so we use this trick
       border = {
         style = "single",
         text = {

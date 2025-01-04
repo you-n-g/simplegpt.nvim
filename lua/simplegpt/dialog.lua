@@ -338,6 +338,12 @@ function M.ChatDialog:register_keys(exit_callback)
 
       local from_bufnr = self.context["from_bufnr"]
 
+      -- Handle terminal buffer first
+      if append_to_terminal(from_bufnr, self.full_answer) then
+        return
+      end
+
+      -- Handle normal buffers
       if self.context.replace_target == "visual" then
         -- Get the range of lines to replace
         local start_line, end_line, mode
