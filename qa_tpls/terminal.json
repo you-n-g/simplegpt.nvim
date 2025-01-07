@@ -1,0 +1,1 @@
+{"q": "", "t": "You are an expert in teminal commmands\n\nHere is the context of your terminal\n```\n{{context}}\n```\n\nPlease response the terminal command for the following intention\n```\n{{q}}\n```"}

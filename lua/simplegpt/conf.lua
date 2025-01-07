@@ -227,6 +227,13 @@ local M = {
             target = "popup",
             opts = { noremap = true, silent = true, desc = "(D)ictionary" },
           },
+          {
+            mode = { "t"},
+            suffix = "t",
+            tpl = "terminal.json",
+            target = "popup",
+            opts = { noremap = true, silent = true, desc = "Terminal Command" },
+          },
         },
       },
 

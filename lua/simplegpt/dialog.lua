@@ -275,6 +275,11 @@ vim.cmd([[
 local function append_to_terminal(bufnr, content)
   -- Check if buffer is a terminal and append content if it is
   if vim.api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
+
+    -- Some terminals use vim mode. So we go to insert mode by 'i' first, then use <C-u> to remove previous content
+    local keys = vim.api.nvim_replace_termcodes('ii<C-u>', true, false, true)
+
+    vim.api.nvim_feedkeys(keys, "t", true)
     -- Convert the content table into a single string with newlines
     local content_str = table.concat(content, "\n")
 
@@ -282,19 +287,22 @@ local function append_to_terminal(bufnr, content)
     local original_z = vim.fn.getreg("z")
 
     -- Enable paste mode to prevent terminal from interpreting special characters
-    vim.api.nvim_buf_set_option(bufnr, "paste", true)
+    vim.opt.paste = true
 
     -- Store the content in register 'z' for pasting
     vim.fn.setreg("z", content_str)
 
-    -- Use the "zp command to paste the content into the terminal
-    vim.api.nvim_feedkeys('"zp', "n", true)
+    -- Use the "zp" command to paste the content into the terminal
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<c-\\><c-n>"zp', true, false, true), "t", true)
 
     -- Disable paste mode after pasting
-    vim.api.nvim_buf_set_option(bufnr, "paste", false)
+    vim.opt.paste = false
 
-    -- Restore the original value of register 'z' (currently commented out)
-    -- vim.fn.setreg('z', original_z)
+    -- Restore the original value of register 'z' after a short delay to ensure the paste operation completes
+    -- I think the problem is that the feedkeys function can be delayed.
+    vim.defer_fn(function()
+      vim.fn.setreg('z', original_z)
+    end, 100)
 
     return true
   end
