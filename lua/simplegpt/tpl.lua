@@ -12,7 +12,8 @@ function M.RegQAUI:ctor(...)
   M.RegQAUI.super.ctor(self, ...)
   self.pop_dict = {}                     -- a dict of register to popup
   self.tpl_pop = nil                     -- the popup of template
-  self.special_dict = self:get_special() -- we have to get special dict before editing the quesiton.. Ohterwise we'll lose the file and visual selection
+  -- Get special dict before editing question to preserve file/visual selection
+  self.special_dict = self:get_special()
   if "" == vim.fn.getreg("t") then
     vim.fn.setreg("t", [[Context:```{{c}}```, {{q}}, {{i}}, Please input your answer:```]])
   end
@@ -32,7 +33,9 @@ function M.get_placeholders(key_reg)
 
   if key_reg == nil then
     key_reg =
-    ".%-?"           -- {{q-}} means that the q register will not be dumped into the permanent storage; vim will only use the first letter when operating on registers.
+    -- {{q-}} means register won't be dumped to permanent storage
+    -- vim only uses first letter when operating on registers
+    ".%-?"
   end
   local reg = "%{%{(" .. key_reg .. ")%}%}"
 
@@ -162,7 +165,7 @@ function M.RegQAUI:build(callback)
 
 end
 
-function M.RegQAUI:get_special()
+function M.RegQAUI.get_special()
   local res = {}
 
   -- shared variables
@@ -205,8 +208,8 @@ function M.RegQAUI:get_special()
 
   -- 4) Get the context of current line (the line under the cursor). Including 10 lines before and 10 lines after
   local context_len = require "simplegpt.conf".options.tpl_conf.context_len;
-  start_line = math.max(cursor_pos[1] - context_len - 1, 0) -- Lua indexing is 0-based
-  end_line = math.min(cursor_pos[1] + context_len, line_count)
+  local start_line = math.max(cursor_pos[1] - context_len - 1, 0) -- Lua indexing is 0-based
+  local end_line = math.min(cursor_pos[1] + context_len, line_count)
   -- Get the context lines
   local context_lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
   -- Now 'context_lines' is a table containing all context lines
@@ -234,12 +237,14 @@ function M.RegQAUI:get_tpl_values()
   end
   return vim.tbl_extend("force", tpl_values, self.special_dict)
 end
+
 function M.RegQAUI:get_q()
   local function interp(s, tab)
     -- return (s:gsub("({{.-}})", function(w)
     --   return tab[w:sub(3, -3)] or w
     -- end))
-    -- replace all {{%l-}} to {{%l}} in s: e.g. '{{q-}}' -> '{{q}}' to make it suitable for standard jinja template engine
+    -- replace {{%l-}} with {{%l}} to make suitable for jinja template
+    -- e.g. '{{q-}}' -> '{{q}}'
     s = s:gsub("({{%l-}})", function(w)
       return w:gsub("-", "")
     end)
@@ -252,7 +257,6 @@ end
 ---@param exit_callback
 function M.RegQAUI:register_keys(exit_callback)
   M.RegQAUI.super.register_keys(self, exit_callback)
-  
   -- Register TPL_DIALOG_KEYMAPS via add_winbar
   local keymaps = require("simplegpt.conf").get_tpl_dialog_keymaps()
   dialog.add_winbar(self.all_pops[1].winid, keymaps)
@@ -264,12 +268,14 @@ function M.RegQAUI:register_keys(exit_callback)
     local line = vim.api.nvim_get_current_line()
     local col = cursor_pos[2] + 1 -- Lua uses 1-based indexing
 
-    -- Pattern to match placeholders like {{...}}
-    local pattern = "{{%s*(%w+)%-?%s*}}"
+    -- Pattern to match placeholders like {{...}}, supporting names with underscores and numbers
+    local pattern = "{{%s*([%w_%d]+)%-?%s*}}"
     local start_pos, end_pos, match = line:find(pattern)
 
     -- Check if the cursor is within the bounds of a match
     local tpl_values = self:get_tpl_values()
+    -- Merge special values into tpl_values
+    tpl_values = vim.tbl_extend("force", tpl_values, self.special_dict)
     while start_pos do
       if col >= start_pos and col <= end_pos then
         if tpl_values[match] then
