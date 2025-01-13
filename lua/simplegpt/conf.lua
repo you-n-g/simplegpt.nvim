@@ -10,13 +10,17 @@ local format = {
   code_only = "No extra explanations.\nNo block quotes. DO NOT include three backticks ``` in the code. Try to keep all the comments (You can modify them to make it better).\nKeep original indent so that we can replace the original code with the newly generated one.",
 }
 
+-- what shortcuts are available in the dialog
 local BASE_DIALOG_KEYMAPS = {
   "exit_keys",
   "cycle_next",
   "cycle_prev",
   "yank_code",
   "extract_code",
+}
+local TPL_DIALOG_KEYMAPS = {
   "show_value",
+  -- "", restore to default value
 }
 local LOCAL_QA_DIALOG_KEYMAPS = {
   "append_keys",
@@ -233,6 +237,9 @@ local M = {
             tpl = "terminal.json",
             target = "popup",
             opts = { noremap = true, silent = true, desc = "Terminal Command" },
+            reg = {
+              q = "fix the last command.",
+            }
           },
         },
       },
@@ -314,6 +321,14 @@ end
 function M.get_qa_dialog_keymaps()
   local keymaps = {}
   for _, k in ipairs(LOCAL_QA_DIALOG_KEYMAPS) do
+    keymaps[k] = M.options.dialog.keymaps[k]
+  end
+  return keymaps
+end
+
+function M.get_tpl_dialog_keymaps()
+  local keymaps = {}
+  for _, k in ipairs(TPL_DIALOG_KEYMAPS) do
     keymaps[k] = M.options.dialog.keymaps[k]
   end
   return keymaps

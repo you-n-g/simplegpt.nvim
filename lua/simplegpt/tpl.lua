@@ -152,91 +152,6 @@ function M.RegQAUI:build(callback)
     end
   end)
 
-  local show_special_key = require("simplegpt.conf").options.dialog.keymaps.show_value
-  self.all_pops[1]:map("n", show_special_key, function()
-    local cursor_pos = vim.api.nvim_win_get_cursor(0)
-    local line = vim.api.nvim_get_current_line()
-    local col = cursor_pos[2] + 1 -- Lua uses 1-based indexing
-
-    -- Pattern to match placeholders like {{...}}
-    local pattern = "{{%s*(%w+)%-?%s*}}"
-    local start_pos, end_pos, match = line:find(pattern)
-
-    -- Check if the cursor is within the bounds of a match
-    local tpl_values = self:get_tpl_values()
-    while start_pos do
-      if col >= start_pos and col <= end_pos then
-        if tpl_values[match] then
-          vim.cmd([[
-            highlight DarkPopup guibg=#1e1e1e guifg=#ffffff
-            highlight DarkPopupBorder guibg=#1e1e1e guifg=#ffffff
-          ]])
-          -- Calculate popup position based on current cursor position
-          local popup = Popup({
-            enter = false,
-            focusable = true,
-            zindex = 60, -- This ensures that register popups also have the highest priority
-            -- border = {
-            --   style = "rounded",
-            --   text = {
-            --     top = match,
-            --     top_align = "center",
-            --   },
-            -- },
-            border = "none",
-            size = {
-              width = "30%",
-              height = "30%",
-            },
-            -- position = "50%",
-            position = {
-              row = 0,
-              col = end_pos - col,
-            },
-            relative = "cursor",
-            -- size = {
-            --   width = 80,
-            --   height = "auto",
-            -- },
-            buf_options = {
-              modifiable = false,
-              readonly = true,
-            },
-            win_options = {
-              winhighlight = "Normal:DarkPopup,FloatBorder:DarkPopupBorder",
-              -- scrollbar = true, -- Enable scrollbar
-            },
-          })
-          -- Set the lines in the buffer
-          vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, vim.split(tpl_values[match], "\n"))
-          popup:mount()
-          local timer = vim.loop.new_timer()
-          timer:start(
-            3000,
-            0,
-            vim.schedule_wrap(function()
-              if vim.api.nvim_win_is_valid(popup.winid) and vim.api.nvim_get_current_win() ~= popup.winid then
-                popup:unmount()
-              end
-            end)
-          )
-          vim.api.nvim_create_autocmd("BufLeave", {
-            buffer = popup.bufnr,
-            callback = function()
-              if vim.api.nvim_win_is_valid(popup.winid) then
-                popup:unmount()
-              end
-            end,
-          })
-        else
-          print("No special value for '" .. match .. "' under cursor.")
-        end
-        return
-      end
-      start_pos, end_pos, match = line:find(pattern, end_pos + 1)
-    end
-    print("No placeholder under cursor.")
-  end, { noremap = true, desc = "Show Special Value for placeholder under cursor" })
   -- - save the registers: This applies to only the register template
   -- TODO: auto update register
   for _, pop in ipairs(self.all_pops) do
@@ -331,6 +246,89 @@ function M.RegQAUI:get_q()
     return require('jinja').lupa.expand(s, tab)
   end
   return interp(M.get_tpl(), self:get_tpl_values())
+end
+
+--- register common keys for dialogs
+---@param exit_callback
+function M.RegQAUI:register_keys(exit_callback)
+  M.RegQAUI.super.register_keys(self, exit_callback)
+  
+  -- Register TPL_DIALOG_KEYMAPS via add_winbar
+  local keymaps = require("simplegpt.conf").get_tpl_dialog_keymaps()
+  dialog.add_winbar(self.all_pops[1].winid, keymaps)
+
+  -- Move show value functionality here
+  local show_special_key = require("simplegpt.conf").options.dialog.keymaps.show_value
+  self.all_pops[1]:map("n", show_special_key, function()
+    local cursor_pos = vim.api.nvim_win_get_cursor(0)
+    local line = vim.api.nvim_get_current_line()
+    local col = cursor_pos[2] + 1 -- Lua uses 1-based indexing
+
+    -- Pattern to match placeholders like {{...}}
+    local pattern = "{{%s*(%w+)%-?%s*}}"
+    local start_pos, end_pos, match = line:find(pattern)
+
+    -- Check if the cursor is within the bounds of a match
+    local tpl_values = self:get_tpl_values()
+    while start_pos do
+      if col >= start_pos and col <= end_pos then
+        if tpl_values[match] then
+          vim.cmd([[
+            highlight DarkPopup guibg=#1e1e1e guifg=#ffffff
+            highlight DarkPopupBorder guibg=#1e1e1e guifg=#ffffff
+          ]])
+          -- Calculate popup position based on current cursor position
+          local popup = Popup({
+            enter = false,
+            focusable = true,
+            zindex = 60,
+            border = "none",
+            size = {
+              width = "30%",
+              height = "30%",
+            },
+            position = {
+              row = 0,
+              col = end_pos - col,
+            },
+            relative = "cursor",
+            buf_options = {
+              modifiable = false,
+              readonly = true,
+            },
+            win_options = {
+              winhighlight = "Normal:DarkPopup,FloatBorder:DarkPopupBorder",
+            },
+          })
+          vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, vim.split(tpl_values[match], "\n"))
+          popup:mount()
+          local timer = vim.loop.new_timer()
+          timer:start(
+            3000,
+            0,
+            vim.schedule_wrap(function()
+              if vim.api.nvim_win_is_valid(popup.winid) and vim.api.nvim_get_current_win() ~= popup.winid then
+                popup:unmount()
+              end
+            end)
+          )
+          vim.api.nvim_create_autocmd("BufLeave", {
+            buffer = popup.bufnr,
+            callback = function()
+              if vim.api.nvim_win_is_valid(popup.winid) then
+                popup:unmount()
+              end
+            end,
+          })
+        else
+          print("No special value for '" .. match .. "' under cursor.")
+        end
+        return
+      end
+      start_pos, end_pos, match = line:find(pattern, end_pos + 1)
+    end
+    print("No placeholder under cursor.")
+  end, { noremap = true, desc = "Show Special Value for placeholder under cursor" })
 end
 
 function M.get_buf_cont(buf)

@@ -275,6 +275,8 @@ vim.cmd([[
 local function append_to_terminal(bufnr, content)
   -- Check if buffer is a terminal and append content if it is
   if vim.api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
+    -- Save current window and switch to terminal buffer
+    vim.api.nvim_set_current_win(vim.fn.bufwinid(bufnr))
 
     -- Some terminals use vim mode. So we go to insert mode by 'i' first, then use <C-u> to remove previous content
     local keys = vim.api.nvim_replace_termcodes('ii<C-u>', true, false, true)
@@ -299,7 +301,6 @@ local function append_to_terminal(bufnr, content)
     vim.opt.paste = false
 
     -- Restore the original value of register 'z' after a short delay to ensure the paste operation completes
-    -- I think the problem is that the feedkeys function can be delayed.
     vim.defer_fn(function()
       vim.fn.setreg('z', original_z)
     end, 100)
