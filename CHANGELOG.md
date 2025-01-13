@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.2.0...v1.3.0) (2025-01-13)
+
+
+### Features
+
+* Add terminal buffer handling and improve code consistency ([d39b96a](https://github.com/you-n-g/simplegpt.nvim/commit/d39b96a37d19fce4ee0aa510e3696f7ea56243d5))
+* Add terminal command support and template for simplegpt ([87971fe](https://github.com/you-n-g/simplegpt.nvim/commit/87971fe6eb50f00652ce7569a3b531525a2abf32))
+
+
+### Bug Fixes
+
+* Correct JSON key from 'q' to 'q-' in terminal.json ([274a500](https://github.com/you-n-g/simplegpt.nvim/commit/274a5006392ecd1bfd1bdbea4d6cf704e6144cea))
+
 ## [1.2.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.1.0...v1.2.0) (2025-01-01)
 
 
