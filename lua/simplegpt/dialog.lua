@@ -7,7 +7,15 @@ local M = {
 }
 M.BaseDialog = utils.class("BaseDialog")
 
--- @param context: The context in which the dialog is being created.
+--- BaseDialog constructor
+-- @param context table containing dialog creation environment info:
+--   - from_bufnr (number): buffer number where request originated
+--   - visual_selection_or_cur_line (table): either:
+--       * visual selection: {start, end, mode} positions
+--       * current line: {row} line number
+--   - replace_target (string): what to replace ('visual', 'file', etc)
+--   - filetype (string): filetype of originating buffer
+--   - additional context-specific data needed for dialog operations
 function M.BaseDialog:ctor(context)
   self.context = context
   self.nui_obj = nil -- subclass should assign this object
@@ -18,11 +26,24 @@ function M.BaseDialog:ctor(context)
   self.conversation = {}
 end
 
+--- Switch back to the window containing the original buffer
+function M.BaseDialog:switch_to_original_window()
+  if self.context == nil then
+    return
+  end
+  local from_bufnr = self.context.from_bufnr
+  if from_bufnr and vim.api.nvim_buf_is_valid(from_bufnr) then
+    local winid = vim.fn.bufwinid(from_bufnr)
+    if winid ~= -1 then
+      vim.api.nvim_set_current_win(winid)
+    end
+  end
+end
+
 function M.BaseDialog:quit()
   -- Quit the dialog window
-  -- vim.cmd("q")
-  -- self.nui_obj:unmount() -- you can't use umount here. It will make the buffer disappear
   self.nui_obj:hide()
+  self:switch_to_original_window()
 end
 
 function M.BaseDialog:show()
@@ -33,6 +54,7 @@ end
 
 function M.BaseDialog:hide()
   self.nui_obj:hide()
+  self:switch_to_original_window()
 end
 
 --- Extracts the last code block from a given text.
@@ -73,7 +95,10 @@ local function extract_code(text, cur_line)
     if index ~= nil then
       recentCodeBlock = string.sub(recentCodeBlock, index + 1)
     end
-    return recentCodeBlock:gsub("```\n", ""):gsub("```", ""):match("^(.-)%s*$") -- We don't use "^%s*(.-)%s*$", so keep the first indents
+    return recentCodeBlock
+      :gsub("```\n", "")
+      :gsub("```", "")
+      :match("^(.-)%s*$") -- Keep first indents (don't use "^%s*(.-)%s*$")
   end
   return nil
 end
@@ -171,7 +196,8 @@ function M.ChatDialog:call(question)
   -- FIXME: But if we put it in target/init.lua, it will not work in packer.
   local Settings = require("chatgpt.settings")
   if not M.init then
-    Settings.get_settings_panel("chat_completions", require("chatgpt.config").options.openai_params) -- call to make Settings.params exists
+    local openai_params = require("chatgpt.config").options.openai_params
+    Settings.get_settings_panel("chat_completions", openai_params) -- Initialize Settings.params
     M.init = true
   end
 
@@ -317,7 +343,8 @@ function M.ChatDialog:register_keys(exit_callback)
   for _, pop in ipairs(self.all_pops) do
     -- Append full answer: append the response to original buffer
     pop:map("n", options.dialog.keymaps.append_keys, function()
-      self:update_full_answer() -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
+      -- Update full_answer before exit to ensure buffer exists
+      self:update_full_answer()
 
       self:quit() -- callback may open new windows. So we quit the windows before callback
       if exit_callback ~= nil then
@@ -336,7 +363,8 @@ function M.ChatDialog:register_keys(exit_callback)
 
     -- replace the selected buffer (or current line) with the response
     pop:map("n", options.dialog.keymaps.replace_keys, function()
-      self:update_full_answer() -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
+      -- Update full_answer before exit to ensure buffer exists
+      self:update_full_answer()
 
       -- TODO: we can support only inserting the code. It may bring more conveniences.
 
@@ -383,7 +411,8 @@ function M.ChatDialog:register_keys(exit_callback)
 
     -- Yank keys
     pop:map("n", options.dialog.keymaps.yank_keys, function()
-      self:update_full_answer() -- Update the full_answer before exit. Please note, it should be called before exit to ensure the buffer exists.
+      -- Update full_answer before exit to ensure buffer exists
+      self:update_full_answer()
       require("simplegpt.utils").set_reg(table.concat(self.full_answer, "\n"))
       print("answer Yanked")
     end, { noremap = true })
