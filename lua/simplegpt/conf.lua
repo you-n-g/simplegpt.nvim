@@ -137,6 +137,17 @@ local M = {
             opts = { noremap = true, silent = true, desc = "(C)omplete Code no explain" },
           },
           {
+            mode = { "v" },
+            suffix = "l",
+            tpl = "code_complete_w_lsp.json",
+            target = "diff",
+            reg = {
+              q = "Please fix all the errors reported by the LSP diagnostics information.\n"
+                .. format.code_only,
+            },
+            opts = { noremap = true, silent = true, desc = "Fix diagnostics information." },
+          },
+          {
             mode = { "n", "v" },
             suffix = "g",
             tpl = "fix_grammar.json",
