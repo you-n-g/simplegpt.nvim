@@ -89,9 +89,9 @@ function M.RegQAUI:update_reg()
 end
 
 function M.RegQAUI:build(callback)
-
+  local placeholders = M.get_placeholders()
   self.tpl_pop = Popup({
-    enter = false,
+    enter = #placeholders == 0,
     border = {
       style = "double",
       text = {
@@ -108,7 +108,6 @@ function M.RegQAUI:build(callback)
 
   self.pop_dict = {}
   local reg_cnt = 0
-  local placeholders = M.get_placeholders()
   for _, k in ipairs(placeholders) do
     self.pop_dict[k] = Popup({
       enter = #self.all_pops == #placeholders,  -- Counting a dict is complex, so we use this trick
@@ -226,6 +225,26 @@ function M.RegQAUI.get_special()
     end
   end
   res["all_buf"] = table.concat(all_buf, "\n")
+
+  -- 6) Get LSP diagnostics info
+  if select_pos then
+    start_line = select_pos.start.row - 1 -- Lua indexing is 0-based
+    end_line = select_pos["end"].row
+    -- Retrieve diagnostics for the current buffer
+    local lsp_info = {}
+    for i, line in ipairs(vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)) do
+      table.insert(lsp_info, string.format("Line %02d:%s", start_line + i, line))
+    end
+    -- Iterate over diagnostics and print them
+    local diagnostics = vim.diagnostic.get(buf)
+    for _, diagnostic in ipairs(diagnostics) do
+      -- vim diagnostics is also 0 based
+      if diagnostic.lnum >= start_line and diagnostic.lnum <= end_line then
+        table.insert(lsp_info, string.format("LSP diagnostics for line %d: %s", diagnostic.lnum + 1, diagnostic.message))
+      end
+    end
+    res["lsp_diag"] = table.concat(lsp_info, "\n")
+  end
   return res
 end
 
