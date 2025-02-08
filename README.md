@@ -2,7 +2,7 @@
 [![Mega-Linter](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg)](https://github.com/marketplace/actions/mega-linter)
 [![panvimdoc](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg)](https://github.com/kdheepak/panvimdoc)
 
-🤏SimpleGPT is a Vim plugin designed to provide a simple yet flexible way to customize your LLM/ChatGPT prompts to for your tasks.
+🤏SimpleGPT is a Vim plugin designed to provide a simple (high transparency based on Jinja) yet flexible way (context-aware based on buffer, visual selection, LSP info, etc.) to customize your LLM/ChatGPT prompts for your tasks (finishing tasks by replacing with diff comparison, appending, etc.).
 
 - Why 🤏SimpleGPT: **You need customized LLM/ChatGPT prompts for your tasks**.
   - AI Coding Plugins didn't provide support for every scenario.
@@ -235,14 +235,16 @@ Registers are of two types:
 
 
 #### Supported special registers
+You can use these variables in your jinja template.
 | key          | meaning                                                     |
 | -            | -                                                           |
-| content      | Partial file content around cursor (configurable length)    |
-| full_content | The complete file content                                   |
-| filetype     | The filetype of the current buffer                         |
-| visual       | The selected lines in visual mode                          |
-| context      | The nearby context of cursor (configurable lines up/down)  |
-| all_buf      | Content of all loaded buffers with files on disk          |
+| content      | Content around the cursor, limited by a configurable length |
+| full_content | Entire content of the current file                          |
+| filetype     | Filetype of the current buffer                              |
+| visual       | Lines selected in visual mode                               |
+| context      | Context around the cursor, configurable lines up/down       |
+| all_buf      | Content from all loaded buffers with files on disk          |
+| lsp_diag     | LSP diagnostics information for the selected lines          |
 
 #### Template Engine
 
