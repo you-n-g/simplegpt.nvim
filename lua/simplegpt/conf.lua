@@ -224,7 +224,7 @@ local M = {
             suffix = "<m-f>",
             tpl = "file_edit.json",
             target = "popup",
-            opts = { noremap = true, silent = true, desc = "Edit Entire (F)ile with diff" },
+            opts = { noremap = true, silent = true, desc = "Edit Entire (F)ile with SEARCH/REPLACE block" },
             -- context = { replace_target = "file" },
             reg = {
               q = format.diff
