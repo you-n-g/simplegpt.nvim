@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.3.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.2.0...v1.3.0) (2025-02-18)
+
+
+### Features
+
+* Add conditional visual content section to question template ([5d71d7d](https://github.com/you-n-g/simplegpt.nvim/commit/5d71d7de151c19a3abb907aec49d5c7af0592fb5))
+* Add LSP diagnostics fix command and template ([150bf3d](https://github.com/you-n-g/simplegpt.nvim/commit/150bf3dcc53dbfa49f74223f133e0433aa63ba7a))
+* add search and replace functionality with key mappings ([#7](https://github.com/you-n-g/simplegpt.nvim/issues/7)) ([7d245aa](https://github.com/you-n-g/simplegpt.nvim/commit/7d245aa92efb8e220da1315af018a872b6eddfb6))
+* Add terminal buffer handling and improve code consistency ([d39b96a](https://github.com/you-n-g/simplegpt.nvim/commit/d39b96a37d19fce4ee0aa510e3696f7ea56243d5))
+* Add terminal command support and template for simplegpt ([87971fe](https://github.com/you-n-g/simplegpt.nvim/commit/87971fe6eb50f00652ce7569a3b531525a2abf32))
+* Add window switch functionality to BaseDialog methods ([d5802e3](https://github.com/you-n-g/simplegpt.nvim/commit/d5802e34e7213c64bc36ffeeab73b24ac864dc93))
+* Fix tpl focus & Add LSP diagnostics info retrieval in RegQAUI.get_special function ([492e7a2](https://github.com/you-n-g/simplegpt.nvim/commit/492e7a27f3ef0b85c0eb8ffc705a24d40011aafe))
+
+
+### Bug Fixes
+
+* Correct JSON key from 'q' to 'q-' in terminal.json ([274a500](https://github.com/you-n-g/simplegpt.nvim/commit/274a5006392ecd1bfd1bdbea4d6cf704e6144cea))
+
 ## [1.2.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.1.0...v1.2.0) (2025-01-01)
 
 
