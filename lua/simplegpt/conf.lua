@@ -8,6 +8,7 @@ local intentions = {
 -- describe the designed format
 local format = {
   code_only = "No extra explanations.\nNo block quotes. DO NOT include three backticks ``` in the code. Try to keep all the comments (You can modify them to make it better).\nKeep original indent so that we can replace the original code with the newly generated one.",
+  diff=require"simplegpt.search_replace".format,
 }
 
 -- what shortcuts are available in the dialog
@@ -27,6 +28,7 @@ local LOCAL_QA_DIALOG_KEYMAPS = {
   "replace_keys",
   "yank_keys",
   "chat_keys",
+  "search_replace",
 }
 
 local M = {
@@ -49,6 +51,7 @@ local M = {
         replace_keys = "replace",
         yank_keys = "yank",
         chat_keys = "chat",
+        search_replace = "apply S&R",
       },
     },
     dialog = {
@@ -77,6 +80,8 @@ local M = {
         },
         -- - chat with current context
         chat_keys = { "<m-c>" },
+        -- - apply search and replace
+        search_replace = { "<m-r>" },
       },
     },
     -- custom data path for loading and dumping files
@@ -213,6 +218,17 @@ local M = {
             target = "diff",
             opts = { noremap = true, silent = true, desc = "Edit Entire (F)ile" },
             context = { replace_target = "file" },
+          },
+          {
+            mode = { "n", "v" },
+            suffix = "<m-f>",
+            tpl = "file_edit.json",
+            target = "popup",
+            opts = { noremap = true, silent = true, desc = "Edit Entire (F)ile with SEARCH/REPLACE block" },
+            -- context = { replace_target = "file" },
+            reg = {
+              q = format.diff
+            },
           },
           {
             mode = { "n" },

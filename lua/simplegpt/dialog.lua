@@ -1,5 +1,6 @@
 local utils = require("simplegpt.utils")
 local conf = require("simplegpt.conf")
+local search_replace = require("simplegpt.search_replace")
 local options = conf.options
 
 local M = {
@@ -463,7 +464,17 @@ function M.ChatDialog:register_keys(exit_callback)
         input:unmount()
       end)
     end, { noremap = true })
+
+    -- search and replace
+    pop:map("n", options.dialog.keymaps.search_replace, function()
+      -- Update full_answer before exit to ensure buffer exists
+      self:update_full_answer()
+      local sr_blocks = search_replace.extract_blocks(self.answer_popup.bufnr)
+      self:quit()
+      search_replace.apply_blocks(self.context.from_bufnr, sr_blocks)
+    end, { noremap = true })
   end
+
 end
 
 return M

@@ -264,6 +264,17 @@ SimpleGPT uses a Jinja-like template engine ([jinja-engine.nvim](https://github.
 
 The template engine provides familiar Jinja-style syntax while being fully integrated with Neovim.
 
+## Post-response Actions
+
+After receiving a response from ChatGPT, you can perform several actions to integrate the output into your workflow:
+
+- **Append**: Use the Append action (e.g., `<C-a>` key) to add the response to your original buffer.
+- **Replace**: Use the Replace action (e.g., `<C-r>` key) to substitute the selected text, current line, or entire file with the response.
+- **Yank**: Use the Yank action (e.g., `<C-y>` key) to copy the response to the clipboard.
+- **Search and Replace**: Use the Search and Replace action (e.g., `<m-r>` key) to apply automated modifications via SEARCH/REPLACE blocks.
+- **Chat/Continue**: Use the Chat action (e.g., `<m-c>` key) to continue the conversation or refine the response.
+
+
 ## Shortcuts
 - Dialog shortcuts:
   - For all dialogs
@@ -281,6 +292,7 @@ The template engine provides familiar Jinja-style syntax while being fully integ
       - Continue conversation with current context
       - Opens input prompt for follow-up questions
       - New response replaces current response
+    - `{"<m-r>"}`: Apply search and replace blocks to modify code based on the response
 - Normal shortcuts start with `<LocalLeader>g` (You can change it by setting `keymaps.prefix` when you setup the plugin)
   - Register operations:
     - `<LocalLeader>gl`: load registers
@@ -298,11 +310,21 @@ The template engine provides familiar Jinja-style syntax while being fully integ
 - Shortcuts for combined actions:  Loading template + send to target
   - By default, they start with `<LocalLeader>s` (You can change it by setting `keymaps.shortcuts.prefix` when you setup the plugin)
   - [Full list of shortcuts](lua/simplegpt/conf.lua#L25)
-    - `<LocalLeader>sr`: (R)ewrite Text
-    - `<LocalLeader>sc`: (C)omplete Code
-    - `<LocalLeader>sg`: Fix (g)rammar
-    - `<LocalLeader>sd`: Con(d)ense
-    - `<LocalLeader>st`: Con(t)inue
+    - `<LocalLeader>sr`: (R)ewrite Text in Diff Mode.
+    - `<LocalLeader>sC`: (C)omplete Code in Popup (with explanations).
+    - `<LocalLeader>sc`: (C)omplete Code in Diff Mode (no explanation).
+    - `<LocalLeader>sl`: Fix code using LSP diagnostics.
+    - `<LocalLeader>sg`: (G)rammar Fix.
+    - `<LocalLeader>sd`: (D)ense for condensing text.
+    - `<LocalLeader>st`: (T)hread or Continue conversation.
+    - `<LocalLeader>se`: (E)xplain Code or Text.
+    - `<LocalLeader>sF`: (F)ix code with error messages.
+    - `<LocalLeader>sE`: (E)xplain Text with Translation.
+    - `<LocalLeader>sT`: (T)ranslate text.
+    - `<LocalLeader>sq`: (Q)uestion with content.
+    - `<LocalLeader>sf`: Edit Entire (F)ile in Diff Mode.
+    - `<LocalLeader>s<m-f>`: Send current file for file edit via search/replace blocks.
+    - `<LocalLeader>sD`: (D)ictionary lookup.
 
 An example to change the shortcuts prefix in lazy.nvim:
 ```lua
