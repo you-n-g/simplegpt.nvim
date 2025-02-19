@@ -262,7 +262,20 @@ function M.RegQAUI.get_special()
   local file_path = vim.api.nvim_buf_get_name(buf)
   res["filename"] = vim.fn.fnamemodify(file_path, ":.") -- Extract the relative path from the full path
 
-  -- 9) Get the content of files listed in {{p}} and render it as a list of file content
+  -- 9) Get the terminal buffer content from the first visible terminal buffer, use content_max_len to control the number of lines
+  res["terminal"] = ""
+  for _, _buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.bo[_buf].buftype == 'terminal' and vim.api.nvim_win_is_valid(vim.fn.bufwinid(_buf)) then
+      local term_lines = vim.api.nvim_buf_line_count(_buf)
+      start_line = math.max(term_lines - content_max_len, 0)
+      lines = vim.api.nvim_buf_get_lines(_buf, start_line, term_lines, false)
+      res["terminal"] = table.concat(lines, "\n")
+      break -- Use the first encountered visible terminal buffer
+    end
+  end
+
+  -- Expanding --
+  -- a) Get the content of files listed in {{p}} and render it as a list of file content
   local p_files = vim.fn.getreg("p") -- Assuming the list of file paths is stored in register 'p'
   local file_contents = {}
 
@@ -393,6 +406,12 @@ function M.get_buf_cont(buf)
   end
 
   -- Get all lines
+  -- Load the buffer if it's not already loaded to get the content
+  if not vim.api.nvim_buf_is_loaded(buf) then
+    vim.fn.bufload(buf)
+  end
+
+  -- Get all lines from the buffer
   local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 
   -- Get the current file path

@@ -41,7 +41,7 @@ You always COMPLETELY IMPLEMENT the needed code!
 
 ONLY EVER RETURN CODE IN A *SEARCH/REPLACE BLOCK*!
 
-Here is a example of SEARCH/REPLACE BLOCK to change a function implementation to import.
+Here is an example of SEARCH/REPLACE BLOCK to change a function implementation to import.
 
 <<<<<<< SEARCH
 def hello():
@@ -51,6 +51,18 @@ def hello():
 =======
 from hello import hello
 
+>>>>>>> REPLACE
+
+Here is an example of a SEARCH/REPLACE BLOCK to add a function foo before the function hello (please remember to keep the original function).
+<<<<<<< SEARCH
+def hello():
+    "print a greeting"
+=======
+def foo()
+    print("foo")
+
+def hello():
+    "print a greeting"
 >>>>>>> REPLACE
 ]=]
 
