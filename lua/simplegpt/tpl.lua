@@ -245,6 +245,50 @@ function M.RegQAUI.get_special()
     end
     res["lsp_diag"] = table.concat(lsp_info, "\n")
   end
+
+  -- 7) Get the content in `.sgpt.md` and render it as {{md_context}}
+  local md_file_path = ".sgpt.md"
+  if vim.loop.fs_stat(md_file_path) then
+    local md_content = {}
+    for line in io.lines(md_file_path) do
+      table.insert(md_content, line)
+    end
+    res["md_context"] = table.concat(md_content, "\n")
+  else
+    res["md_context"] = ""
+  end
+
+  -- 8) Get the relative path of the current buffer
+  local file_path = vim.api.nvim_buf_get_name(buf)
+  res["filename"] = vim.fn.fnamemodify(file_path, ":.") -- Extract the relative path from the full path
+
+  -- 9) Get the terminal buffer content from the first visible terminal buffer, use content_max_len to control the number of lines
+  res["terminal"] = ""
+  for _, _buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.bo[_buf].buftype == 'terminal' and vim.api.nvim_win_is_valid(vim.fn.bufwinid(_buf)) then
+      local term_lines = vim.api.nvim_buf_line_count(_buf)
+      start_line = math.max(term_lines - content_max_len, 0)
+      lines = vim.api.nvim_buf_get_lines(_buf, start_line, term_lines, false)
+      res["terminal"] = table.concat(lines, "\n")
+      break -- Use the first encountered visible terminal buffer
+    end
+  end
+
+  -- Expanding --
+  -- a) Get the content of files listed in {{p}} and render it as a list of file content
+  local p_files = vim.fn.getreg("p") -- Assuming the list of file paths is stored in register 'p'
+  local file_contents = {}
+
+  for file_path in p_files:gmatch("[^\r\n]+") do
+    if vim.loop.fs_stat(file_path) then
+      local file_buf = vim.fn.bufnr(file_path, true) -- Get or create buffer for the file
+      if file_buf ~= -1 then
+        table.insert(file_contents, M.get_buf_cont(file_buf))
+      end
+    end
+  end
+  res["p"] = table.concat(file_contents, "\n")
+
   return res
 end
 
@@ -362,6 +406,12 @@ function M.get_buf_cont(buf)
   end
 
   -- Get all lines
+  -- Load the buffer if it's not already loaded to get the content
+  if not vim.api.nvim_buf_is_loaded(buf) then
+    vim.fn.bufload(buf)
+  end
+
+  -- Get all lines from the buffer
   local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 
   -- Get the current file path
