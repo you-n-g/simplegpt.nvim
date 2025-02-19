@@ -245,6 +245,37 @@ function M.RegQAUI.get_special()
     end
     res["lsp_diag"] = table.concat(lsp_info, "\n")
   end
+
+  -- 7) Get the content in `.sgpt.md` and render it as {{md_context}}
+  local md_file_path = ".sgpt.md"
+  if vim.loop.fs_stat(md_file_path) then
+    local md_content = {}
+    for line in io.lines(md_file_path) do
+      table.insert(md_content, line)
+    end
+    res["md_context"] = table.concat(md_content, "\n")
+  else
+    res["md_context"] = ""
+  end
+
+  -- 8) Get the relative path of the current buffer
+  local file_path = vim.api.nvim_buf_get_name(buf)
+  res["filename"] = vim.fn.fnamemodify(file_path, ":.") -- Extract the relative path from the full path
+
+  -- 9) Get the content of files listed in {{p}} and render it as a list of file content
+  local p_files = vim.fn.getreg("p") -- Assuming the list of file paths is stored in register 'p'
+  local file_contents = {}
+
+  for file_path in p_files:gmatch("[^\r\n]+") do
+    if vim.loop.fs_stat(file_path) then
+      local file_buf = vim.fn.bufnr(file_path, true) -- Get or create buffer for the file
+      if file_buf ~= -1 then
+        table.insert(file_contents, M.get_buf_cont(file_buf))
+      end
+    end
+  end
+  res["p"] = table.concat(file_contents, "\n")
+
   return res
 end
 

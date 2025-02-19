@@ -126,7 +126,8 @@ local M = {
             tpl = "code_complete.json",
             target = "popup",
             reg = {
-              q = "Please fix all the errors and complete all the missing feature in the focused part.\nYou don't have to output the complete code. You can output the key part with some extra context.",
+              f = "You don't have to output the complete code. You can output the key part with some extra context.",
+              q = "Please fix all the errors and complete all the missing feature in the focused part.",
             },
             opts = { noremap = true, silent = true, desc = "(C)omplete Code" },
           },
@@ -136,8 +137,8 @@ local M = {
             tpl = "code_complete.json",
             target = "diff",
             reg = {
-              q = "Please fix all the errors and complete all the missing feature in the focused part.\n"
-                .. format.code_only,
+              q = "Please fix all the errors and complete all the missing feature in the focused part.\n",
+              f = format.code_only,
             },
             opts = { noremap = true, silent = true, desc = "(C)omplete Code no explain" },
           },
@@ -222,12 +223,12 @@ local M = {
           {
             mode = { "n", "v" },
             suffix = "<m-f>",
-            tpl = "file_edit.json",
+            tpl = "code_complete.json",
             target = "popup",
-            opts = { noremap = true, silent = true, desc = "Edit Entire (F)ile with SEARCH/REPLACE block" },
+            opts = { noremap = true, silent = true, desc = "Edit (F)ile with SEARCH/REPLACE block" },
             -- context = { replace_target = "file" },
             reg = {
-              q = format.diff
+              f = format.diff
             },
           },
           {
@@ -248,7 +249,8 @@ local M = {
             target = "diff",
             opts = { noremap = true, silent = true, desc = "(R)efine selection" },
             reg = {
-              q = intentions.refine .. "\n" .. format.code_only,
+              q = intentions.refine, 
+              f = format.code_only,
             },
           },
           {
