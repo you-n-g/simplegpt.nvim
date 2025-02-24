@@ -1,4 +1,4 @@
-*simplegpt.txt*          For NVIM v0.8.0         Last change: 2025 February 18
+*simplegpt.txt*          For NVIM v0.8.0         Last change: 2025 February 24
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -341,7 +341,13 @@ full_content | Entire content of the current file | | filetype | Filetype of
 the current buffer | | visual | Lines selected in visual mode | | context |
 Context around the cursor, configurable lines up/down | | all_buf | Content
 from all loaded buffers with files on disk | | lsp_diag | LSP diagnostics
-information for the selected lines |
+information for the selected lines | | md_context | Directly loading the
+content in `.sgpt.md` as the register value. | | filename | The name of the
+current file | | terminal | The content from the active terminal buffer,
+capturing recent terminal output (if available) | | p | If register `p`
+contains a list of file paths (one per line), its value becomes the
+concatenation of the content from each of those files. Files that do not exist
+will be skipped. |
 
 
 TEMPLATE ENGINE
