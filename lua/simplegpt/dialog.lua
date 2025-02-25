@@ -8,15 +8,16 @@ local M = {
 }
 M.BaseDialog = utils.class("BaseDialog")
 
----BaseDialog constructor
----@param context table containing dialog creation environment info:
---   - from_bufnr (number): buffer number where request originated
---   - visual_selection_or_cur_line (table): either:
---       * visual selection: {start, end, mode} positions
---       * current line: {row} line number
---   - replace_target (string): what to replace ('visual', 'file', etc)
---   - filetype (string): filetype of originating buffer
---   - additional context-specific data needed for dialog operations
+--- BaseDialog constructor
+--- @param context table A table containing the dialog creation environment information with the following fields:
+---   - from_bufnr (number): The buffer number where the request originated.
+---   - visual_selection (table): Represents either:
+---       * A visual selection: {start, end, mode} positions.
+---   - replace_target (string): Specifies what to replace ('visual', 'file', etc.).
+---   - filetype (string): The filetype of the originating buffer.
+---   - cursor_pos (table): The current cursor position in the form {line, col}.
+---   - rqa (RegQAUI): An instance of the RegQAUI class for building questions and answers.
+---   - additional (table, optional): Context-specific data needed for dialog operations.
 function M.BaseDialog:ctor(context)
   self.context = context
   self.nui_obj = nil -- subclass should assign this object
@@ -408,7 +409,7 @@ function M.ChatDialog:register_keys(exit_callback)
       end
 
       local from_bufnr = self.context["from_bufnr"]
-      local last_line = self.context.visual_selection_or_cur_line["end"].row
+      local last_line = self.context.visual_selection["end"].row
 
       -- Handle terminal or normal buffer
       if not append_to_terminal(from_bufnr, self.full_answer) then
@@ -441,17 +442,17 @@ function M.ChatDialog:register_keys(exit_callback)
         -- Get the range of lines to replace
         local start_line, end_line, mode
         start_line, end_line, mode =
-          self.context.visual_selection_or_cur_line.start.row,
-          self.context.visual_selection_or_cur_line["end"].row,
-          self.context.visual_selection_or_cur_line.mode
+          self.context.visual_selection.start.row,
+          self.context.visual_selection["end"].row,
+          self.context.visual_selection.mode
         -- Replace the lines in from_bufnr with `self.full_answer`
         if mode == "V" then
           -- Replace the entire lines in visual selection with `self.full_answer`
           vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, end_line, false, self.full_answer)
         elseif mode == "v" then
           -- Keep the content before and after visual selection
-          local start_col = self.context.visual_selection_or_cur_line.start.col
-          local end_col = self.context.visual_selection_or_cur_line["end"].col
+          local start_col = self.context.visual_selection.start.col
+          local end_col = self.context.visual_selection["end"].col
           local current_line = vim.api.nvim_buf_get_lines(from_bufnr, start_line - 1, start_line, false)[1]
           local before_selection = current_line:sub(1, start_col - 1)
           local after_selection = current_line:sub(end_col + 1)

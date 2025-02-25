@@ -6,24 +6,25 @@ local loader = require("simplegpt.loader")
 
 M = {}
 
+function M.build_context(context_extra)
+  local context = {
+    filetype = vim.bo.filetype,
+    from_bufnr = vim.api.nvim_get_current_buf(),
+    replace_target = "visual", -- what the response is expected to replace (visual, file)
+  }
+  if context_extra ~= nil then
+    context = vim.tbl_extend("force", context, context_extra)
+  end
+
+  context.cursor_pos = vim.api.nvim_win_get_cursor(require"simplegpt.utils".get_win_of_buf(context.from_bufnr))
+  context.visual_selection = require"simplegpt.utils".get_visual_selection()
+  return context
+end
+
 function M.build_func(target)
   return function(context_extra)
-    local rqa = require("simplegpt.tpl").RegQAUI()
-    -- the context when building the QA builder
+    local context = M.build_context(context_extra)
     -- TODO: open a new tab and load current buffer
-    local context = {
-      filetype = vim.bo.filetype,
-      rqa = rqa,
-      from_bufnr = vim.api.nvim_get_current_buf(),
-      replace_target = "visual", -- what the response is expected to replace (visual, file)
-    }
-    if context_extra ~= nil then
-      context = vim.tbl_extend("force", context, context_extra)
-    end
-
-    context.cursor_pos = vim.api.nvim_win_get_cursor(require"simplegpt.utils".get_win_of_buf(context.from_bufnr))
-    context.visual_selection_or_cur_line = require"simplegpt.utils".get_visual_selection()
-
     if require"simplegpt.conf".options.new_tab then
       -- NOTE: it will fail to run tabedit if we are in a unnamed buffer
       -- Attempt to execute the command in a protected call
@@ -40,8 +41,10 @@ function M.build_func(target)
       end
     end
 
+    context['rqa'] = require("simplegpt.tpl").RegQAUI(context)
+    -- the context when building the QA builder
     -- rqa will build the question and send to the target
-    rqa:build(require("simplegpt.target." .. target).build_q_handler(context))
+    context['rqa']:build(require("simplegpt.target." .. target).build_q_handler(context))
   end
 end
 

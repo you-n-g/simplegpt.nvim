@@ -25,7 +25,7 @@ function M.setup_main_keymaps()
   )
   vim.keymap.set({ "n", "v" },
     keymaps.edit_reg.key or prefix .. keymaps.edit_reg.suffix, function()
-    local rqa = tpl.RegQAUI()
+    local rqa = tpl.RegQAUI(shortcut.build_context())
     rqa:build()
   end, { noremap = true, silent = true, desc = "edit registers" })
   vim.keymap.set(

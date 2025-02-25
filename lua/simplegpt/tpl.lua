@@ -109,12 +109,13 @@ function M.RegQAUI:build(callback)
   self.pop_dict = {}
   local reg_cnt = 0
   for _, k in ipairs(placeholders) do
+    print(k)
     self.pop_dict[k] = Popup({
       enter = #self.all_pops == #placeholders,  -- Counting a dict is complex, so we use this trick
       border = {
         style = "single",
         text = {
-          top = "register: {{" .. k .. "}}",
+          top = (k:match("^p%-?$") and "Files to be included as context | " or "") .. "register: {{" .. k .. "}}",
           top_align = "center",
         },
       },
@@ -164,19 +165,20 @@ function M.RegQAUI:build(callback)
 
 end
 
-function M.RegQAUI.get_special()
+
+function M.RegQAUI:get_special()
   -- self.context (use self.context)
   local res = {}
 
   -- shared variables
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local cursor_pos = self.context.cursor_pos
 
   -- 1) all file content
   -- Get the current buffer
-  local buf = vim.api.nvim_get_current_buf()
+  local buf = self.context.from_bufnr
   -- Get the number of lines in the buffer
   local line_count = vim.api.nvim_buf_line_count(buf)
-  local content_max_len = require "simplegpt.conf".options.tpl_conf.content_max_len;
+  local content_max_len = require "simplegpt.conf".options.tpl_conf.content_max_len
   -- Get all lines
   local lines = vim.api.nvim_buf_get_lines(buf, math.max(cursor_pos[1] - content_max_len - 1, 0),
     math.min(cursor_pos[1] + content_max_len, line_count), false)
@@ -184,7 +186,7 @@ function M.RegQAUI.get_special()
   res["full_content"] = table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), "\n")
 
   -- 2) get the visual content
-  local select_pos = require("simplegpt.utils").get_visual_selection(true)
+  local select_pos = self.context.visual_selection
 
   if select_pos then
     local start_line = select_pos.start.row - 1 -- Lua indexing is 0-based
@@ -204,10 +206,10 @@ function M.RegQAUI.get_special()
   end
 
   -- 3) Get the filetype of the current buffer
-  res["filetype"] = vim.bo.filetype
+  res["filetype"] = self.context.filetype
 
   -- 4) Get the context of current line (the line under the cursor). Including 10 lines before and 10 lines after
-  local context_len = require "simplegpt.conf".options.tpl_conf.context_len;
+  local context_len = require "simplegpt.conf".options.tpl_conf.context_len
   local start_line = math.max(cursor_pos[1] - context_len - 1, 0) -- Lua indexing is 0-based
   local end_line = math.min(cursor_pos[1] + context_len, line_count)
   -- Get the context lines
@@ -255,8 +257,6 @@ function M.RegQAUI.get_special()
       table.insert(md_content, line)
     end
     res["md_context"] = table.concat(md_content, "\n")
-  else
-    res["md_context"] = ""
   end
 
   -- 8) Get the relative path of the current buffer
@@ -280,9 +280,9 @@ function M.RegQAUI.get_special()
   local p_files = vim.fn.getreg("p") -- Assuming the list of file paths is stored in register 'p'
   local file_contents = {}
 
-  for file_path in p_files:gmatch("[^\r\n]+") do
-    if vim.loop.fs_stat(file_path) then
-      local file_buf = vim.fn.bufnr(file_path, true) -- Get or create buffer for the file
+  for _file_path in p_files:gmatch("[^\r\n]+") do
+    if vim.loop.fs_stat(_file_path) then
+      local file_buf = vim.fn.bufnr(_file_path, true) -- Get or create buffer for the file
       if file_buf ~= -1 then
         table.insert(file_contents, M.get_buf_cont(file_buf))
       end
@@ -292,6 +292,7 @@ function M.RegQAUI.get_special()
 
   return res
 end
+
 
 function M.RegQAUI:get_tpl_values()
   local tpl_values = {}
@@ -313,6 +314,12 @@ function M.RegQAUI:get_q()
     s = s:gsub("({{%l-}})", function(w)
       return w:gsub("-", "")
     end)
+    -- NOTE: for testing render
+    -- local t = {}
+    -- for k, v in pairs(tab) do
+    --   t[k] = "<placeholder>"
+    -- end
+    -- return require('jinja').lupa.expand(s, t)
     return require('jinja').lupa.expand(s, tab)
   end
   return interp(M.get_tpl(), self:get_tpl_values())
