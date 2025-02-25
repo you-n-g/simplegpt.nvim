@@ -12,8 +12,6 @@ function M.RegQAUI:ctor(...)
   M.RegQAUI.super.ctor(self, ...)
   self.pop_dict = {}                     -- a dict of register to popup
   self.tpl_pop = nil                     -- the popup of template
-  -- Get special dict before editing question to preserve file/visual selection
-  self.special_dict = self:get_special()
   if "" == vim.fn.getreg("t") then
     vim.fn.setreg("t", [[Context:```{{c}}```, {{q}}, {{i}}, Please input your answer:```]])
   end
@@ -109,7 +107,6 @@ function M.RegQAUI:build(callback)
   self.pop_dict = {}
   local reg_cnt = 0
   for _, k in ipairs(placeholders) do
-    print(k)
     self.pop_dict[k] = Popup({
       enter = #self.all_pops == #placeholders,  -- Counting a dict is complex, so we use this trick
       border = {
@@ -167,7 +164,8 @@ end
 
 
 function M.RegQAUI:get_special()
-  -- self.context (use self.context)
+  self:update_reg()
+
   local res = {}
 
   -- shared variables
@@ -281,6 +279,8 @@ function M.RegQAUI:get_special()
   local file_contents = {}
 
   for _file_path in p_files:gmatch("[^\r\n]+") do
+    -- Trim whitespace from the beginning and end of the file path
+    _file_path = vim.trim(_file_path)
     if vim.loop.fs_stat(_file_path) then
       local file_buf = vim.fn.bufnr(_file_path, true) -- Get or create buffer for the file
       if file_buf ~= -1 then
@@ -300,7 +300,7 @@ function M.RegQAUI:get_tpl_values()
     k = k:gsub("-", "") -- when rendering the template, we should remove the "-" in the placeholder
     tpl_values[k] = vim.fn.getreg(k)
   end
-  return vim.tbl_extend("force", tpl_values, self.special_dict)
+  return vim.tbl_extend("force", tpl_values, self:get_special())
 end
 
 function M.RegQAUI:get_q()
@@ -348,7 +348,7 @@ function M.RegQAUI:register_keys(exit_callback)
     -- Check if the cursor is within the bounds of a match
     local tpl_values = self:get_tpl_values()
     -- Merge special values into tpl_values
-    tpl_values = vim.tbl_extend("force", tpl_values, self.special_dict)
+    tpl_values = vim.tbl_extend("force", tpl_values, self:get_special())
     while start_pos do
       if col >= start_pos and col <= end_pos then
         if tpl_values[match] then
@@ -443,7 +443,7 @@ function M.get_buf_cont(buf)
   local file_type = vim.api.nvim_buf_get_option(buf, "filetype")
 
   -- Prepare the content to be set into the register
-  local content = "- " .. file_path .. ":\n" .. "```" .. file_type .. "\n" .. table.concat(lines, "\n") .. "\n```"
+  local content = "- " .. file_path .. ":\n" .. "````" .. file_type .. "\n" .. table.concat(lines, "\n") .. "\n````"
   return content
 end
 

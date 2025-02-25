@@ -73,7 +73,7 @@ function M.DiffPopup:build(context)
       0,
       -1,
       false,
-      vim.split(self.context.rqa.special_dict[key_map[self.context.replace_target]], "\n")
+      vim.split(self.context.rqa:get_special()[key_map[self.context.replace_target]], "\n")
     ) -- set conttn
 
     self:_turn_on_diff()

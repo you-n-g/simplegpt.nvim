@@ -138,6 +138,7 @@ require("simplegpt").setup({
   custom_template_path = "~/my_custom_templates/"
 })
 ```
+
 When you set a custom_template_path:
 - If a template is specified and it exists in the custom path, it will be loaded from and saved to that path.
 - If the template file doesn't exist in the custom path, a new file will be created there when you save the registers.
