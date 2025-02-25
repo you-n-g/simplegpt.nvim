@@ -21,6 +21,7 @@ local BASE_DIALOG_KEYMAPS = {
 }
 local TPL_DIALOG_KEYMAPS = {
   "show_value",
+  "preview_keys",
   -- "", restore to default value
 }
 local LOCAL_QA_DIALOG_KEYMAPS = {
@@ -47,6 +48,7 @@ local M = {
       },
       name_map = { -- map the name of features to a more readable name
         exit_keys = "exit&continue",
+        preview_keys = "preview&exit",
         append_keys = "append",
         replace_keys = "replace",
         yank_keys = "yank",
@@ -60,6 +62,7 @@ local M = {
         show_value = { "K" }, -- Default key for showing special value
         -- Base Dialog shortcuts
         exit_keys = { "q", "<c-c>", "<esc>" },
+        preview_keys = {"Q"},
         cycle_next = { "<tab>" },
         cycle_prev = { "<S-Tab>" },
         yank_code = { "<C-c>" },

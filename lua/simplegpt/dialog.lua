@@ -8,8 +8,8 @@ local M = {
 }
 M.BaseDialog = utils.class("BaseDialog")
 
---- BaseDialog constructor
--- @param context table containing dialog creation environment info:
+---BaseDialog constructor
+---@param context table containing dialog creation environment info:
 --   - from_bufnr (number): buffer number where request originated
 --   - visual_selection_or_cur_line (table): either:
 --       * visual selection: {start, end, mode} positions
@@ -25,6 +25,16 @@ function M.BaseDialog:ctor(context)
 
   require("simplegpt.target").set_last_dialog(self)
   self.conversation = {}
+end
+
+function M.BaseDialog:build()
+  -- Responsibilities of this method:
+  -- 1. Construct the dialog interface.
+  -- 2. Subclasses must implement this method to define the specific UI components and layout.
+  -- 3. Initialize and configure the `nui_obj` and any other necessary elements.
+  -- 4. Register keys.
+  -- 5. Show the nui.
+  error("The build method must be implemented by subclasses")
 end
 
 --- Switch back to the window containing the original buffer
@@ -167,6 +177,51 @@ function M.BaseDialog:register_keys(exit_callback)
       end
     end, { noremap = true })
   end
+end
+
+-- A util dialog to display information.
+M.InfoDialog = utils.class("InfoDialog", M.BaseDialog)
+
+function M.InfoDialog:ctor(context, info, filetype)
+  M.InfoDialog.super.ctor(self, context)
+  self.info = info
+  self.filetype = filetype or 'markdown'
+end
+
+function M.InfoDialog:build()
+  self.nui_obj = require("nui.popup")({
+    position = "50%",
+    size = {
+      width = "80%",
+      height = "80%",
+    },
+    border = {
+      style = "single",
+      text = {
+        top = "[Info]",
+        top_align = "center",
+      },
+    },
+    win_options = {
+      winhighlight = "Normal:Normal,FloatBorder:Normal",
+    },
+  })
+  table.insert(self.all_pops, self.nui_obj)
+
+  vim.api.nvim_buf_set_lines(self.nui_obj.bufnr, 0, -1, false, vim.split(self.info, "\n"))
+
+  -- Mount the popup
+  self.nui_obj:mount()
+
+  -- Set the filetype for the buffer using the recommended method
+  vim.bo[self.nui_obj.bufnr].filetype = self.filetype
+
+  -- Focus on the new popup nui_obj
+  -- This necessary due to previous exit nui may switch the focus to the from buffer
+  vim.api.nvim_set_current_win(self.nui_obj.winid)
+
+  -- Register keys for the popup
+  self:register_keys()
 end
 
 -- The dialog that are able to get response to a specific PopUps

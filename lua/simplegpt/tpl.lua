@@ -165,6 +165,7 @@ function M.RegQAUI:build(callback)
 end
 
 function M.RegQAUI.get_special()
+  -- self.context (use self.context)
   local res = {}
 
   -- shared variables
@@ -263,7 +264,7 @@ function M.RegQAUI.get_special()
   res["filename"] = vim.fn.fnamemodify(file_path, ":.") -- Extract the relative path from the full path
 
   -- 9) Get the terminal buffer content from the first visible terminal buffer, use content_max_len to control the number of lines
-  res["terminal"] = ""
+  res["terminal"] = nil
   for _, _buf in ipairs(vim.api.nvim_list_bufs()) do
     if vim.bo[_buf].buftype == 'terminal' and vim.api.nvim_win_is_valid(vim.fn.bufwinid(_buf)) then
       local term_lines = vim.api.nvim_buf_line_count(_buf)
@@ -302,6 +303,7 @@ function M.RegQAUI:get_tpl_values()
 end
 
 function M.RegQAUI:get_q()
+  self:update_reg() -- make sure the register is updated.
   local function interp(s, tab)
     -- return (s:gsub("({{.-}})", function(w)
     --   return tab[w:sub(3, -3)] or w
@@ -324,7 +326,8 @@ function M.RegQAUI:register_keys(exit_callback)
   local keymaps = require("simplegpt.conf").get_tpl_dialog_keymaps()
   dialog.add_winbar(self.all_pops[1].winid, keymaps)
 
-  -- Move show value functionality here
+  -- Special key bindings for current level of class
+  -- 1) Move show value functionality here
   local show_special_key = require("simplegpt.conf").options.dialog.keymaps.show_value
   self.all_pops[1]:map("n", show_special_key, function()
     local cursor_pos = vim.api.nvim_win_get_cursor(0)
@@ -398,6 +401,19 @@ function M.RegQAUI:register_keys(exit_callback)
     end
     print("No placeholder under cursor.")
   end, { noremap = true, desc = "Show Special Value for placeholder under cursor" })
+
+  -- 2) Register 'Q' to exit the NUI and show the result of get_q in a BaseDialog popup
+  local exit_preview_key = require("simplegpt.conf").options.dialog.keymaps.preview_keys
+  for _, pop in ipairs(self.all_pops) do
+      pop:map("n", exit_preview_key, function()
+      -- Exit the current NUI
+      self:quit()  -- this will switch back to the orginal buffer
+
+      -- Create an InfoDialog to show the result
+      local info_dialog = dialog.InfoDialog(self.context, self:get_q())
+      info_dialog:build()
+    end, { noremap = true, desc = "Exit NUI and show result of get_q in a popup" })
+  end
 end
 
 function M.get_buf_cont(buf)
