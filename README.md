@@ -247,7 +247,7 @@ You can use these variables in your jinja template.
 | lsp_diag     | LSP diagnostics information for the selected lines          |
 | md_context   | Directly loading the content in `.sgpt.md` as the register value. |
 | filename     | The name of the current file                                |
-| terminal     | The content from the active terminal buffer, capturing recent terminal output (if available) |
+| terminal     | The content from the active (visiable) terminal buffer, capturing recent terminal output (if available) |
 | p            | If register `p` contains a list of file paths (one per line), its value becomes the concatenation of the content from each of those files. Files that do not exist will be skipped. |
 
 #### Template Engine
