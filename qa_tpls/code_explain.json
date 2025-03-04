@@ -1,1 +1,1 @@
-{"q": "Please explain the part you are focusing.", "t": "You are an expert in programming.\n{{p-}}\nWe have a file with content:\n```{{filetype}} \n{{content}}\n```\nYou are focusing on following part\n```\n{{visual}}\n```\n{{q}}"}
+{"q": "Please explain the part you are focusing.", "t": "You are an expert in programming.\n{{p-}}\nWe have a file with content:\n```{{filetype}} \n{{content}}\n```\n\n{%if terminal%}\nHere is some related output from the terminal\n```\n{{terminal}}\n```\n{% endif %}\n\nYou are focusing on following part\n```\n{{visual}}\n```\n{{q}}"}

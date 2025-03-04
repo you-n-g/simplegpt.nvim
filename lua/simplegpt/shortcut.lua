@@ -7,6 +7,7 @@ local loader = require("simplegpt.loader")
 M = {}
 
 function M.build_context(context_extra)
+  ---@class DialogContext
   local context = {
     filetype = vim.bo.filetype,
     from_bufnr = vim.api.nvim_get_current_buf(),
@@ -17,7 +18,8 @@ function M.build_context(context_extra)
   end
 
   context.cursor_pos = vim.api.nvim_win_get_cursor(require"simplegpt.utils".get_win_of_buf(context.from_bufnr))
-  context.visual_selection = require"simplegpt.utils".get_visual_selection()
+  context.visual_selection = require"simplegpt.utils".get_visual_selection(true)
+  context.visual_selection_or_current_line = require"simplegpt.utils".get_visual_selection()  -- replace and append action will use this if no visual
   return context
 end
 

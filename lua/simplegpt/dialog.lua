@@ -3,21 +3,22 @@ local conf = require("simplegpt.conf")
 local search_replace = require("simplegpt.search_replace")
 local options = conf.options
 
+--- @class DialogContext
+--- @field from_bufnr number         The buffer number where the request originated.
+--- @field visual_selection table    Represents either a visual selection: {start, end, mode} positions.
+--- @field replace_target string     Specifies what to replace ('visual', 'file', etc.).
+--- @field filetype string           The filetype of the originating buffer.
+--- @field cursor_pos table          The current cursor position in the form {line, col}.
+--- @field rqa RegQAUI             An instance of the RegQAUI class for building questions and answers.
+--- @field additional? table         Optional context-specific data needed for dialog operations.
+
 local M = {
   init = false, -- if it is initialized
 }
 M.BaseDialog = utils.class("BaseDialog")
 
 --- BaseDialog constructor
---- @param context table A table containing the dialog creation environment information with the following fields:
----   - from_bufnr (number): The buffer number where the request originated.
----   - visual_selection (table): Represents either:
----       * A visual selection: {start, end, mode} positions.
----   - replace_target (string): Specifies what to replace ('visual', 'file', etc.).
----   - filetype (string): The filetype of the originating buffer.
----   - cursor_pos (table): The current cursor position in the form {line, col}.
----   - rqa (RegQAUI): An instance of the RegQAUI class for building questions and answers.
----   - additional (table, optional): Context-specific data needed for dialog operations.
+--- @param context DialogContext A table containing the dialog creation environment.
 function M.BaseDialog:ctor(context)
   self.context = context
   self.nui_obj = nil -- subclass should assign this object
@@ -409,7 +410,7 @@ function M.ChatDialog:register_keys(exit_callback)
       end
 
       local from_bufnr = self.context["from_bufnr"]
-      local last_line = self.context.visual_selection["end"].row
+      local last_line = self.context.visual_selection_or_current_line["end"].row
 
       -- Handle terminal or normal buffer
       if not append_to_terminal(from_bufnr, self.full_answer) then
@@ -442,17 +443,17 @@ function M.ChatDialog:register_keys(exit_callback)
         -- Get the range of lines to replace
         local start_line, end_line, mode
         start_line, end_line, mode =
-          self.context.visual_selection.start.row,
-          self.context.visual_selection["end"].row,
-          self.context.visual_selection.mode
+          self.context.visual_selection_or_current_line.start.row,
+          self.context.visual_selection_or_current_line["end"].row,
+          self.context.visual_selection_or_current_line.mode
         -- Replace the lines in from_bufnr with `self.full_answer`
         if mode == "V" then
           -- Replace the entire lines in visual selection with `self.full_answer`
           vim.api.nvim_buf_set_lines(from_bufnr, start_line - 1, end_line, false, self.full_answer)
         elseif mode == "v" then
           -- Keep the content before and after visual selection
-          local start_col = self.context.visual_selection.start.col
-          local end_col = self.context.visual_selection["end"].col
+          local start_col = self.context.visual_selection_or_current_line.start.col
+          local end_col = self.context.visual_selection_or_current_line["end"].col
           local current_line = vim.api.nvim_buf_get_lines(from_bufnr, start_line - 1, start_line, false)[1]
           local before_selection = current_line:sub(1, start_col - 1)
           local after_selection = current_line:sub(end_col + 1)

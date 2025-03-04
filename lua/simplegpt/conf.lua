@@ -192,6 +192,9 @@ local M = {
             suffix = "F",
             tpl = "fix_bug_with_err.json",
             target = "popup",
+            reg = {
+              f = format.diff,
+            },
             opts = { noremap = true, silent = true, desc = "(F)ix errors" },
           },
           {
