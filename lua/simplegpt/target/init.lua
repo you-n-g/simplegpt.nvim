@@ -9,10 +9,10 @@ for _, module in pairs(modules) do
 end
 
 function M.set_last_dialog(dialog)
-  if require("simplegpt.utils").isinstance(dialog, require("simplegpt.dialog").ChatDialog) then
-    -- filter and only record chatdialog
-    M.last_dialog = dialog
-  end
+  -- filter and only record chatdialog
+  -- if require("simplegpt.utils").isinstance(dialog, require("simplegpt.dialog").ChatDialog) then
+  -- end
+  M.last_dialog = dialog  -- But we think normal popup dialog is also useful
 end
 
 function M.resume_last_dialog()

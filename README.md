@@ -309,7 +309,7 @@ After receiving a response from ChatGPT, you can perform several actions to inte
     - `<LocalLeader>gr`: send to get direct response
     - `<LocalLeader>gd`: send to get response with diff
   - Other operations:
-    - `<LocalLeader>gR`: resume last popup
+    - `<LocalLeader>gR`: toggle the dialog.
     - `<LocalLeader>gp`: load current file to reg
     - `<LocalLeader>gP`: append current file to reg
 - Shortcuts for combined actions:  Loading template + send to target

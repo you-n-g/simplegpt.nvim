@@ -340,6 +340,14 @@ local M = {
   },
 }
 
+-- This function retrieves the basic keymaps for a given name.
+-- It first checks if a specific key is defined for the name.
+-- If not, it constructs the keymap using a prefix and suffix associated with the name.
+function M.get_basic_keymaps(name)
+    local km = M.options.keymaps
+    return km[name].key or km.prefix .. km[name].suffix
+end
+
 function M.setup(options)
   options = options or {}
   M.options = vim.tbl_deep_extend("force", {}, M.defaults, options)

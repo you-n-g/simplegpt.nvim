@@ -70,6 +70,14 @@ function M.BaseDialog:hide()
   self:switch_to_original_window()
 end
 
+function M.BaseDialog:toggle_window()
+  if self.nui_obj._.mounted then
+    self:hide()
+  else
+    self:show()
+  end
+end
+
 --- Extracts the last code block from a given text.
 -- This function was originally located in `lua/chatgpt/flows/chat/base.lua` within the ChatGPT.nvim project,
 -- but has been copied and adapted for use within this module.
@@ -125,6 +133,14 @@ function M.BaseDialog:register_keys(exit_callback)
 
   M.add_winbar(self.all_pops[1].winid, keymaps) -- add winbar to the first popup
 
+  -- - cycle windows
+  local _closure_func = function(i, sft)
+    return function()
+      -- P(i, sft, (i - 1 + sft) % #all_pops + 1,  all_pops[0].winid, all_pops[1].winid)
+      vim.api.nvim_set_current_win(all_pops[(i - 1 + sft) % #all_pops + 1].winid)
+    end
+  end
+
   -- set keys to escape for all popups
   -- - Quit
   for _, pop in ipairs(all_pops) do
@@ -135,22 +151,11 @@ function M.BaseDialog:register_keys(exit_callback)
         exit_callback()
       end
     end, { noremap = true })
-  end
 
-  -- - cycle windows
-  local _closure_func = function(i, sft)
-    return function()
-      -- P(i, sft, (i - 1 + sft) % #all_pops + 1,  all_pops[0].winid, all_pops[1].winid)
-      vim.api.nvim_set_current_win(all_pops[(i - 1 + sft) % #all_pops + 1].winid)
-    end
-  end
-  for i, pop in ipairs(all_pops) do
     pop:map("n", keymaps.cycle_next, _closure_func(i, 1), { noremap = true })
     pop:map("n", keymaps.cycle_prev, _closure_func(i, -1), { noremap = true })
-  end
 
-  -- - yank (c)ode
-  for _, pop in ipairs(all_pops) do
+    -- - yank (c)ode
     pop:map("n", keymaps.yank_code, function()
       local full_cont = table.concat(vim.api.nvim_buf_get_lines(pop.bufnr, 0, -1, false), "\n")
       local code = extract_code(full_cont, vim.api.nvim_win_get_cursor(pop.winid)[1])
@@ -164,10 +169,8 @@ function M.BaseDialog:register_keys(exit_callback)
         print(string.format("Yanked Code Summary: %d lines, %d characters", num_lines, num_chars))
       end
     end, { noremap = true })
-  end
 
-  -- Add <C-k> as a shortcut to replace the `pop.bufnr` with the code block that is closest to the cursor
-  for _, pop in ipairs(all_pops) do
+    -- Add <C-k> as a shortcut to replace the `pop.bufnr` with the code block that is closest to the cursor
     pop:map("n", keymaps.extract_code, function()
       local full_cont = table.concat(vim.api.nvim_buf_get_lines(pop.bufnr, 0, -1, false), "\n")
       local code = extract_code(full_cont, vim.api.nvim_win_get_cursor(pop.winid)[1])
@@ -178,7 +181,15 @@ function M.BaseDialog:register_keys(exit_callback)
         print("No code block found near the cursor.")
       end
     end, { noremap = true })
+
+    -- Add keymap to toggle dialog visibility using resume_dialog keymaps
+    P( conf.get_basic_keymaps("resume_dialog"))
+    pop:map("n", conf.get_basic_keymaps("resume_dialog"), function()
+      print("good")
+      self:toggle_window()
+    end, { noremap = true })
   end
+
 end
 
 -- A util dialog to display information.
