@@ -143,7 +143,7 @@ function M.BaseDialog:register_keys(exit_callback)
 
   -- set keys to escape for all popups
   -- - Quit
-  for _, pop in ipairs(all_pops) do
+  for i, pop in ipairs(all_pops) do
     pop:map("n", keymaps.exit_keys, function()
       self:quit() -- callback may open new windows. So we quit the windows before callback
 
