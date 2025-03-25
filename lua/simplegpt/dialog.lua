@@ -183,9 +183,7 @@ function M.BaseDialog:register_keys(exit_callback)
     end, { noremap = true })
 
     -- Add keymap to toggle dialog visibility using resume_dialog keymaps
-    P( conf.get_basic_keymaps("resume_dialog"))
     pop:map("n", conf.get_basic_keymaps("resume_dialog"), function()
-      print("good")
       self:toggle_window()
     end, { noremap = true })
   end
