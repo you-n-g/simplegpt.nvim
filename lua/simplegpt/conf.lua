@@ -186,6 +186,19 @@ local M = {
             tpl = "code_explain.json",
             target = "popup",
             opts = { noremap = true, silent = true, desc = "(E)xplain or Question" },
+            reg = {
+              q = "Please explain the part you are focusing.",
+            },
+          },
+          {
+            mode = { "n", "v" },
+            suffix = "b",
+            tpl = "code_explain.json",
+            target = "popup",
+            opts = { noremap = true, silent = true, desc = "Find (B)ug." },
+            reg = {
+              q = "Can you find any bugs in the current script that could cause it to fail during execution?\nPlease list bugs that are certain to cause failure first, followed by potential bugs you think might occur. Rank the bugs by their likelihood of causing issues, starting with the most probable."
+            },
           },
           {
             mode = { "n", "v" },
