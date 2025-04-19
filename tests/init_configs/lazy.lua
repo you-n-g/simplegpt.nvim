@@ -16,25 +16,26 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
 vim.g.maplocalleader = "\\" -- Same for `maplocalleader`
 
--- ChatGPT.nvim has a different naming convention for the environment variable
-if vim.env.OPENAI_BASE_URL then
-  vim.env.OPENAI_API_HOST = vim.env.OPENAI_BASE_URL
-end
-
 local plugins = {
   {
     "you-n-g/simplegpt.nvim",
     dependencies = {
-      -- "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
       {
-        "jackMort/ChatGPT.nvim",
+        "yetone/avante.nvim",
         event = "VeryLazy",
-        config = true,
+        opts = {
+          provider = "openai",
+          openai = {
+            endpoint = vim.env.OPENAI_BASE_URL,
+            model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
+            timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
+            temperature = 0,
+            max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+          },
+        },
         dependencies = {
           "MunifTanjim/nui.nvim",
           "nvim-lua/plenary.nvim",
-          "folke/trouble.nvim",
-          "nvim-telescope/telescope.nvim",
         },
       },
       "you-n-g/jinja-engine.nvim",

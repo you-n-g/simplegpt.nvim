@@ -2,7 +2,7 @@
 [![Mega-Linter](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg)](https://github.com/marketplace/actions/mega-linter)
 [![panvimdoc](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg)](https://github.com/kdheepak/panvimdoc)
 
-🤏SimpleGPT is a Vim plugin designed to provide a simple (high transparency based on Jinja) yet flexible way (context-aware based on buffer, visual selection, LSP info, etc.) to customize your LLM/ChatGPT prompts for your tasks (finishing tasks by replacing with diff comparison, appending, etc.).
+🤏SimpleGPT is a Vim plugin designed to provide a simple (high transparency based on Jinja) yet flexible way (context-aware based on buffer, visual selection, LSP info, etc.) to customize your LLM/ChatGPT prompts for your tasks (finishing tasks by replacing them with diff comparison, appending, etc.) on nearly all kinds of LLM APIs.
 
 - Why 🤏SimpleGPT: **You need customized LLM/ChatGPT prompts for your tasks**.
   - AI Coding Plugins didn't provide support for every scenario.
@@ -37,9 +37,12 @@ We provide a tools gallery for basic usage, which also serves as examples for fu
 More tools are coming soon.
 
 # Installation
-⚠️Please follow the [installation guide of ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim?tab=readme-ov-file#installation) to make sure your ChatGPT works.
+Our project aims to make customizing your LLM/ChatGPT prompts straightforward by using the [yetone/avante.nvim](https://github.com/yetone/avante.nvim) as the backend API, ensuring we don't reinvent the wheel while supporting diverse models.
 
-You can use `:ChatGPT` to start a chat and verify if it is working.
+
+⚠️Please follow the [installation guide of avante.nvim](https://github.com/yetone/avante.nvim#installation) to make sure it works.
+
+You can use `:AvanteAsk` to start a chat and verify if it is working.
 
 ```lua
 -- Lazy.nvim
@@ -47,14 +50,12 @@ You can use `:ChatGPT` to start a chat and verify if it is working.
   "you-n-g/simplegpt.nvim",
   dependencies = {
     {
-      "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
+      "yetone/avante.nvim", -- You should configure your avante.nvim make sure it works.
       event = "VeryLazy",
-      config = true,
+      opts = {<your config>},
       dependencies = {
         "MunifTanjim/nui.nvim",
         "nvim-lua/plenary.nvim",
-        "folke/trouble.nvim",
-        "nvim-telescope/telescope.nvim",
       },
     },
     "you-n-g/jinja-engine.nvim",
@@ -71,16 +72,14 @@ use({
   end,
   requires = {
     {
-      "jackMort/ChatGPT.nvim", -- You should configure your ChatGPT make sure it works.
+      "yetone/avante.nvim", -- You should configure your avante.nvim make sure it works.
       event = "VimEnter",
       config = function()
-        require("chatgpt").setup()
+        require("avante").setup({<your config>})
       end,
       requires = {
         "MunifTanjim/nui.nvim",
         "nvim-lua/plenary.nvim",
-        "folke/trouble.nvim",
-        "nvim-telescope/telescope.nvim",
       },
     },
     "you-n-g/jinja-engine.nvim",
@@ -458,3 +457,4 @@ You can test the plugin with minimal config with
 # Related Projects
 - [jackMort/ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim)
 - [robitx/gp.nvim](https://github.com/Robitx/gp.nvim)
+- [yetone/avante.nvim](https://github.com/yetone/avante.nvim)

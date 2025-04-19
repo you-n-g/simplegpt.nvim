@@ -2,6 +2,7 @@ local utils = require("simplegpt.utils")
 local conf = require("simplegpt.conf")
 local search_replace = require("simplegpt.search_replace")
 local options = conf.options
+local avante_llm    = require("avante.llm")
 
 --- @class DialogContext
 --- @field from_bufnr number         The buffer number where the request originated.
@@ -199,6 +200,36 @@ function M.InfoDialog:ctor(context, info, filetype)
   self.filetype = filetype or 'markdown'
 end
 
+local Providers = require("avante.providers")
+local Config = require("avante.config")
+--- @param messages table
+--- @param cb fun(chunk: string, state: string)  Callback receiving START/CONTINUE/END
+--- @param should_stop fun():boolean            (unused) stop predicate
+function M.chat_completions(messages, cb, should_stop)
+  -- pick the default provider
+  local provider = Providers[Config.provider]
+  local prompt_opts = {
+    system_prompt="You are a helpful AI assistant.",
+    messages = messages,
+  }
+  local handler_opts = {
+    on_start = function() cb("", "START") end,
+    on_chunk = function(chunk) cb(chunk, "CONTINUE") end,
+    on_stop = function(stop_opts)
+      if stop_opts.reason == "complete" then
+        cb("", "END")
+      else
+        cb("", stop_opts.reason)
+      end
+    end,
+  }
+  avante_llm.curl({
+    provider     = provider,
+    prompt_opts  = prompt_opts,
+    handler_opts = handler_opts,
+  })
+end
+
 function M.InfoDialog:build()
   self.nui_obj = require("nui.popup")({
     position = "50%",
@@ -259,21 +290,11 @@ function M.ChatDialog:show()
 end
 
 function M.ChatDialog:call(question)
-  -- NOTE: we have to initial ChatGPT.nvim at least once to make the settings effective
-  -- FIXME: But if we put it in target/init.lua, it will not work in packer.
-  local Settings = require("chatgpt.settings")
-  if not M.init then
-    local openai_params = require("chatgpt.config").options.openai_params
-    Settings.get_settings_panel("chat_completions", openai_params) -- Initialize Settings.params
-    M.init = true
-  end
-
   -- Save the question to conversation history
   table.insert(self.conversation, { content = question, role = "user" })
 
   local messages = vim.deepcopy(self.conversation) -- Create a copy of the full conversation
 
-  local params = vim.tbl_extend("keep", { stream = true, messages = messages }, require("chatgpt.settings").params)
   local popup = self.answer_popup -- add it to namespace to support should_stop & cb
   local current_answer = "" -- Track the complete answer
 
@@ -320,7 +341,7 @@ function M.ChatDialog:call(question)
     end
   end
 
-  require("chatgpt.api").chat_completions(params, cb, should_stop)
+  M.chat_completions(messages, cb, should_stop)
 end
 
 function M.ChatDialog:update_full_answer()

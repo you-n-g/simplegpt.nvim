@@ -16,16 +16,23 @@ require("packer").startup(function()
     end,
     requires = {
       {
-        "jackMort/ChatGPT.nvim",
+        "yetone/avante.nvim",
         event = "VimEnter",
         config = function()
-          require("chatgpt").setup()
+          require("avante").setup({
+            provider = "openai",
+            openai = {
+              endpoint = vim.env.OPENAI_BASE_URL,
+              model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
+              timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
+              temperature = 0,
+              max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+            },
+          })
         end,
         requires = {
           "MunifTanjim/nui.nvim",
           "nvim-lua/plenary.nvim",
-          "folke/trouble.nvim",
-          "nvim-telescope/telescope.nvim",
         },
       },
       "you-n-g/jinja-engine.nvim",
