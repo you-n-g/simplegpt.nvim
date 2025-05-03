@@ -2,7 +2,7 @@
 [![Mega-Linter](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg)](https://github.com/marketplace/actions/mega-linter)
 [![panvimdoc](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg)](https://github.com/kdheepak/panvimdoc)
 
-🤏SimpleGPT is a Vim plugin designed to provide a simple (high transparency based on Jinja) yet flexible way (context-aware based on buffer, visual selection, LSP info, etc.) to customize your LLM/ChatGPT prompts for your tasks (finishing tasks by replacing them with diff comparison, appending, etc.) on nearly all kinds of LLM APIs.
+🤏SimpleGPT is a Vim plugin designed to provide a simple (high transparency based on Jinja) yet flexible way (context-aware based on buffer, visual selection, LSP info, terminal etc.) to customize your LLM/ChatGPT prompts for your tasks (finishing tasks by replacing them with diff comparison, appending, SEARCH/REPLACE etc.) on nearly all kinds of LLM APIs.
 
 - Why 🤏SimpleGPT: **You need customized LLM/ChatGPT prompts for your tasks**.
   - AI Coding Plugins didn't provide support for every scenario.
@@ -346,98 +346,6 @@ An example to change the shortcuts prefix in lazy.nvim:
   --- ... other configurations
 }
 ```
-
-# TODOs
-Flag explanation:
-- 🌟: high priority
-
-- TODOs
-  - Basic:
-    - [x] Conversations
-      - [x] Supporting multi-rounds conversation with context
-      - [/] Converting current response to a new conversation template
-        - Quick thought: we can build a ChatGPT session directly.
-        - Chat Conversation is useful enough, so we cancel this feature.
-    - [ ] Anonymous register to avoid confliction;
-  - Misc
-    - [ ] Inline selection & following operators
-    - [x] Resume last answer.
-    - [X] Diff mode
-    - [x] Fast copy code in backquotes
-    - [x] async Answering in the background(it will stop the answering streaming if we exit the QA UI)
-      - It would boots the writing workflow.
-        - We can create a new tab and ask the question further
-    - [x] Temporary register(without saving to disk)
-    - Repository level context
-      - Add file content to context
-        - [x] current file
-      - [x] Ask repository-level question
-    - Shortcuts
-      - [ ] Telescope to run shortcuts.
-      - [x] Directly ask error information (load + do!)
-        - [x] while remain the original information.
-    - Utils:
-      - [ ] get the buffer number where you are from; It is helpful to accurate control the content in different windows.
-  - Targets:
-    - Run from targets;
-      - Dialog targets ==>  Supporting edit in place.
-      - [-] 🌟🐞 When we goto tex Diffpop for the second time. It will prompt to select the b:vimtex_main
-          - Stop setting `b:vimtex_main` in my config solve this problem.
-        - If you don't abort it. It will not appear again.
-    - Followup actions;
-      - [X] Replace the text
-      - [X] Append the text
-      - [X] Yank the text
-      - [x] 🌟🐞The action line may is wrong when we enable new tab.
-      - [x] 🌟🐞For visual selection, the append action will append content after the first line.
-  - UI:
-    - short cuts
-    - [x] Help function: You can press `?` to see the help menu for shortcuts.
-      - Alternative implementation: [ ] Add shortcuts prompt around the box
-    - Add preview of the place holders inline
-  - Navigation
-    - [x] fast saving and loading(without entering name)
-      - [x] remembering the filename in the background.
-    - [x] Better Preview of the documents
-  - Docs: try panvimdoc
-    - [x] Normal vim doc(generating from README.md).
-    - [x] One picture docs.
-    - [X] Recording Demo
-    - features demonstration:
-      - repository-level QA building:
-    - [ ] Document about the config
-  - Open source routine
-    - Vim CI
-      - [X] Add linting CI
-      - [ ] Fix Linting errors
-        - [Switching to Mega-Linter](https://github.com/nvuillam/npm-groovy-lint/pull/109/files) may help.
-        - Maybe Refining code by evolving framework.
-    - [x] Automatic releasing (maybe tagging is included)
-    - Tests:
-      - Add test initialization configs for fast debugging and testing.
-        - [X] lazy.nvim
-        - [X] packer.nvim
-  - templates design
-    - [x] Ask inline questions(continue writing)
-    - [x] Simplify the template design (merge templates)
-    - [ ] Disable the back quotes in the template. Even though I add following content, it still does not work.
-      ```
-      ---- Example focused part ----
-      def plus(a, b):
-          # TODO: plus them and return
-      ---- Example output part ----
-      def plus(a, b):
-          return a + b
-      ```
-  - Code Design:
-    - [x] use `show` an `hide` to ctrl the conversation dialog
-
-- Bugs
-  - [x] Replace only affect one line(in the popup target).
-  - [x] It raises errors when `<c-r>` in popup target.
-
-- More features that may be added in the long future
-  - Automatically ask questions based on the current context(Currently we have to manually select and ask the question)
 
 # Development
 
