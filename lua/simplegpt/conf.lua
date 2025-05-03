@@ -141,7 +141,7 @@ local M = {
             target = "diff",
             reg = {
               q = "Please fix all the errors and complete all the missing feature in the focused part.\n",
-              f = format.code_only,
+              f = "Format requirements:\n" .. format.code_only,
             },
             opts = { noremap = true, silent = true, desc = "(C)omplete Code no explain" },
           },
@@ -234,10 +234,13 @@ local M = {
           {
             mode = { "n", "v" },
             suffix = "f",
-            tpl = "file_edit.json",
+            tpl = "code_complete.json",
             target = "diff",
             opts = { noremap = true, silent = true, desc = "Edit Entire (F)ile" },
             context = { replace_target = "file" },
+            reg = {
+              f = "Please output the entire content to replace the file to be edit.\n" .. format.code_only,
+            },
           },
           {
             mode = { "n", "v" },
@@ -251,22 +254,11 @@ local M = {
             },
           },
           {
-            mode = { "n" },
+            mode = { "v", "n" },
             suffix = "<m-r>",
-            tpl = "file_edit.json",
+            tpl = "code_complete_w_lsp.json",
             target = "diff",
-            opts = { noremap = true, silent = true, desc = "(R)efine Entire File" },
-            context = { replace_target = "file" },
-            reg = {
-              q = intentions.refine,
-            },
-          },
-          {
-            mode = { "v" },
-            suffix = "<m-r>",
-            tpl = "code_complete.json",
-            target = "diff",
-            opts = { noremap = true, silent = true, desc = "(R)efine selection" },
+            opts = { noremap = true, silent = true, desc = "(R)efine code" },
             reg = {
               q = intentions.refine, 
               f = format.code_only,
