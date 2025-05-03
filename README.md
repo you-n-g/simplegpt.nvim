@@ -33,6 +33,10 @@ We provide a tools gallery for basic usage, which also serves as examples for fu
 | Translation with great formatting      |  [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L182)      | [Demo](#translation-with-great-formatting) |
 | Dictionary with customized explanation       |  [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L225)      | [Demo](#dictionary-with-customized-explanation) |
 | Reading          | [My Config](https://github.com/you-n-g/deploy/blob/8535f451758e45b77b073bb65bb6e8e5baafa714/configs/lazynvim/lua/plugins/gpt.lua#L269)       |      |
+| Terminal with LLM supported | | [Demo](#terminal-with-llm-supported) |
+| Code editing with LSP information | | [Demo](#code-editing-with-lsp-information) |
+| Code editing with terminal context |  | [Demo](#code-editing-with-terminal-context) |
+
 
 More tools are coming soon.
 
@@ -109,6 +113,22 @@ You can find my latest and preferred configuration [here](https://github.com/you
 ### Dictionary with customized explanation
 [![image](https://github.com/user-attachments/assets/9d52a367-76fe-4337-91d5-0eeb247c1c9e)](https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2F1pigeebnheae1.gif)
 
+
+### Terminal with LLM supported
+- Press `<localleader>st` in a terminal buffer to open the LLM dialog.
+- Enter your request or command.
+- Edit the suggestion to keep only what you want.
+- Press `<c-a>` to add the chosen command to the terminal.
+
+### Code editing with LSP information
+- Select the code you want to fix.  
+- Press `<localleader>sl` to use the code editing feature and address LSP warnings or errors.  
+- Press `<c-r>` to replace the selected text with the suggested fix.
+
+### Code editing with terminal context
+- Run `ls` and `python <your script>` to gather live feedback from the terminal.
+- Press `<localleader>sF` to use the code editing feature and fix errors detected in the terminal output.
+- Press `<m-r>` to apply search and replace actions to quickly update your code based on the suggestions.
 
 ## Typical workflow & Shortcuts
 I have attempted to summarize the key concepts and manual in one image.
