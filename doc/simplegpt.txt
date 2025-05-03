@@ -1,4 +1,4 @@
-*simplegpt.txt*           For NVIM v0.8.0           Last change: 2025 April 19
+*simplegpt.txt*            For NVIM v0.8.0            Last change: 2025 May 03
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -13,11 +13,10 @@ Table of Contents                                *simplegpt-table-of-contents*
   - Custom Jinja-based Prompt Template|simplegpt-features-custom-jinja-based-prompt-template|
   - Post-response Actions           |simplegpt-features-post-response-actions|
   - Shortcuts                                   |simplegpt-features-shortcuts|
-5. TODOs                                                     |simplegpt-todos|
-6. Development                                         |simplegpt-development|
-7. Limitations                                         |simplegpt-limitations|
-8. Related Projects                               |simplegpt-related-projects|
-9. Links                                                     |simplegpt-links|
+5. Development                                         |simplegpt-development|
+6. Limitations                                         |simplegpt-limitations|
+7. Related Projects                               |simplegpt-related-projects|
+8. Links                                                     |simplegpt-links|
 
 ==============================================================================
 1. 🤏 SimpleGPT                                   *simplegpt-🤏-simplegpt*
@@ -27,9 +26,9 @@ Table of Contents                                *simplegpt-table-of-contents*
 
 🤏SimpleGPT is a Vim plugin designed to provide a simple (high transparency
 based on Jinja) yet flexible way (context-aware based on buffer, visual
-selection, LSP info, etc.) to customize your LLM/ChatGPT prompts for your tasks
-(finishing tasks by replacing them with diff comparison, appending, etc.) on
-nearly all kinds of LLM APIs.
+selection, LSP info, terminal etc.) to customize your LLM/ChatGPT prompts for
+your tasks (finishing tasks by replacing them with diff comparison, appending,
+SEARCH/REPLACE etc.) on nearly all kinds of LLM APIs.
 
 - Why 🤏SimpleGPT: **You need customized LLM/ChatGPT prompts for your tasks**.
     - AI Coding Plugins didn’t provide support for every scenario.
@@ -75,6 +74,15 @@ further customization.
   customized explanation                          
 
   Reading                 My Config               
+
+  Terminal with LLM                               Demo
+  supported                                       
+
+  Code editing with LSP                           Demo
+  information                                     
+
+  Code editing with                               Demo
+  terminal context                                
   -----------------------------------------------------------------------
 More tools are coming soon.
 
@@ -168,6 +176,28 @@ TRANSLATION WITH GREAT FORMATTING ~
 DICTIONARY WITH CUSTOMIZED EXPLANATION ~
 
 <https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2F1pigeebnheae1.gif>
+
+
+TERMINAL WITH LLM SUPPORTED ~
+
+- Press `<localleader>st` in a terminal buffer to open the LLM dialog.
+- Enter your request or command.
+- Edit the suggestion to keep only what you want.
+- Press `<c-a>` to add the chosen command to the terminal.
+
+
+CODE EDITING WITH LSP INFORMATION ~
+
+- Select the code you want to fix.
+- Press `<localleader>sl` to use the code editing feature and address LSP warnings or errors.
+- Press `<c-r>` to replace the selected text with the suggested fix.
+
+
+CODE EDITING WITH TERMINAL CONTEXT ~
+
+- Run `ls` and `python <your script>` to gather live feedback from the terminal.
+- Press `<localleader>sF` to use the code editing feature and fix errors detected in the terminal output.
+- Press `<m-r>` to apply search and replace actions to quickly update your code based on the suggestions.
 
 
 TYPICAL WORKFLOW & SHORTCUTS    *simplegpt-demos-typical-workflow-&-shortcuts*
@@ -455,100 +485,7 @@ An example to change the shortcuts prefix in lazy.nvim:
 
 
 ==============================================================================
-5. TODOs                                                     *simplegpt-todos*
-
-Flag explanation: - 🌟: high priority
-
-- TODOs
-    - Basic:
-        - ☒ Conversations
-            - ☒ Supporting multi-rounds conversation with context
-            - [/] Converting current response to a new conversation template
-                - Quick thought: we can build a ChatGPT session directly.
-                - Chat Conversation is useful enough, so we cancel this feature.
-        - ☐ Anonymous register to avoid confliction;
-    - Misc
-        - ☐ Inline selection & following operators
-        - ☒ Resume last answer.
-        - ☒ Diff mode
-        - ☒ Fast copy code in backquotes
-        - ☒ async Answering in the background(it will stop the answering streaming if we exit the QA UI)
-            - It would boots the writing workflow.
-                - We can create a new tab and ask the question further
-        - ☒ Temporary register(without saving to disk)
-        - Repository level context
-            - Add file content to context
-                - ☒ current file
-            - ☒ Ask repository-level question
-        - Shortcuts
-            - ☐ Telescope to run shortcuts.
-            - ☒ Directly ask error information (load + do!)
-                - ☒ while remain the original information.
-        - Utils:
-            - ☐ get the buffer number where you are from; It is helpful to accurate control the content in different windows.
-    - Targets:
-        - Run from targets;
-            - Dialog targets ==> Supporting edit in place.
-            - [-] 🌟🐞 When we goto tex Diffpop for the second time. It will prompt to select the b:vimtex_main
-                - Stop setting `b:vimtex_main` in my config solve this problem.
-                - If you don’t abort it. It will not appear again.
-        - Followup actions;
-            - ☒ Replace the text
-            - ☒ Append the text
-            - ☒ Yank the text
-            - ☒ 🌟🐞The action line may is wrong when we enable new tab.
-            - ☒ 🌟🐞For visual selection, the append action will append content after the first line.
-    - UI:
-        - short cuts
-        - ☒ Help function: You can press `?` to see the help menu for shortcuts.
-            - Alternative implementation: [ ] Add shortcuts prompt around the box
-        - Add preview of the place holders inline
-    - Navigation
-        - ☒ fast saving and loading(without entering name)
-            - ☒ remembering the filename in the background.
-        - ☒ Better Preview of the documents
-    - Docs: try panvimdoc
-        - ☒ Normal vim doc(generating from README.md).
-        - ☒ One picture docs.
-        - ☒ Recording Demo
-        - features demonstration:
-            - repository-level QA building:
-        - ☐ Document about the config
-    - Open source routine
-        - Vim CI
-            - ☒ Add linting CI
-            - ☐ Fix Linting errors
-                - Switching to Mega-Linter <https://github.com/nvuillam/npm-groovy-lint/pull/109/files> may help.
-                - Maybe Refining code by evolving framework.
-        - ☒ Automatic releasing (maybe tagging is included)
-        - Tests:
-            - Add test initialization configs for fast debugging and testing.
-                - ☒ lazy.nvim
-                - ☒ packer.nvim
-    - templates design
-        - ☒ Ask inline questions(continue writing)
-        - ☒ Simplify the template design (merge templates)
-        - ☐ Disable the back quotes in the template. Even though I add following
-            content, it still does not work.
-            >
-                ---- Example focused part ----
-                def plus(a, b):
-                    # TODO: plus them and return
-                ---- Example output part ----
-                def plus(a, b):
-                    return a + b
-            <
-    - Code Design:
-        - ☒ use `show` an `hide` to ctrl the conversation dialog
-- Bugs
-    - ☒ Replace only affect one line(in the popup target).
-    - ☒ It raises errors when `<c-r>` in popup target.
-- More features that may be added in the long future
-    - Automatically ask questions based on the current context(Currently we have to manually select and ask the question)
-
-
-==============================================================================
-6. Development                                         *simplegpt-development*
+5. Development                                         *simplegpt-development*
 
 Welcome to contribute to this project.
 
@@ -561,21 +498,21 @@ tests/init_configs/packer.lua -U NONE -N -i NONE`
 
 
 ==============================================================================
-7. Limitations                                         *simplegpt-limitations*
+6. Limitations                                         *simplegpt-limitations*
 
 - It only leverage the `ChatCompletion` API (which is the most powerful and frequently used in the future trend).
 - It is based on Vim registers, which may conflict with users’ usage of them.
 
 
 ==============================================================================
-8. Related Projects                               *simplegpt-related-projects*
+7. Related Projects                               *simplegpt-related-projects*
 
 - jackMort/ChatGPT.nvim <https://github.com/jackMort/ChatGPT.nvim>
 - robitx/gp.nvim <https://github.com/Robitx/gp.nvim>
 - yetone/avante.nvim <https://github.com/yetone/avante.nvim>
 
 ==============================================================================
-9. Links                                                     *simplegpt-links*
+8. Links                                                     *simplegpt-links*
 
 1. *Mega-Linter*: https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg
 2. *panvimdoc*: https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg
