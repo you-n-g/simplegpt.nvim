@@ -97,9 +97,12 @@ function M.RegQAUI:build(callback)
         top_align = "center",
       },
     },
+    buf_options = {
+      filetype = "jinja",
+    },
   })
+
   vim.api.nvim_buf_set_text(self.tpl_pop.bufnr, 0, 0, 0, 0, vim.split(vim.fn.getreg("t"), "\n"))
-  vim.api.nvim_buf_set_option(self.tpl_pop.bufnr, "filetype", "jinja")
 
   -- merge self.pop_dict and pop_dict
   self.all_pops = { self.tpl_pop }
@@ -160,6 +163,66 @@ function M.RegQAUI:build(callback)
     end, { noremap = true })
   end
 
+  -- Define custom highlight for special placeholders if not already defined
+  local hl_group = "SimpleGPTPlaceholder"
+  if vim.fn.hlID(hl_group) == 0 then
+    vim.api.nvim_set_hl(0, hl_group, { fg = "#e4c95f", bold = true })
+  end
+
+  -- list of special/important keywords to highlight (only those mentioned/used in this file)
+  local special_words = {
+    "md_context",
+    "all_buf",
+    "q",
+    "content",
+    "full_content",
+    "i",
+    "visual",
+    "filetype",
+    "context",
+    "lsp_diag",
+    "terminal",
+    "p",
+    "filename"
+  }
+
+  -- function to highlight placeholders in the buffer
+  local function highlight_placeholders(bufnr)
+    vim.api.nvim_buf_clear_namespace(bufnr, 0, 0, -1)
+    local curr_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+    for lnum, line in ipairs(curr_lines) do
+      for _, word in ipairs(special_words) do
+        -- Match {{   word    }} (any amount of spaces between)
+        local pattern = "{{%s*" .. word .. "%s*}}"
+        local s = 1
+        while true do
+          local from_col, to_col = line:find(pattern, s)
+          if not from_col then break end
+          vim.api.nvim_buf_add_highlight(
+            bufnr,
+            0,
+            hl_group,
+            lnum - 1,
+            from_col - 1,
+            to_col
+          )
+          s = to_col + 1
+        end
+      end
+    end
+  end
+
+  -- initial highlight
+  highlight_placeholders(self.tpl_pop.bufnr)
+
+  -- automatically re-highlight on buffer/text change
+  vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "BufEnter", "InsertLeave" }, {
+    buffer = self.tpl_pop.bufnr,
+    callback = function()
+      highlight_placeholders(self.tpl_pop.bufnr)
+    end,
+    desc = "SimpleGPT: highlight placeholders in template popup",
+  })
 end
 
 
