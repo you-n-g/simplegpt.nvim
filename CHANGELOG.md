@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.3.0...v1.4.0) (2025-05-06)
+
+
+### Features
+
+* add custom highlight for placeholders in template popup ([e5c9def](https://github.com/you-n-g/simplegpt.nvim/commit/e5c9def4262424547616eb3a4f41219c2cfe76ba))
+* code_review ([d41e66e](https://github.com/you-n-g/simplegpt.nvim/commit/d41e66e89b89f30d9c719ce4a8179a03816d12ec))
+
 ## [1.3.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.2.0...v1.3.0) (2025-03-20)
 
 
