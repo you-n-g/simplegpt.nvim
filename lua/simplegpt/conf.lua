@@ -281,6 +281,13 @@ local M = {
               q = "fix the last command.",
             }
           },
+          {
+            mode = { "t"},
+            suffix = "r",
+            tpl = "code_review.json",
+            target = "popup",
+            opts = { noremap = true, silent = true, desc = "Terminal Command" },
+          },
         },
       },
 
