@@ -8,7 +8,7 @@ local intentions = {
 -- describe the designed format
 local format = {
   code_only = "No extra explanations.\nNo block quotes. DO NOT include three backticks ``` in the code. Try to keep all the comments (You can modify them to make it better).\nKeep original indent so that we can replace the original code with the newly generated one.",
-  diff=require"simplegpt.search_replace".format,
+  search_replace=require"simplegpt.search_replace".format,
 }
 
 -- what shortcuts are available in the dialog
@@ -201,14 +201,24 @@ local M = {
             },
           },
           {
-            mode = { "n", "v" },
+            mode = { "n"},
             suffix = "F",
             tpl = "fix_bug_with_err.json",
             target = "popup",
             reg = {
-              f = format.diff,
+              f = format.search_replace,
             },
             opts = { noremap = true, silent = true, desc = "(F)ix errors" },
+          },
+          {
+            mode = { "v" },
+            suffix = "F",
+            tpl = "fix_bug_with_err.json",
+            target = "diff",
+            reg = {
+              f = format.code_only,
+            },
+            opts = { noremap = true, silent = true, desc = "(F)ix errors for selected text" },
           },
           {
             mode = { "n", "v" },
@@ -250,7 +260,7 @@ local M = {
             opts = { noremap = true, silent = true, desc = "Edit (F)ile with SEARCH/REPLACE block" },
             -- context = { replace_target = "file" },
             reg = {
-              f = format.diff
+              f = format.search_replace
             },
           },
           {
