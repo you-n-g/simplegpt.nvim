@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.3.0...v1.4.0) (2025-05-17)
+
+
+### Features
+
+* add custom highlight for placeholders in template popup ([e5c9def](https://github.com/you-n-g/simplegpt.nvim/commit/e5c9def4262424547616eb3a4f41219c2cfe76ba))
+* add full_terminal and chat answer navigation keymaps ([ea10dfb](https://github.com/you-n-g/simplegpt.nvim/commit/ea10dfb8afc6305bc17c9cd601929d8e31b0ec11))
+* add terminal section in question template ([92f667b](https://github.com/you-n-g/simplegpt.nvim/commit/92f667b773e5e9e00f7559248c918f64e1e5d2e7))
+* code_review ([d41e66e](https://github.com/you-n-g/simplegpt.nvim/commit/d41e66e89b89f30d9c719ce4a8179a03816d12ec))
+
+
+### Bug Fixes
+
+* update config mappings to use search_replace and code_only ([63b565f](https://github.com/you-n-g/simplegpt.nvim/commit/63b565f417cfc67405ec27cf7e55e9687d9746a6))
+
 ## [1.3.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.2.0...v1.3.0) (2025-03-20)
 
 
