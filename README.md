@@ -12,6 +12,8 @@
       - Translating.
   - Even for specific tasks that AI Coding supports, using a customized prompt and workflow is often more effective and smooth.
 
+Another reason to choose SimpleGPT is better maintenance and compatibility. Many general-purpose LLM/ChatGPT neovim plugins are not actively maintained and often do not support the latest APIs for advanced models like DeepSeek or reasoning LLMs(e.g. I can't find any plugin to simply chat without involving my codebase on reasoning models). In contrast, popular coding-focused plugins are usually kept up to date with new developments. SimpleGPT solves this issue by integrating the backends of these well-maintained coding plugins, allowing you to use nearly any LLM API for a wide range of general tasks.
+
 ## Design Philosophy
 
 🤏SimpleGPT's efforts can be categorized into the following parts:
