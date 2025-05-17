@@ -27,7 +27,6 @@ function M.BaseDialog:ctor(context)
   -- self.quit_action = "quit"
 
   require("simplegpt.target").set_last_dialog(self)
-  self.conversation = {}
 end
 
 function M.BaseDialog:build()
@@ -274,6 +273,10 @@ function M.ChatDialog:ctor(...)
   self.answer_popup = nil -- the popup to display the answer
   self.full_answer = {}
   self.open_in_new_tab = require("simplegpt.conf").options.new_tab
+
+  self.conversation = {}
+  self.current_answer_idx = nil
+  self.is_streaming = false
 end
 
 function M.ChatDialog:quit()
@@ -310,6 +313,9 @@ function M.ChatDialog:call(question)
   end
 
   local function cb(answer, state)
+    if state == "START" then
+      self.is_streaming = true
+    end
     if state == "START" or state == "CONTINUE" then
       -- Accumulate the complete answer
       current_answer = current_answer .. answer
@@ -331,6 +337,8 @@ function M.ChatDialog:call(question)
 
       self:update_full_answer()
     elseif state == "END" then
+      self.is_streaming = false
+      self.current_answer_idx = #self.conversation
       -- Save the complete answer to conversation history
       table.insert(self.conversation, { content = current_answer, role = "assistant" })
     end
@@ -560,8 +568,73 @@ function M.ChatDialog:register_keys(exit_callback)
       self:quit()
       search_replace.apply_blocks(self.context.from_bufnr, sr_blocks)
     end, { noremap = true })
+
+    -- navigation between answers
+    pop:map("n", "[", function()
+      self:show_prev_answer()
+    end, { noremap = true })
+    pop:map("n", "]", function()
+      self:show_next_answer()
+    end, { noremap = true })
   end
 
 end
 
+-- Helper to find the previous/next assistant answer index
+local function find_prev_assistant(conversation, cur_idx)
+  for i = cur_idx - 1, 1, -1 do
+    if conversation[i] and conversation[i].role == "assistant" then
+      return i
+    end
+  end
+  return cur_idx
+end
+
+local function find_next_assistant(conversation, cur_idx)
+  for i = cur_idx + 1, #conversation do
+    if conversation[i] and conversation[i].role == "assistant" then
+      return i
+    end
+  end
+  return cur_idx
+end
+
+function M.ChatDialog:show_answer_at(idx)
+  if self.is_streaming then
+    vim.notify("Cannot switch answers while LLM is streaming output.", vim.log.levels.WARN)
+    return
+  end
+  if self.conversation and self.conversation[idx] and self.conversation[idx].role == "assistant" then
+    self.current_answer_idx = idx
+    local answer = self.conversation[idx].content
+    vim.api.nvim_buf_set_lines(self.answer_popup.bufnr, 0, -1, false, vim.split(answer, "\n"))
+    self:update_full_answer()
+  end
+end
+
+function M.ChatDialog:show_prev_answer()
+  if self.is_streaming then
+    vim.notify("Cannot switch answers while LLM is streaming output.", vim.log.levels.WARN)
+    return
+  end
+  if not self.conversation or not self.current_answer_idx then return end
+  local prev_idx = find_prev_assistant(self.conversation, self.current_answer_idx)
+  if prev_idx ~= self.current_answer_idx then
+    self:show_answer_at(prev_idx)
+  end
+end
+
+function M.ChatDialog:show_next_answer()
+  if self.is_streaming then
+    vim.notify("Cannot switch answers while LLM is streaming output.", vim.log.levels.WARN)
+    return
+  end
+  if not self.conversation or not self.current_answer_idx then return end
+  local next_idx = find_next_assistant(self.conversation, self.current_answer_idx)
+  if next_idx ~= self.current_answer_idx then
+    self:show_answer_at(next_idx)
+  end
+end
+
 return M
+

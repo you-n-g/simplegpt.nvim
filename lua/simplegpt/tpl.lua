@@ -182,6 +182,7 @@ function M.RegQAUI:build(callback)
     "context",
     "lsp_diag",
     "terminal",
+    "full_terminal",
     "p",
     "filename"
   }
@@ -326,9 +327,11 @@ function M.RegQAUI:get_special()
 
   -- 9) Get the terminal buffer content from the first visible terminal buffer, use content_max_len to control the number of lines
   res["terminal"] = nil
+  res["full_terminal"] = nil
   for _, _buf in ipairs(vim.api.nvim_list_bufs()) do
     if vim.bo[_buf].buftype == 'terminal' and vim.api.nvim_win_is_valid(vim.fn.bufwinid(_buf)) then
       local term_lines = vim.api.nvim_buf_line_count(_buf)
+      res["full_terminal"] = vim.api.nvim_buf_get_lines(_buf, 0, -1, false)
       start_line = math.max(term_lines - content_max_len, 0)
       lines = vim.api.nvim_buf_get_lines(_buf, start_line, term_lines, false)
       res["terminal"] = table.concat(lines, "\n")

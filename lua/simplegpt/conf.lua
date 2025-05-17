@@ -3,12 +3,15 @@
 -- - the intention in the varibables/registers
 local intentions = {
   refine = "Please refine the code. Make it more consistent (e.g., consistency among the code, document, annotation, variable naming), readable (e.g., fix typos), and standard (e.g., follow the coding linting).",
+  -- rules
+  mod_on_conversation="When we have multiple loops of conversations, don't assume that previous modifications have been made. You are still changing the initial version of the code.",
 }
+
 
 -- describe the designed format
 local format = {
-  code_only = "No extra explanations.\nNo block quotes. DO NOT include three backticks ``` in the code. Try to keep all the comments (You can modify them to make it better).\nKeep original indent so that we can replace the original code with the newly generated one.",
-  search_replace=require"simplegpt.search_replace".format,
+  code_only = "No extra explanations.\nNo block quotes. DO NOT include three backticks ``` in the code. Try to keep all the comments (You can modify them to make it better).\nKeep original indent so that we can replace the original code with the newly generated one." .. "\n" .. intentions.mod_on_conversation,
+  search_replace=require"simplegpt.search_replace".format .. "\n" .. intentions.mod_on_conversation,
 }
 
 -- what shortcuts are available in the dialog
@@ -30,6 +33,7 @@ local LOCAL_QA_DIALOG_KEYMAPS = {
   "yank_keys",
   "chat_keys",
   "search_replace",
+  "nav_ans",
 }
 
 local M = {
@@ -85,6 +89,7 @@ local M = {
         chat_keys = { "<m-c>" },
         -- - apply search and replace
         search_replace = { "<m-r>" },
+        nav_ans = { "[]" },  -- Please note it is a pair of keys. The first key is for nav  back and the second key is for nav forward
       },
     },
     -- custom data path for loading and dumping files

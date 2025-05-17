@@ -274,6 +274,7 @@ You can use these variables in your jinja template.
 | md_context   | Directly loading the content in `.sgpt.md` as the register value. |
 | filename     | The name of the current file                                |
 | terminal     | The content from the active (visiable) terminal buffer, capturing recent terminal output (if available) |
+| full_terminal     | like terminal, but including all terminal output |
 | p            | If register `p` contains a list of file paths (one per line), its value becomes the concatenation of the content from each of those files. Files that do not exist will be skipped. |
 
 #### Template Engine
@@ -323,6 +324,7 @@ After receiving a response from ChatGPT, you can perform several actions to inte
       - Opens input prompt for follow-up questions
       - New response replaces current response
     - `{"<m-r>"}`: Apply search and replace blocks to modify code based on the response
+    - `[]`: Navigate(prev/next) between responses/answers
 - Normal shortcuts start with `<LocalLeader>g` (You can change it by setting `keymaps.prefix` when you setup the plugin)
   - Register operations:
     - `<LocalLeader>gl`: load registers
