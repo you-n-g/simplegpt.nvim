@@ -12,6 +12,7 @@ local intentions = {
 local format = {
   code_only = "No extra explanations.\nNo block quotes. DO NOT include three backticks ``` in the code. Try to keep all the comments (You can modify them to make it better).\nKeep original indent so that we can replace the original code with the newly generated one." .. "\n" .. intentions.mod_on_conversation,
   search_replace=require"simplegpt.search_replace".format .. "\n" .. intentions.mod_on_conversation,
+  text_rewrite="No extra explanations. No block quotes. Output only the rewritten text. Maintain prefix spaces and indentations.",
 }
 
 -- what shortcuts are available in the dialog
@@ -124,7 +125,7 @@ local M = {
             tpl = "complete_writing_replace.json",
             target = "diff",
             reg = {
-              r = "No extra explanations. No block quotes. Output only the rewritten text. Maintain prefix spaces and indentations.",
+              f = format.text_rewrite,
             },
             opts = { noremap = true, silent = true, desc = "(R)ewrite Text in Diff" },
           },
@@ -167,7 +168,7 @@ local M = {
             tpl = "fix_grammar.json",
             target = "diff",
             reg = {
-              r = "No extra explanations. No block quotes. Output only the rewritten text. Maintain prefix spaces and indentations.",
+              f = format.text_rewrite,
             },
             opts = { noremap = true, silent = true, desc = "Fix (g)rammar" },
           },
