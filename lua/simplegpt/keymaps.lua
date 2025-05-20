@@ -72,6 +72,12 @@ function M.setup_main_keymaps()
     tpl.repo_append_file,
     { noremap = true, silent = true, desc = "append current file to reg" }
   )
+  vim.keymap.set(
+    { "n", "v" },
+    conf.get_basic_keymaps("chat_complete"),
+    require"simplegpt.buf_chat".buf_chat_complete,
+    { noremap = true, silent = true, desc = "send question2ChatGPT" }
+  )
 end
 
 function M.setup()

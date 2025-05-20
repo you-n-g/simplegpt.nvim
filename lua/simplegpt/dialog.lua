@@ -207,9 +207,22 @@ local Config = require("avante.config")
 function M.chat_completions(messages, cb, should_stop)
   -- pick the default provider
   local provider = Providers[Config.provider]
+  
+  -- Extract system message if present
+  local system_prompt = "You are a helpful AI assistant."
+  local filtered_messages = {}
+  
+  for _, msg in ipairs(messages) do
+    if msg.role == "system" then
+      system_prompt = msg.content
+    else
+      table.insert(filtered_messages, msg)
+    end
+  end
+  
   local prompt_opts = {
-    system_prompt="You are a helpful AI assistant.",
-    messages = messages,
+    system_prompt = system_prompt,
+    messages = filtered_messages,
   }
   local handler_opts = {
     on_start = function() cb("", "START") end,
@@ -575,6 +588,22 @@ function M.ChatDialog:register_keys(exit_callback)
     end, { noremap = true })
     pop:map("n", "]", function()
       self:show_next_answer()
+    end, { noremap = true })
+
+    -- map Q to quit the message and create a new buffer based on the messages and convert the message to buf_chat format
+    pop:map("n", options.dialog.keymaps.buffer_chat_keys, function()
+      -- Update full_answer before exit to ensure we have the latest content
+      self:update_full_answer()
+    
+      -- Close the dialog
+      self:quit()
+
+      -- Create a new buffer with the conversation in chat format
+      local buf_chat = require("simplegpt.buf_chat")
+      buf_chat.create_chat_buffer(self.conversation)
+      
+      -- Notify the user
+      vim.notify("Conversation transferred to buffer chat format", vim.log.levels.INFO)
     end, { noremap = true })
   end
 

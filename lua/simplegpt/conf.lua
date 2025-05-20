@@ -25,7 +25,7 @@ local BASE_DIALOG_KEYMAPS = {
 }
 local TPL_DIALOG_KEYMAPS = {
   "show_value",
-  "preview_keys",
+  "buffer_chat_keys",
   -- "", restore to default value
 }
 local LOCAL_QA_DIALOG_KEYMAPS = {
@@ -35,6 +35,7 @@ local LOCAL_QA_DIALOG_KEYMAPS = {
   "chat_keys",
   "search_replace",
   "nav_ans",
+  "buffer_chat_keys",
 }
 
 local M = {
@@ -53,7 +54,7 @@ local M = {
       },
       name_map = { -- map the name of features to a more readable name
         exit_keys = "exit&continue",
-        preview_keys = "preview&exit",
+        buffer_chat_keys = "buffer chat",
         append_keys = "append",
         replace_keys = "replace",
         yank_keys = "yank",
@@ -67,7 +68,7 @@ local M = {
         show_value = { "K" }, -- Default key for showing special value
         -- Base Dialog shortcuts
         exit_keys = { "q", "<c-c>", "<esc>" },
-        preview_keys = {"Q"},
+        buffer_chat_keys = {"Q"},
         cycle_next = { "<tab>" },
         cycle_prev = { "<S-Tab>" },
         yank_code = { "<C-c>" },
@@ -337,7 +338,7 @@ local M = {
         key = nil,
       },
       send_chat = {
-        suffix = "c",
+        suffix = "Q",
         key = nil,
       },
       send_popup = {
@@ -360,10 +361,19 @@ local M = {
         suffix = "P",
         key = nil,
       },
+      chat_complete = { -- for buffer chat
+        suffix = "c",
+        key = nil,
+      },
     },
     tpl_conf = { -- configure that will affect the rendering of the templates.
       context_len = 10, -- the number of lines before and after the current line as context
       content_max_len = 100, -- the max number of lines to show as full content
+    },
+    buffer_chat = {
+      user_emoji = '👤',  -- User emoji (👤)
+      ai_emoji = '🤖',    -- AI emoji (🤖)
+      system_emoji = '💻', -- System emoji (💻) - computer
     },
   },
 }

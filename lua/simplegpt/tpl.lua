@@ -475,17 +475,23 @@ function M.RegQAUI:register_keys(exit_callback)
     print("No placeholder under cursor.")
   end, { noremap = true, desc = "Show Special Value for placeholder under cursor" })
 
-  -- 2) Register 'Q' to exit the NUI and show the result of get_q in a BaseDialog popup
-  local exit_preview_key = require("simplegpt.conf").options.dialog.keymaps.preview_keys
+  -- 2) Register 'Q' to exit the NUI and create a buffer chat with the query
+  local buffer_chat_key = require("simplegpt.conf").options.dialog.keymaps.buffer_chat_keys
   for _, pop in ipairs(self.all_pops) do
-      pop:map("n", exit_preview_key, function()
+      pop:map("n", buffer_chat_key, function()
       -- Exit the current NUI
       self:quit()  -- this will switch back to the orginal buffer
 
-      -- Create an InfoDialog to show the result
-      local info_dialog = dialog.InfoDialog(self.context, self:get_q())
-      info_dialog:build()
-    end, { noremap = true, desc = "Exit NUI and show result of get_q in a popup" })
+      -- Create a buffer chat with self:get_q() as user message
+      local buf_chat = require("simplegpt.buf_chat")
+      local messages = {
+        { role = "user", content = self:get_q() }
+      }
+      buf_chat.create_chat_buffer(messages)
+      
+      -- Notify the user
+      vim.notify("Created buffer chat with template query", vim.log.levels.INFO)
+    end, { noremap = true, desc = "Exit template and create a buffer chat with the query" })
   end
 end
 
