@@ -209,7 +209,7 @@ function M.chat_completions(messages, cb, should_stop)
   local provider = Providers[Config.provider]
   
   -- Extract system message if present
-  local system_prompt = "You are a helpful AI assistant."
+  local system_prompt = conf.options.buffer_chat.default_system_prompt
   local filtered_messages = {}
   
   for _, msg in ipairs(messages) do

@@ -374,6 +374,7 @@ local M = {
       user_emoji = '👤',  -- User emoji (👤)
       ai_emoji = '🤖',    -- AI emoji (🤖)
       system_emoji = '💻', -- System emoji (💻) - computer
+      default_system_prompt = 'You are a helpful AI assistant.', -- Default prompt used when no system prompt is present
     },
   },
 }

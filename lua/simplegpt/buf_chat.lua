@@ -32,12 +32,27 @@ function M.get_emoji_role_maps()
   return emoji_to_role, role_to_emoji
 end
 
--- Extract messages from buffer content
--- This function analyzes buffer content and tries to identify conversation messages
-function M.extract_messages(buffer_content, filetype)
+--- Extract and parse messages from buffer content into a structured format.  
+-- This function analyzes buffer content line by line to identify and categorize conversation messages  
+-- based on emoji markers. It handles special cases like system messages and maintains the structure  
+-- of multiline messages.  
+--  
+-- @param buffer_content string The raw text content from the buffer to be parsed  
+-- @return table An array of message objects, each containing:  
+--   - role: string ("user", "assistant", or "system")  
+--   - content: string (the message text without the emoji marker)  
+--   - start_line: number (the line number where this message starts)  
+--  
+-- Special behaviors:  
+-- 1. System emoji (💻) is treated as "system" role only when it appears in the first message  
+-- 2. System emoji in later messages is interpreted as "user" role  
+-- 3. If no emojis are found, the entire content is treated as a single user message  
+-- 4. Consecutive lines without emoji markers are grouped with the preceding message
+function M.extract_messages(buffer_content)
   local conversation_lines = vim.split(buffer_content, "\n")
   local extracted_messages = {}
   local current_role = nil
+  local current_start_line = nil
   local current_content = {}
 
   -- Get emoji-to-role mapping
@@ -55,7 +70,7 @@ function M.extract_messages(buffer_content, filetype)
       if content_match then
         -- Save previous message if any
         if current_role then
-          table.insert(extracted_messages, { role = current_role, content = table.concat(current_content, "\n") })
+          table.insert(extracted_messages, { role = current_role, content = table.concat(current_content, "\n"), start_line = current_start_line})
         end
 
         -- System emoji treatment depends on position
@@ -64,6 +79,7 @@ function M.extract_messages(buffer_content, filetype)
         else
           current_role = role
         end
+        current_start_line = line_number
 
         current_content = { content_match }
         is_first_message = false
@@ -80,18 +96,97 @@ function M.extract_messages(buffer_content, filetype)
 
   -- Add the last message if any
   if current_role and #current_content > 0 then
-    table.insert(extracted_messages, { role = current_role, content = table.concat(current_content, "\n") })
+    table.insert(extracted_messages, { role = current_role, content = table.concat(current_content, "\n"), start_line = current_start_line})
   end
 
   -- If no messages were extracted or no conversation detected, create a default message
   if #extracted_messages == 0 then
     -- Create a default message treating all content as user input
     return {
-      { role = "user", content = buffer_content },
+      { role = "user", content = buffer_content, start_line = 1 },
     }
   end
 
   return extracted_messages
+end
+
+--- Ensures all messages in the buffer have appropriate emoji markers.  
+-- This function examines each message in the buffer and adds the correct emoji marker  
+-- to the beginning of any message that doesn't already have one. It preserves the content  
+-- of the messages while enforcing consistent formatting.  
+--  
+-- @param buf number The buffer handle to modify  
+-- @param messages table Array of message objects from extract_messages function, each containing:  
+--   - role: string ("user", "assistant", or "system")  
+--   - content: string (the message text)  
+--   - start_line: number (the line number where this message starts)  
+--  
+-- Side effects:  
+-- - Modifies the buffer content by adding emoji markers where needed  
+-- - Only updates the buffer if at least one line was modified
+function M.reformat_buffer(buf, messages)
+  -- If no messages, return early
+  if not messages or #messages == 0 then
+    return
+  end
+
+  -- Get emoji-to-role and role-to-emoji mappings
+  local emoji_to_role, role_to_emoji = M.get_emoji_role_maps()
+
+  -- Get the buffer lines
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  local modified = false
+
+  -- Process each message
+  for _, msg in ipairs(messages) do
+    local role = msg.role
+    local start_line = msg.start_line or 1
+    
+    -- Skip if start_line is out of range
+    if start_line <= #lines then
+      -- Get emoji for this message's role
+      local emoji = role_to_emoji[role]
+      
+      -- Check if line already starts with an emoji
+      local line = lines[start_line]
+      local has_emoji = false
+      
+      for e, _ in pairs(emoji_to_role) do
+        if line:match("^" .. e) then
+          has_emoji = true
+          break
+        end
+      end
+      
+      -- If line doesn't start with emoji, add the appropriate one
+      if not has_emoji and emoji then
+        lines[start_line] = emoji .. " " .. line
+        modified = true
+      end
+    end
+  end
+
+  -- Check if buffer starts with a system prompt
+  local has_system_prompt = false
+  if #messages > 0 then
+    has_system_prompt = messages[1].role == "system"
+  end
+
+  -- If no system prompt, add a default one at the top
+  if not has_system_prompt then
+    local system_emoji = role_to_emoji["system"]
+    local default_prompt = conf.options.buffer_chat.default_system_prompt
+    table.insert(lines, 1, system_emoji .. " " .. default_prompt)
+    
+    -- Add an empty line after the system prompt for better readability
+    table.insert(lines, 2, "")
+    modified = true
+  end
+
+  -- Update buffer if any changes were made
+  if modified then
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  end
 end
 
 -- Simple function to generate the next response and append it to the buffer
@@ -102,10 +197,13 @@ function M.buf_chat_complete()
 
   local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
   local content = table.concat(lines, "\n")
-  local filetype = vim.bo[buf].filetype or ""
 
   -- Extract messages from buffer content
-  local messages = M.extract_messages(content, filetype)
+  local messages = M.extract_messages(content)
+  M.reformat_buffer(buf, messages)
+  -- NOTE: after reformat, the (system) messages may change
+  messages = M.extract_messages(content)
+  lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 
   -- Get role-to-emoji mapping
   local _, role_to_emoji = M.get_emoji_role_maps()
@@ -147,8 +245,8 @@ function M.buf_chat_complete()
       -- When response is complete, add user prompt for next message
       vim.schedule(function()
         -- Add user emoji for next message
-        local line_count = vim.api.nvim_buf_line_count(buf)
-        vim.api.nvim_buf_set_lines(buf, line_count, line_count, false, { "", role_to_emoji.user .. " " })
+        local line_cnt = vim.api.nvim_buf_line_count(buf)
+        vim.api.nvim_buf_set_lines(buf, line_cnt, line_cnt, false, { "", role_to_emoji.user .. " " })
 
         -- Move cursor after the user emoji for convenient input
         local new_line_count = vim.api.nvim_buf_line_count(buf)
@@ -166,6 +264,7 @@ function M.buf_chat_complete()
   -- Call LLM to start generation
   vim.notify("Chatting with buffer, please wait...", vim.log.levels.INFO)
   dialog.chat_completions(messages, cb, should_stop)
+  vim.bo[buf].filetype = "markdown"
 end
 
 -- Create a buffer with formatted chat messages
@@ -236,4 +335,3 @@ function M.create_chat_buffer(messages, add_prompt)
 end
 
 return M
-
