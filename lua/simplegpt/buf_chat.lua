@@ -61,7 +61,7 @@ function M.extract_messages(buffer_content)
   -- Track if this is the first message we're seeing
   local is_first_message = true
 
-  for _, line in ipairs(conversation_lines) do
+  for lino, line in ipairs(conversation_lines) do
     local matched = false
 
     -- Check for emoji markers at the start of lines
@@ -79,7 +79,7 @@ function M.extract_messages(buffer_content)
         else
           current_role = role
         end
-        current_start_line = line_number
+        current_start_line = lino
 
         current_content = { content_match }
         is_first_message = false
@@ -189,6 +189,38 @@ function M.reformat_buffer(buf, messages)
   end
 end
 
+function M.set_style(buf)
+  local messages = M.extract_messages(table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), "\n"))
+  -- Use Neovim's UI to add a line marker to the start of each message
+  -- Create a single namespace for all message markers
+  local ns = vim.api.nvim_create_namespace("simplegpt_msg_marker")
+
+  -- Clear all existing markers first
+  vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+
+  for _, msg in ipairs(messages) do
+    local start_line = msg.start_line or 1
+    -- Add a vim sign/mark at the start of each message line
+    if start_line >= 1 then
+      -- Place the extmark ONLY if the line exists
+      local total_lines = vim.api.nvim_buf_line_count(buf)
+      if start_line <= total_lines then
+        vim.api.nvim_buf_set_extmark(
+          buf,
+          ns,
+          start_line - 1,
+          0,
+          {
+            sign_text = "▶",
+            sign_hl_group = "Question", -- You can customize this group
+            priority = 10,
+          }
+        )
+      end
+    end
+  end
+end
+
 -- Simple function to generate the next response and append it to the buffer
 function M.buf_chat_complete()
   -- Get buffer information
@@ -202,8 +234,8 @@ function M.buf_chat_complete()
   local messages = M.extract_messages(content)
   M.reformat_buffer(buf, messages)
   -- NOTE: after reformat, the (system) messages may change
-  messages = M.extract_messages(content)
   lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  messages = M.extract_messages(table.concat(lines, "\n"))
 
   -- Get role-to-emoji mapping
   local _, role_to_emoji = M.get_emoji_role_maps()
@@ -219,6 +251,7 @@ function M.buf_chat_complete()
 
   -- Add AI emoji
   vim.api.nvim_buf_set_lines(buf, line_count, line_count, false, { role_to_emoji.assistant .. " " })
+  M.set_style(buf)
 
   -- Streaming callback function
   local function cb(answer, state)
