@@ -193,7 +193,7 @@ function M.set_style(buf)
   local messages = M.extract_messages(table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), "\n"))
   -- Use Neovim's UI to add a line marker to the start of each message
   -- Create a single namespace for all message markers
-  local ns = vim.api.nvim_create_namespace("simplegpt_msg_marker")
+  local ns = vim.api.nvim_create_namespace("simplegpt_msg_marker_and_spinner")
 
   -- Clear all existing markers first
   vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
@@ -253,7 +253,18 @@ function M.buf_chat_complete()
   vim.api.nvim_buf_set_lines(buf, line_count, line_count, false, { role_to_emoji.assistant .. " " })
   M.set_style(buf)
 
-  -- Streaming callback function
+
+  -- Create a spinner instance (before the callback so it's in the outer scope)
+  local response_spinner = require("simplegpt.spinner").Spinner()
+  
+  -- Get the line where the spinner should appear (last line of buffer)
+  local response_start_line = vim.api.nvim_buf_line_count(buf) - 1
+  
+  -- Start the spinner immediately and force UI update
+  response_spinner:start(buf, response_start_line)
+  vim.cmd("redraw")
+
+  -- Streaming callback function with access to the spinner
   local function cb(answer, state)
     -- Accumulate complete answer
     if answer and (state == "START" or state == "CONTINUE") then
@@ -285,6 +296,10 @@ function M.buf_chat_complete()
         local new_line_count = vim.api.nvim_buf_line_count(buf)
         vim.api.nvim_win_set_cursor(win, { new_line_count, #role_to_emoji.user + 2 }) -- Position after emoji and space
       end)
+      -- Safely complete the spinner if it exists
+      if response_spinner then
+        response_spinner:complete()
+      end
     end
   end
 
@@ -296,7 +311,11 @@ function M.buf_chat_complete()
 
   -- Call LLM to start generation
   vim.notify("Chatting with buffer, please wait...", vim.log.levels.INFO)
-  dialog.chat_completions(messages, cb, should_stop, conf.options.buffer_chat.provider)
+
+  -- Schedule the API call to happen after UI updates are processed
+  vim.schedule(function()
+    dialog.chat_completions(messages, cb, should_stop, conf.options.buffer_chat.provider)
+  end)
   vim.bo[buf].filetype = "markdown"
 end
 
