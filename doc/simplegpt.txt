@@ -1,4 +1,4 @@
-*simplegpt.txt*            For NVIM v0.8.0            Last change: 2025 May 19
+*simplegpt.txt*            For NVIM v0.8.0            Last change: 2025 May 20
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -27,8 +27,8 @@ Table of Contents                                *simplegpt-table-of-contents*
 🤏SimpleGPT is a Vim plugin designed to provide a simple (high transparency
 based on Jinja) yet flexible way (context-aware based on buffer, visual
 selection, LSP info, terminal etc.) to customize your LLM/ChatGPT prompts for
-your tasks (finishing tasks by replacing them with diff comparison, appending,
-SEARCH/REPLACE etc.) on nearly all kinds of LLM APIs.
+your tasks (building chat or finishing tasks by replacing them with diff
+comparison, appending, SEARCH/REPLACE etc.) on nearly all kinds of LLM APIs.
 
 - Why 🤏SimpleGPT: **You need customized LLM/ChatGPT prompts for your tasks**.
     - AI Coding Plugins didn’t provide support for every scenario.
