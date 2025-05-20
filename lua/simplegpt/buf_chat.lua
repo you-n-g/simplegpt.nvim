@@ -263,7 +263,7 @@ function M.buf_chat_complete()
 
   -- Call LLM to start generation
   vim.notify("Chatting with buffer, please wait...", vim.log.levels.INFO)
-  dialog.chat_completions(messages, cb, should_stop)
+  dialog.chat_completions(messages, cb, should_stop, conf.options.buffer_chat.provider)
   vim.bo[buf].filetype = "markdown"
 end
 

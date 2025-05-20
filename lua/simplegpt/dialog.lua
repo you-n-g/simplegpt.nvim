@@ -204,10 +204,10 @@ local Config = require("avante.config")
 --- @param messages table
 --- @param cb fun(chunk: string, state: string)  Callback receiving START/CONTINUE/END
 --- @param should_stop fun():boolean            (unused) stop predicate
-function M.chat_completions(messages, cb, should_stop)
+function M.chat_completions(messages, cb, should_stop, provider)
   -- pick the default provider
-  local provider = Providers[Config.provider]
-  
+  provider = Providers[provider or Config.provider]
+
   -- Extract system message if present
   local system_prompt = conf.options.buffer_chat.default_system_prompt
   local filtered_messages = {}
