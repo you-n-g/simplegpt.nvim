@@ -203,8 +203,7 @@ local Providers = require("avante.providers")
 local Config = require("avante.config")
 --- @param messages table
 --- @param cb fun(chunk: string, state: string)  Callback receiving START/CONTINUE/END
---- @param should_stop fun():boolean            (unused) stop predicate
-function M.chat_completions(messages, cb, should_stop, provider)
+function M.chat_completions(messages, cb, provider)
   -- pick the default provider
   provider = Providers[provider or Config.provider]
 
@@ -317,14 +316,6 @@ function M.ChatDialog:call(question)
   -- Clear the answer popup buffer before starting new response
   vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, { "" })
 
-  local function should_stop()
-    if popup.bufnr == nil then
-      -- if the window disappeared, then return False
-      return true
-    end
-    return false
-  end
-
   local function cb(answer, state)
     if state == "START" then
       self.is_streaming = true
@@ -362,7 +353,7 @@ function M.ChatDialog:call(question)
     end
   end
 
-  M.chat_completions(messages, cb, should_stop)
+  M.chat_completions(messages, cb)
 end
 
 function M.ChatDialog:update_full_answer()

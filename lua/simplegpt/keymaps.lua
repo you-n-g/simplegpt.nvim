@@ -40,7 +40,7 @@ function M.setup_main_keymaps()
     { "n", "v" },
     conf.get_basic_keymaps("send_chat"),
     shortcut.build_func("chat"),
-    { noremap = true, silent = true, desc = "send question2ChatGPT" }
+    { noremap = true, silent = true, desc = "send question to chat" }
   )
   vim.keymap.set(
     { "n", "v" },
@@ -76,7 +76,7 @@ function M.setup_main_keymaps()
     { "n", "v" },
     conf.get_basic_keymaps("chat_complete"),
     require"simplegpt.buf_chat".buf_chat_complete,
-    { noremap = true, silent = true, desc = "send question2ChatGPT" }
+    { noremap = true, silent = true, desc = "Buffer chat or stop streaming" }
   )
 end
 

@@ -32,21 +32,21 @@ function M.get_emoji_role_maps()
   return emoji_to_role, role_to_emoji
 end
 
---- Extract and parse messages from buffer content into a structured format.  
--- This function analyzes buffer content line by line to identify and categorize conversation messages  
--- based on emoji markers. It handles special cases like system messages and maintains the structure  
--- of multiline messages.  
---  
--- @param buffer_content string The raw text content from the buffer to be parsed  
--- @return table An array of message objects, each containing:  
---   - role: string ("user", "assistant", or "system")  
---   - content: string (the message text without the emoji marker)  
---   - start_line: number (the line number where this message starts)  
---  
--- Special behaviors:  
--- 1. System emoji (💻) is treated as "system" role only when it appears in the first message  
--- 2. System emoji in later messages is interpreted as "user" role  
--- 3. If no emojis are found, the entire content is treated as a single user message  
+--- Extract and parse messages from buffer content into a structured format.
+-- This function analyzes buffer content line by line to identify and categorize conversation messages
+-- based on emoji markers. It handles special cases like system messages and maintains the structure
+-- of multiline messages.
+--
+-- @param buffer_content string The raw text content from the buffer to be parsed
+-- @return table An array of message objects, each containing:
+--   - role: string ("user", "assistant", or "system")
+--   - content: string (the message text without the emoji marker)
+--   - start_line: number (the line number where this message starts)
+--
+-- Special behaviors:
+-- 1. System emoji (💻) is treated as "system" role only when it appears in the first message
+-- 2. System emoji in later messages is interpreted as "user" role
+-- 3. If no emojis are found, the entire content is treated as a single user message
 -- 4. Consecutive lines without emoji markers are grouped with the preceding message
 function M.extract_messages(buffer_content)
   local conversation_lines = vim.split(buffer_content, "\n")
@@ -70,7 +70,10 @@ function M.extract_messages(buffer_content)
       if content_match then
         -- Save previous message if any
         if current_role then
-          table.insert(extracted_messages, { role = current_role, content = table.concat(current_content, "\n"), start_line = current_start_line})
+          table.insert(
+            extracted_messages,
+            { role = current_role, content = table.concat(current_content, "\n"), start_line = current_start_line }
+          )
         end
 
         -- System emoji treatment depends on position
@@ -96,7 +99,10 @@ function M.extract_messages(buffer_content)
 
   -- Add the last message if any
   if current_role and #current_content > 0 then
-    table.insert(extracted_messages, { role = current_role, content = table.concat(current_content, "\n"), start_line = current_start_line})
+    table.insert(
+      extracted_messages,
+      { role = current_role, content = table.concat(current_content, "\n"), start_line = current_start_line }
+    )
   end
 
   -- If no messages were extracted or no conversation detected, create a default message
@@ -110,19 +116,19 @@ function M.extract_messages(buffer_content)
   return extracted_messages
 end
 
---- Ensures all messages in the buffer have appropriate emoji markers.  
--- This function examines each message in the buffer and adds the correct emoji marker  
--- to the beginning of any message that doesn't already have one. It preserves the content  
--- of the messages while enforcing consistent formatting.  
---  
--- @param buf number The buffer handle to modify  
--- @param messages table Array of message objects from extract_messages function, each containing:  
---   - role: string ("user", "assistant", or "system")  
---   - content: string (the message text)  
---   - start_line: number (the line number where this message starts)  
---  
--- Side effects:  
--- - Modifies the buffer content by adding emoji markers where needed  
+--- Ensures all messages in the buffer have appropriate emoji markers.
+-- This function examines each message in the buffer and adds the correct emoji marker
+-- to the beginning of any message that doesn't already have one. It preserves the content
+-- of the messages while enforcing consistent formatting.
+--
+-- @param buf number The buffer handle to modify
+-- @param messages table Array of message objects from extract_messages function, each containing:
+--   - role: string ("user", "assistant", or "system")
+--   - content: string (the message text)
+--   - start_line: number (the line number where this message starts)
+--
+-- Side effects:
+-- - Modifies the buffer content by adding emoji markers where needed
 -- - Only updates the buffer if at least one line was modified
 function M.reformat_buffer(buf, messages)
   -- If no messages, return early
@@ -141,23 +147,23 @@ function M.reformat_buffer(buf, messages)
   for _, msg in ipairs(messages) do
     local role = msg.role
     local start_line = msg.start_line or 1
-    
+
     -- Skip if start_line is out of range
     if start_line <= #lines then
       -- Get emoji for this message's role
       local emoji = role_to_emoji[role]
-      
+
       -- Check if line already starts with an emoji
       local line = lines[start_line]
       local has_emoji = false
-      
+
       for e, _ in pairs(emoji_to_role) do
         if line:match("^" .. e) then
           has_emoji = true
           break
         end
       end
-      
+
       -- If line doesn't start with emoji, add the appropriate one
       if not has_emoji and emoji then
         lines[start_line] = emoji .. " " .. line
@@ -177,7 +183,7 @@ function M.reformat_buffer(buf, messages)
     local system_emoji = role_to_emoji["system"]
     local default_prompt = conf.options.buffer_chat.default_system_prompt
     table.insert(lines, 1, system_emoji .. " " .. default_prompt)
-    
+
     -- Add an empty line after the system prompt for better readability
     table.insert(lines, 2, "")
     modified = true
@@ -205,20 +211,67 @@ function M.set_style(buf)
       -- Place the extmark ONLY if the line exists
       local total_lines = vim.api.nvim_buf_line_count(buf)
       if start_line <= total_lines then
-        vim.api.nvim_buf_set_extmark(
-          buf,
-          ns,
-          start_line - 1,
-          0,
-          {
-            sign_text = "▶",
-            sign_hl_group = "Question", -- You can customize this group
-            priority = 10,
-          }
-        )
+        vim.api.nvim_buf_set_extmark(buf, ns, start_line - 1, 0, {
+          sign_text = "▶",
+          sign_hl_group = "Question", -- You can customize this group
+          priority = 10,
+        })
       end
     end
   end
+end
+
+-- Define a CompletionState class to track chat completion state for a buffer
+local CompletionState = require("simplegpt.utils").class("CompletionState")
+
+-- Constructor for CompletionState
+function CompletionState:ctor(buf_id)
+  self.buf_id = buf_id
+  self.running = false
+  self.spinner = nil
+  self.spinner_line = nil
+end
+
+-- Check if completion is running
+function CompletionState:is_running()
+  return self.running
+end
+
+-- Create and start a spinner at the specified line
+function CompletionState:start_spinner(line)
+  -- Create a spinner instance
+  self.spinner = require("simplegpt.spinner").Spinner()
+  self.spinner_line = line
+  self.running = true
+
+  -- Start the spinner immediately and force UI update
+  self.spinner:start(self.buf_id, line)
+  vim.cmd("redraw")
+
+  return self.spinner
+end
+
+-- Stop a completion
+function CompletionState:stop()
+  vim.api.nvim_exec_autocmds("User", { pattern = require("avante.llm").CANCEL_PATTERN }) -- avante's mechanism to cancel the request
+
+  if self.spinner then
+    self.spinner:complete()
+  end
+  self.running = false
+  self.spinner = nil
+  self.spinner_line = nil
+end
+
+-- Table to store state managers for each buffer
+M.buffer_states = {}
+
+-- Get or create a completion state for a buffer
+function M.get_buffer_state(buf_id)
+  if not M.buffer_states[buf_id] then
+    M.buffer_states[buf_id] = CompletionState(buf_id)
+  end
+  return M.buffer_states[buf_id]
 end
 
 -- Simple function to generate the next response and append it to the buffer
@@ -226,6 +279,17 @@ function M.buf_chat_complete()
   -- Get buffer information
   local buf = vim.api.nvim_get_current_buf()
   local win = vim.api.nvim_get_current_win()
+
+  -- Get the state for this buffer
+  local buf_state = M.get_buffer_state(buf)
+
+  -- Check if a completion is already running for this buffer and abort it if needed
+  if buf_state:is_running() then
+    buf_state:stop()
+    return
+  end
+
+  -- Lines already moved to previous code block
 
   local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
   local content = table.concat(lines, "\n")
@@ -253,16 +317,8 @@ function M.buf_chat_complete()
   vim.api.nvim_buf_set_lines(buf, line_count, line_count, false, { role_to_emoji.assistant .. " " })
   M.set_style(buf)
 
-
-  -- Create a spinner instance (before the callback so it's in the outer scope)
-  local response_spinner = require("simplegpt.spinner").Spinner()
-  
-  -- Get the line where the spinner should appear (last line of buffer)
-  local response_start_line = vim.api.nvim_buf_line_count(buf) - 1
-  
-  -- Start the spinner immediately and force UI update
-  response_spinner:start(buf, response_start_line)
-  vim.cmd("redraw")
+  -- Create and start the spinner in the buffer state
+  buf_state:start_spinner(vim.api.nvim_buf_line_count(buf) - 1)
 
   -- Streaming callback function with access to the spinner
   local function cb(answer, state)
@@ -295,26 +351,17 @@ function M.buf_chat_complete()
         -- Move cursor after the user emoji for convenient input
         local new_line_count = vim.api.nvim_buf_line_count(buf)
         vim.api.nvim_win_set_cursor(win, { new_line_count, #role_to_emoji.user + 2 }) -- Position after emoji and space
+
+        -- Reset active completion state for this buffer
+        buf_state:stop()
       end)
-      -- Safely complete the spinner if it exists
-      if response_spinner then
-        response_spinner:complete()
-      end
+      -- State cleanup will handle the spinner
     end
   end
 
-  -- Callback for stopping generation
-  local function should_stop()
-    -- Stop generation if buffer is no longer valid
-    return not vim.api.nvim_buf_is_valid(buf)
-  end
-
-  -- Call LLM to start generation
-  vim.notify("Chatting with buffer, please wait...", vim.log.levels.INFO)
-
   -- Schedule the API call to happen after UI updates are processed
   vim.schedule(function()
-    dialog.chat_completions(messages, cb, should_stop, conf.options.buffer_chat.provider)
+    dialog.chat_completions(messages, cb, conf.options.buffer_chat.provider)
   end)
   vim.bo[buf].filetype = "markdown"
 end
