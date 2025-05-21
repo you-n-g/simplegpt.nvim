@@ -244,6 +244,13 @@ function M.RegQAUI:get_special()
   -- Get all lines
   local lines = vim.api.nvim_buf_get_lines(buf, math.max(cursor_pos[1] - content_max_len - 1, 0),
     math.min(cursor_pos[1] + content_max_len, line_count), false)
+  -- prepend/append annotation if lines are omitted (like  <.... X lines omitted .....>)
+  if cursor_pos[1] - content_max_len - 1 > 0 then
+    table.insert(lines, 1, string.format("<.... %d lines omitted .....>", cursor_pos[1] - content_max_len - 1))
+  end
+  if cursor_pos[1] + content_max_len < line_count then
+    table.insert(lines, string.format("<.... %d lines omitted .....>", line_count - (cursor_pos[1] + content_max_len)))
+  end
   res["content"] = table.concat(lines, "\n")
   res["full_content"] = table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), "\n")
 
@@ -277,6 +284,13 @@ function M.RegQAUI:get_special()
   -- Get the context lines
   local context_lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
   -- Now 'context_lines' is a table containing all context lines
+  -- prepend/append annotation if lines are omitted (like  <.... X lines omitted .....>)
+  if start_line > 0 then
+    table.insert(context_lines, 1, string.format("<.... %d lines omitted .....>", start_line))
+  end
+  if end_line < line_count then
+    table.insert(context_lines, string.format("<.... %d lines omitted .....>", line_count - end_line))
+  end
   res["context"] = table.concat(context_lines, "\n")
 
   -- 5) Get content in all buffers that have corresponding files on disk; use get_buf_cont
