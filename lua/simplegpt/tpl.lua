@@ -359,6 +359,19 @@ function M.RegQAUI:get_special()
   return res
 end
 
+-- NOTE: jijia.nvim has some bug when rendering if logic. {% if p %} will be rendered as true if p == ""; 
+-- So we need to patch it to convert empty string
+-- - you can test by `print(require"jinja".lupa.expand("| {% if p %}GOOD{% endif %} |", {p=""}))`
+function M.patch_tpl_values(tpl_values)
+  for k, v in pairs(tpl_values) do
+    -- Convert empty string or whitespace-only values to nil
+    if v == "" then
+      tpl_values[k] = nil
+    end
+  end
+  return tpl_values
+end
+
 
 function M.RegQAUI:get_tpl_values()
   local tpl_values = {}
@@ -388,7 +401,8 @@ function M.RegQAUI:get_q()
     -- return require('jinja').lupa.expand(s, t)
     return require('jinja').lupa.expand(s, tab)
   end
-  return interp(M.get_tpl(), self:get_tpl_values())
+
+  return interp(M.get_tpl(), M.patch_tpl_values(self:get_tpl_values()))
 end
 
 --- register common keys for dialogs
