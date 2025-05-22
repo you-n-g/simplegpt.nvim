@@ -4,6 +4,7 @@
 Table of Contents                                *simplegpt-table-of-contents*
 
 1. 🤏 SimpleGPT                                   |simplegpt-🤏-simplegpt|
+  - Why 🤏SimpleGPT:           |simplegpt-🤏-simplegpt-why-🤏simplegpt:|
   - Design Philosophy             |simplegpt-🤏-simplegpt-design-philosophy|
 2. Installation                                       |simplegpt-installation|
 3. Demos                                                     |simplegpt-demos|
@@ -30,22 +31,82 @@ selection, LSP info, terminal etc.) to customize your LLM/ChatGPT prompts for
 your tasks (building chat or finishing tasks by replacing them with diff
 comparison, appending, SEARCH/REPLACE etc.) on nearly all kinds of LLM APIs.
 
-- Why 🤏SimpleGPT: **You need customized LLM/ChatGPT prompts for your tasks**.
-    - AI Coding Plugins didn’t provide support for every scenario.
-        - General tasks beyond coding:
-            - Article writing.
-            - Reading, notetaking, summarizing.
-            - Translating.
-    - Even for specific tasks that AI Coding supports, using a customized prompt and workflow is often more effective and smooth.
 
-Another reason to choose SimpleGPT is better maintenance and compatibility.
-Many general-purpose LLM/ChatGPT neovim plugins are not actively maintained and
-often do not support the latest APIs for advanced models like DeepSeek or
-reasoning LLMs(e.g. I can’t find any plugin to simply chat without involving
-my codebase on reasoning models). In contrast, popular coding-focused plugins
-are usually kept up to date with new developments. SimpleGPT solves this issue
-by integrating the backends of these well-maintained coding plugins, allowing
-you to use nearly any LLM API for a wide range of general tasks.
+WHY 🤏SIMPLEGPT:               *simplegpt-🤏-simplegpt-why-🤏simplegpt:*
+
+
+YOU NEED CUSTOMIZED LLM/CHATGPT PROMPTS FOR YOUR TASKS. ~
+
+- AI Coding Plugins didn’t provide support for every scenario.
+    - General tasks beyond coding:
+        - Article writing.
+        - Reading, notetaking, summarizing.
+        - Translating.
+- Even for specific tasks that AI Coding supports, using a customized prompt and workflow is often more effective and smooth.
+
+
+YOU JUST NEED A SIMPLE WAY TO CHAT WITH ALL KINDS LLM ~
+
+For a long time, I’ve been looking for a simple way to chat in VIM with any
+LLM—just having a conversation, without pulling in my codebase as context
+(VIM is a tool far beyond code). - 🍰 Why a simple way? Many LLM-chatting
+plugins come with lots of features—session management, code extraction,
+shortcuts to scroll content, and more. But as an experienced Vim user, I
+already have many of these features through my plugins. If I can just chat in a
+buffer, I have everything I need. Extra shortcuts that don’t fit my setup
+only add unnecessary complexity. - 🦾 Can’t existing chat plugins support
+all kinds of LLMs? While pure Vim-powered chat plugins like
+jackMort/ChatGPT.nvim <https://github.com/jackMort/ChatGPT.nvim> and
+robitx/gp.nvim <https://github.com/Robitx/gp.nvim> are excellent, they do not
+support reasoning models.
+
+SimpleGPT aims to solve this problem. - 🍰 It only provides the core feature
+to chat in an existing buffer. The chat will be organized by emoji like
+👤(user), 🤖(AI), 💻(system). and only one customizable shortcut, which
+is `<LocalLeader>gc` (to trigger chat completion or stop the chat completion
+stream). - 🦾 It supports all kinds of LLMs, including reasoning models.
+It’s backend is based on yetone/avante.nvim
+<https://github.com/yetone/avante.nvim>, which supports a wide range of LLMs.
+
+What’s more! - Simple here means we removed features that Vim users don’t
+need. - We also include a Jinja engine to help you use context in your chats
+more quickly. This is the key for efficient chatting. You can create your own
+templates over time to chat even more efficiently.
+
+Here is a Jinja template example (this shows how you can build rich,
+context-aware chat experiences):
+
+>jinja
+    You are an expert in programming.
+    
+    {% if p %}
+    Here are a list of files for reference.
+    {{p-}}
+    {% endif %}
+    
+    We have a file named {{filename}} with content:
+    ````{{filetype}} 
+    {{content}}
+    ````
+    
+    {%if terminal%}
+    You encountered error when running or compiling it
+    ```
+    {{terminal}}
+    ```
+    {% endif %}
+    
+    
+    {% if visual %}The error are potentially caused by the following code block(We call it *focused code block*).
+    ```{{filetype}} 
+    {{visual}}
+    ```
+    Please only return the code to replace the *focused code block*{% else %}
+    {{f-}}
+    {% endif %}
+    
+    {{q}}
+<
 
 
 DESIGN PHILOSOPHY                 *simplegpt-🤏-simplegpt-design-philosophy*
@@ -439,6 +500,7 @@ SHORTCUTS                                       *simplegpt-features-shortcuts*
         - `{"<C-h>"}`: Cycle to previous window
         - `{"<C-s>"}`: Save registers (for template editing only)
         - `K`: Show special value for placeholder under cursor (for template editing only)
+        - `Q`: Send current question or conversation to a buffer for chatting.
     - For `ChatDialog` (The dialog that can get responses)
         - `{"<C-a>"}`: Append response to original buffer after selection/current line
         - `{"<C-y>"}`: Copy full response to clipboard
@@ -463,6 +525,8 @@ SHORTCUTS                                       *simplegpt-features-shortcuts*
         - `<LocalLeader>gR`: toggle the dialog.
         - `<LocalLeader>gp`: load current file to reg
         - `<LocalLeader>gP`: append current file to reg
+    - Buffer Chatting:
+        - `<LocalLeader>c`: Start chatting in current buffer.
 - Shortcuts for combined actions: Loading template + send to target
     - By default, they start with `<LocalLeader>s` (You can change it by setting `keymaps.shortcuts.prefix` when you setup the plugin)
     - Full list of shortcuts <lua/simplegpt/conf.lua#L25>
