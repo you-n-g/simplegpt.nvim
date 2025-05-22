@@ -151,7 +151,7 @@ vim.g.maplocalleader = "\\"  -- change the localleader key to \
 ```
 
 More detailed [configuration](lua/simplegpt/conf.lua) are listed here.
-You can find my latest and preferred configuration [here](https://github.com/you-n-g/deploy/blob/master/configs/lazynvim/lua/plugins/gpt.lua) as an example.
+You can find my latest and preferred configuration [here](https://github.com/you-n-g/deploy/blob/master/configs/lazynvim/lua/plugins/ai.lua) as an example.
 
 # Demos
 
