@@ -27,7 +27,7 @@ SimpleGPT aims to solve this problem.
    and only one customizable shortcut, which is `<LocalLeader>gc` (to trigger chat completion or stop the chat completion stream). You can edit your conversation like a normal buffer and continue chat completion freely.
 - 🦾 It supports all kinds of LLMs, including reasoning models. It's backend is based on [yetone/avante.nvim](https://github.com/yetone/avante.nvim), which supports a wide range of LLMs.
 
-What's more!
+What's more🎁!
 - Simple here means we removed features that Vim users don't need.
 - We also include a Jinja engine to help you use context in your chats more quickly. This is the key for efficient chatting. You can create your own templates over time to chat even more efficiently.
 
