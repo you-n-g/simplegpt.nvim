@@ -50,9 +50,10 @@ function M.build_func(target)
   end
 end
 
-local function register_shortcut_dict(shortcut_dict)
-  for key, s in pairs(shortcut_dict) do
-    vim.keymap.set(s.mode, key, function()
+-- Make sure we have `key`attribute in each element of `shortcut_list`
+local function register_shortcut_list(shortcut_list)
+  for _, s in ipairs(shortcut_list) do
+    vim.keymap.set(s.mode, s.key, function()
       loader.load_reg(s.tpl)
 
       -- Support setting extra reg when loading template
@@ -77,16 +78,12 @@ end
 function M.register_shortcuts()
   local keymaps = require"simplegpt.conf".options.keymaps
   local shortcuts = keymaps.shortcuts
-  local shortcut_dict = {}
   for _, s in ipairs(shortcuts.list) do
-    local key = s.key or (shortcuts.prefix and shortcuts.prefix .. s.suffix)
-    if key then
-      shortcut_dict[key] = s
-    end
+    s.key = s.key or (shortcuts.prefix and shortcuts.prefix .. s.suffix)
   end
-  register_shortcut_dict(shortcut_dict)
+  register_shortcut_list(shortcuts.list)
 
-  register_shortcut_dict(keymaps.custom_shortcuts)
+  register_shortcut_list(keymaps.custom_shortcuts)
 end
 
 

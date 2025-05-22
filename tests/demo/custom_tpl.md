@@ -7,8 +7,9 @@
   opts = {
     keymaps = {
       custom_shortcuts = {
-        ["<localleader>st"] = {
+        {
           mode = { "v" },
+          key = "<localleader>st",
           tpl = "converter.json",
           target = "diff",
           opts = { noremap = true, silent = true, desc = "Convert between YAML & JSON" },

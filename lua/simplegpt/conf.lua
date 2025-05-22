@@ -311,7 +311,8 @@ local M = {
       -- customized shortcuts
       custom_shortcuts = {
         -- An exmaple of shorcuts
-        -- ["<LocalLeader>sQ"] = {
+        -- {
+        --   key = "<LocalLeader>sQ"
         --   mode = { "n", "v" },
         --   tpl = "question.json",
         --   target = "chat",
