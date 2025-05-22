@@ -24,7 +24,7 @@ For a long time, I've been looking for a simple way to chat in VIM with any LLM�
 
 SimpleGPT aims to solve this problem.
 - 🍰 It only provides the core feature to chat in an existing buffer. The chat will be organized by emoji like 👤(user), 🤖(AI), 💻(system).  
-   and only one customizable shortcut, which is `<LocalLeader>gc` (to trigger chat completion or stop the chat completion stream).
+   and only one customizable shortcut, which is `<LocalLeader>gc` (to trigger chat completion or stop the chat completion stream). You can edit your conversation like a normal buffer and continue chat completion freely.
 - 🦾 It supports all kinds of LLMs, including reasoning models. It's backend is based on [yetone/avante.nvim](https://github.com/yetone/avante.nvim), which supports a wide range of LLMs.
 
 What's more!
