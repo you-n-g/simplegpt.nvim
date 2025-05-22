@@ -223,7 +223,7 @@ If you want to customize you `<LocalLeader>`, please use following code:
 
 More detailed configuration <lua/simplegpt/conf.lua> are listed here. You can
 find my latest and preferred configuration here
-<https://github.com/you-n-g/deploy/blob/master/configs/lazynvim/lua/plugins/gpt.lua>
+<https://github.com/you-n-g/deploy/blob/master/configs/lazynvim/lua/plugins/ai.lua>
 as an example.
 
 
