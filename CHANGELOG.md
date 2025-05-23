@@ -1,5 +1,38 @@
 # Changelog
 
+## [2.0.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.3.0...v2.0.0) (2025-05-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **config:** breaking change - update shortcut registration and config formatting
+
+### Features
+
+* add custom highlight for placeholders in template popup ([e5c9def](https://github.com/you-n-g/simplegpt.nvim/commit/e5c9def4262424547616eb3a4f41219c2cfe76ba))
+* add full_terminal and chat answer navigation keymaps ([ea10dfb](https://github.com/you-n-g/simplegpt.nvim/commit/ea10dfb8afc6305bc17c9cd601929d8e31b0ec11))
+* add message extmark styling and update line indexing ([fcbc7b9](https://github.com/you-n-g/simplegpt.nvim/commit/fcbc7b978415dce2e91fa3e15c09b3f6daa5aad0))
+* add provider option for buffer chat completions ([681a04a](https://github.com/you-n-g/simplegpt.nvim/commit/681a04a3f104fc4943e1218e1d8d2ce5e4c847ad))
+* add terminal section in question template ([92f667b](https://github.com/you-n-g/simplegpt.nvim/commit/92f667b773e5e9e00f7559248c918f64e1e5d2e7))
+* annotate omitted lines in content and context output ([c29714e](https://github.com/you-n-g/simplegpt.nvim/commit/c29714eec6f48ff7abd6139b5c3bf508591a465f))
+* code_review ([d41e66e](https://github.com/you-n-g/simplegpt.nvim/commit/d41e66e89b89f30d9c719ce4a8179a03816d12ec))
+* improve buf_chat parsing, formatting, and default system prompt ([bc7f1ca](https://github.com/you-n-g/simplegpt.nvim/commit/bc7f1ca43eb3df11a9eb1b8378df81209f5842bf))
+* integrate spinner for chat completions and schedule API call ([3a5d520](https://github.com/you-n-g/simplegpt.nvim/commit/3a5d520ec22c2593aa06aa5bb7623160140d36a5))
+* support buffer chat! ([69ce2d7](https://github.com/you-n-g/simplegpt.nvim/commit/69ce2d7cb39b86563e35fc6ca83a7ff1d4ca5c44))
+* support path when rewriting. ([4fcf280](https://github.com/you-n-g/simplegpt.nvim/commit/4fcf280e1ab5752d37846faf7b5609340370d863))
+
+
+### Bug Fixes
+
+* patch tpl values to convert empty strings to nil ([9f8d18b](https://github.com/you-n-g/simplegpt.nvim/commit/9f8d18b2df5546e01a61c4ce7da8878f07f0c484))
+* update config mappings to use search_replace and code_only ([63b565f](https://github.com/you-n-g/simplegpt.nvim/commit/63b565f417cfc67405ec27cf7e55e9687d9746a6))
+* update error template to include filename and new code fences ([174e485](https://github.com/you-n-g/simplegpt.nvim/commit/174e48528bebec716fffe6bf80c851014503159f))
+
+
+### Code Refactoring
+
+* **config:** breaking change - update shortcut registration and config formatting ([6f7defb](https://github.com/you-n-g/simplegpt.nvim/commit/6f7defb331a4f4727264aeea37531320c75046c2))
+
 ## [1.3.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.2.0...v1.3.0) (2025-03-20)
 
 
