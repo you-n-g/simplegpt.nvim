@@ -90,6 +90,9 @@ We provide a tools gallery for basic usage, which also serves as examples for fu
 | Code editing with LSP information | [Config](https://github.com/you-n-g/simplegpt.nvim/blob/b14c715fda43a0b34cc18ba4394e3440c883f3d5/lua/simplegpt/conf.lua#L157) | [Demo](#code-editing-with-lsp-information) |
 | Code editing with terminal context | [Config](https://github.com/you-n-g/simplegpt.nvim/blob/b14c715fda43a0b34cc18ba4394e3440c883f3d5/lua/simplegpt/conf.lua#L211) | [Demo](#code-editing-with-terminal-context) |
 
+Chat
+- Start a buffer and chat: [Demo](#chat-in-a-buffer)
+- Build Chat based on Rich Context: [Demo](#build-chat-based-on-rich-context)
 
 More tools are coming soon.
 
@@ -198,6 +201,21 @@ The question is constructed by rendering a template. The 't' register serves as 
 - Special variables such as `{{content}}`, `{{filetype}}`, and `{{visual}}`.
 - Standard registers like `{{a}}`, `{{b}}`, and `{{c}}`.
 
+## Chat
+
+### Chat In A Buffer
+[![image](https://github.com/user-attachments/assets/9ada0d88-66e0-4236-a69b-665160e4bcb9)](https://i.redd.it/jqfhzckd2d2f1.gif)
+
+- Press `<localleader>gc` to send current buffer as question to chat or continue chat.
+- Press `<localleader>gc` to stop the chat stream.
+
+### Build Chat based on Rich Context
+[![image](https://github.com/user-attachments/assets/737d4cbe-9ab0-4e9d-892f-5d7a57887592)](https://i.redd.it/vvvz21cv3d2f1.gif)
+
+
+- Call any tools (e.g. `<localleader>se`) to build according question based on context.
+- Press `Q` to convert the question into a new chat.
+- Press `<localleader>gc` to continue chat.
 
 # Features
 
