@@ -2,7 +2,7 @@
 [![Mega-Linter](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/linter.yml/badge.svg)](https://github.com/marketplace/actions/mega-linter)
 [![panvimdoc](https://github.com/you-n-g/simplegpt.nvim/actions/workflows/panvimdoc.yml/badge.svg)](https://github.com/kdheepak/panvimdoc)
 
-🤏SimpleGPT is a Vim plugin designed to provide a simple (high transparency based on Jinja) yet flexible way (context-aware based on buffer, visual selection, LSP info, terminal etc.) to customize your LLM/ChatGPT prompts for your tasks (building chat or finishing tasks by replacing them with diff comparison, appending, SEARCH/REPLACE etc.) on nearly all kinds of LLM APIs.
+🤏SimpleGPT is a Vim plugin designed to provide a simple (high transparency based on Jinja) yet flexible way (context-aware based on buffer, visual selection, LSP info, terminal etc.) to customize your LLM/ChatGPT prompts for your tasks (building chat or finishing tasks by replacing them with diff comparison, appending, SEARCH/REPLACE etc.) or building chat on nearly all kinds of LLM APIs.
 
 ## Why 🤏SimpleGPT:
 
