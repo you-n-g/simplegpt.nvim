@@ -164,6 +164,18 @@ local M = {
             opts = { noremap = true, silent = true, desc = "Fix diagnostics information." },
           },
           {
+            mode = { "v" },
+            suffix = "k",
+            tpl = "code_complete.json",
+            target = "diff",
+            reg = {
+              f = format.code_only .. "\n" .. "Only return the signature and the document.",
+              q = "Please add detailed document for the function you are focusing.\n"
+                .. "The document should include the type and a conceret example of each variable and the return type.\n"
+            },
+            opts = { noremap = true, silent = true, desc = "Add do(c) for the function." },
+          },
+          {
             mode = { "n", "v" },
             suffix = "g",
             tpl = "fix_grammar.json",
