@@ -81,6 +81,7 @@ We provide a tools gallery for basic usage, which also serves as examples for fu
 | Grammar fixing   |  [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L137)      |      |
 | Text Rewriting   | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L106)       |      |
 | Code completing  | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L126)       | [Demo](#code-completion--instruct-editing) |
+| Function documentation (Docstring) | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/90a9823/lua/simplegpt/conf.lua#L175) | |
 | Code Explanation | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L161)       | |
 | Bug Fixing       | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L168)       |      |
 | Translation with great formatting      |  [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L182)      | [Demo](#translation-with-great-formatting) |
@@ -421,6 +422,7 @@ After receiving a response from ChatGPT, you can perform several actions to inte
     - `<LocalLeader>sC`: (C)omplete Code in Popup (with explanations).
     - `<LocalLeader>sc`: (C)omplete Code in Diff Mode (no explanation).
     - `<LocalLeader>sl`: Fix code using LSP diagnostics.
+    - `<LocalLeader>sk`: Add documentation for the function.
     - `<LocalLeader>sg`: (G)rammar Fix.
     - `<LocalLeader>sd`: (D)ense for condensing text.
     - `<LocalLeader>st`: (T)hread or Continue conversation.
