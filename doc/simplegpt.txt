@@ -136,6 +136,9 @@ further customization.
 
   Code completing         conf.lua                Demo
 
+  Function documentation  conf.lua                
+  (Docstring)                                     
+
   Code Explanation        conf.lua                
 
   Bug Fixing              conf.lua                
@@ -561,6 +564,7 @@ SHORTCUTS                                       *simplegpt-features-shortcuts*
         - `<LocalLeader>sC`: (C)omplete Code in Popup (with explanations).
         - `<LocalLeader>sc`: (C)omplete Code in Diff Mode (no explanation).
         - `<LocalLeader>sl`: Fix code using LSP diagnostics.
+        - `<LocalLeader>sk`: Add documentation for the function.
         - `<LocalLeader>sg`: (G)rammar Fix.
         - `<LocalLeader>sd`: (D)ense for condensing text.
         - `<LocalLeader>st`: (T)hread or Continue conversation.
