@@ -78,6 +78,43 @@ function M.key_sort(tpl_json)
   return keys
 end
 
+-- Utility: extract context lines surrounding the cursor position.
+-- Returns a single string with omitted-lines annotations applied.
+local function extract_context(buf, cursor_line, context_len, show_line_num, highlight_current_line)
+  -- show_line_num: when true prefixes every line with its absolute number.
+  -- highlight_current_line: when true marks the cursor line with a leading '>> '.
+  local line_count = vim.api.nvim_buf_line_count(buf)
+  local start_line = math.max(cursor_line - context_len - 1, 0) -- 0-based indexing
+  local end_line   = math.min(cursor_line + context_len, line_count)
+
+  local context_lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
+
+  -- Decorate each context line as requested
+  for i, line in ipairs(context_lines) do
+    local abs_line = start_line + i -- absolute 1-based line number
+    if show_line_num then
+      line = string.format("%5d| %s", abs_line, line)
+    end
+    if highlight_current_line and abs_line == cursor_line then
+      line = ">> " .. line
+    end
+    context_lines[i] = line
+  end
+
+  if start_line > 0 then
+    table.insert(context_lines, 1, string.format("<.... %d lines omitted .....>", start_line))
+  end
+  if end_line < line_count then
+    table.insert(context_lines, string.format("<.... %d lines omitted .....>", line_count - end_line))
+  end
+
+  table.insert(context_lines, 1, "Notation Explanation:")
+  table.insert(context_lines, "`>>` means the current line.")
+  table.insert(context_lines, "Lines are numbered from the top.")
+
+  return table.concat(context_lines, "\n")
+end
+
 function M.RegQAUI:update_reg()
   vim.fn.setreg("t", table.concat(vim.api.nvim_buf_get_lines(self.tpl_pop.bufnr, 0, -1, true), "\n"))
   for k, p in pairs(self.pop_dict) do
@@ -180,6 +217,7 @@ function M.RegQAUI:build(callback)
     "visual",
     "filetype",
     "context",
+    "context_line_num",
     "lsp_diag",
     "terminal",
     "full_terminal",
@@ -277,21 +315,13 @@ function M.RegQAUI:get_special()
   -- 3) Get the filetype of the current buffer
   res["filetype"] = self.context.filetype
 
-  -- 4) Get the context of current line (the line under the cursor). Including 10 lines before and 10 lines after
+  -- 4) Get the context of current line (the line under the cursor).
   local context_len = require "simplegpt.conf".options.tpl_conf.context_len
-  local start_line = math.max(cursor_pos[1] - context_len - 1, 0) -- Lua indexing is 0-based
-  local end_line = math.min(cursor_pos[1] + context_len, line_count)
-  -- Get the context lines
-  local context_lines = vim.api.nvim_buf_get_lines(buf, start_line, end_line, false)
-  -- Now 'context_lines' is a table containing all context lines
-  -- prepend/append annotation if lines are omitted (like  <.... X lines omitted .....>)
-  if start_line > 0 then
-    table.insert(context_lines, 1, string.format("<.... %d lines omitted .....>", start_line))
-  end
-  if end_line < line_count then
-    table.insert(context_lines, string.format("<.... %d lines omitted .....>", line_count - end_line))
-  end
-  res["context"] = table.concat(context_lines, "\n")
+  res["context"] = extract_context(buf, cursor_pos[1], context_len)
+
+  -- 4.1) get line context with line numbers (useful for accurate locate the place)
+  res["context_line_num"] = extract_context(buf, cursor_pos[1], 2, true, true) -- show line numbers and highlight the current line.
+
 
   -- 5) Get content in all buffers that have corresponding files on disk; use get_buf_cont
   local all_buf = {conf.options.q_build.repo.header}

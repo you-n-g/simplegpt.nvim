@@ -198,7 +198,7 @@ I have attempted to summarize the key concepts and manual in one image.
 ![image](https://github.com/user-attachments/assets/bf3db252-2679-4c45-a307-774754492134)
 
 The question is constructed by rendering a template. The 't' register serves as the template, encompassing:
-- Special variables such as `{{content}}`, `{{filetype}}`, and `{{visual}}`.
+- Special variables such as `{{content}}`, `{{filetype}}`, `{{visual}}`, and `{{context_line_num}}`.
 - Standard registers like `{{a}}`, `{{b}}`, and `{{c}}`.
 
 ## Chat
@@ -340,6 +340,7 @@ You can use these variables in your jinja template.
 | filetype     | Filetype of the current buffer                              |
 | visual       | Lines selected in visual mode                               |
 | context      | Context around the cursor, configurable lines up/down       |
+| context_line_num | Like `context` but additionally shows absolute line numbers and marks the current line with `>>` for precise location |
 | all_buf      | Content from all loaded buffers with files on disk          |
 | lsp_diag     | LSP diagnostics information for the selected lines          |
 | md_context   | Directly loading the content in `.sgpt.md` as the register value. |
