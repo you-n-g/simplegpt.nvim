@@ -490,7 +490,9 @@ command was invoked | | p | If register `p` contains a list of file paths (one
 per line), its value becomes the concatenation of the content from each of
 those files. While editing the template, open the _Files_ popup and press @ to
 fuzzy-search files with fzf-lua and append their paths automatically. Files
-that do not exist will be skipped. |
+that do not exist will be skipped and are now highlighted inside the popup
+(using the `Comment` highlight group) so you can immediately spot and fix stale
+paths. |
 
 
 TEMPLATE ENGINE
