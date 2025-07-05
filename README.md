@@ -82,6 +82,7 @@ We provide a tools gallery for basic usage, which also serves as examples for fu
 | Text Rewriting   | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L106)       |      |
 | Code completing  | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L126)       | [Demo](#code-completion--instruct-editing) |
 | Function documentation (Docstring) | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/90a9823/lua/simplegpt/conf.lua#L175) | |
+| Variable documentation | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/HEAD/lua/simplegpt/conf.lua) | |
 | Code Explanation | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L161)       | |
 | Bug Fixing       | [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L168)       |      |
 | Translation with great formatting      |  [conf.lua](https://github.com/you-n-g/simplegpt.nvim/blob/4fa41a0f412c17bbd0588e7d3e9221399e682669/lua/simplegpt/conf.lua#L182)      | [Demo](#translation-with-great-formatting) |
@@ -348,6 +349,7 @@ You can use these variables in your jinja template.
 | filename     | The name of the current file                                |
 | terminal     | The content from the active (visiable) terminal buffer, capturing recent terminal output (if available) |
 | full_terminal     | like terminal, but including all terminal output |
+| cword        | The word under the cursor when the command was invoked |
 | p            | If register `p` contains a list of file paths (one per line), its value becomes the concatenation of the content from each of those files. Files that do not exist will be skipped. |
 
 #### Template Engine
@@ -423,6 +425,7 @@ After receiving a response from ChatGPT, you can perform several actions to inte
     - `<LocalLeader>sc`: (C)omplete Code in Diff Mode (no explanation).
     - `<LocalLeader>sl`: Fix code using LSP diagnostics.
     - `<LocalLeader>sk`: Add documentation for the function.
+    - `<LocalLeader>sv`: Add documentation for the variable under cursor or selection.
     - `<LocalLeader>sg`: (G)rammar Fix.
     - `<LocalLeader>sd`: (D)ense for condensing text.
     - `<LocalLeader>st`: (T)hread or Continue conversation.

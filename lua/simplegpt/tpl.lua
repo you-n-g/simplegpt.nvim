@@ -222,6 +222,7 @@ function M.RegQAUI:build(callback)
     "terminal",
     "full_terminal",
     "p",
+    "cword",
     "filename"
   }
 
@@ -382,6 +383,17 @@ function M.RegQAUI:get_special()
       break -- Use the first encountered visible terminal buffer
     end
   end
+
+  -- 10) Get {{cword}}: the word under cursor
+  res["cword"] = (function()
+    -- Safely extract the word under cursor in the source buffer,
+    -- without relying on the current window.
+    local line = vim.api.nvim_buf_get_lines(buf, cursor_pos[1] - 1, cursor_pos[1], false)[1] or ""
+    local col  = (cursor_pos[2] or 0) + 1 -- convert to 1-based for string ops
+    local left = line:sub(1, col):match("[_%w]+$") or ""
+    local right = line:sub(col + 1):match("^[_%w]+") or ""
+    return left .. right
+  end)()
 
   -- Expanding --
   -- a) Get the content of files listed in {{p}} and render it as a list of file content

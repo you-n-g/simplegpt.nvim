@@ -176,6 +176,13 @@ local M = {
             opts = { noremap = true, silent = true, desc = "Add do(c) for the function." },
           },
           {
+            mode = { "v", "n" },
+            suffix = "v",
+            tpl = "variable_explain.json",
+            target = "popup",
+            opts = { noremap = true, silent = true, desc = "Add Doc For (V)ariable" },
+          },
+          {
             mode = { "n", "v" },
             suffix = "g",
             tpl = "fix_grammar.json",
