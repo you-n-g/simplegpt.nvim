@@ -12,6 +12,7 @@ function M.RegQAUI:ctor(...)
   M.RegQAUI.super.ctor(self, ...)
   self.pop_dict = {}                     -- a dict of register to popup
   self.tpl_pop = nil                     -- the popup of template
+  self.file_path_pop = nil
   if "" == vim.fn.getreg("t") then
     vim.fn.setreg("t", [[Context:```{{c}}```, {{q}}, {{i}}, Please input your answer:```]])
   end
@@ -147,18 +148,36 @@ function M.RegQAUI:build(callback)
   self.pop_dict = {}
   local reg_cnt = 0
   for _, k in ipairs(placeholders) do
+    local is_path_popup = k:match("^p%-?$")
     self.pop_dict[k] = Popup({
       enter = #self.all_pops == #placeholders,  -- Counting a dict is complex, so we use this trick
       border = {
         style = "single",
         text = {
-          top = (k:match("^p%-?$") and "Files to be included as context | " or "") .. "register: {{" .. k .. "}}",
+          top = (is_path_popup and "Files to be included as context | " or "") .. "register: {{" .. k .. "}}",
           top_align = "center",
         },
       },
     })
+
+    if is_path_popup then
+      self.file_path_pop = self.pop_dict[k]
+    end
+
     reg_cnt = reg_cnt + 1
-    vim.api.nvim_buf_set_text(self.pop_dict[k].bufnr, 0, 0, 0, 0, vim.split(vim.fn.getreg(k), "\n"))
+    local buf_k = self.pop_dict[k].bufnr
+    vim.api.nvim_buf_set_text(buf_k, 0, 0, 0, 0, vim.split(vim.fn.getreg(k), "\n"))
+
+    -- Add a virtual-text hint showing the shortcut (press “@”) only for the
+    -- file-path popup.
+    if is_path_popup then
+      local ns = vim.api.nvim_create_namespace("SimpleGPTShortcutHint")
+      vim.api.nvim_buf_set_extmark(buf_k, ns, 0, 0, {
+        virt_text = { { " ← press @ to add files", "Comment" } },
+        virt_text_pos = "eol",
+      })
+    end
+
     table.insert(self.all_pops, self.pop_dict[k])
   end
 
@@ -562,6 +581,37 @@ function M.RegQAUI:register_keys(exit_callback)
       -- Notify the user
       vim.notify("Created buffer chat with template query", vim.log.levels.INFO)
     end, { noremap = true, desc = "Exit template and create a buffer chat with the query" })
+  end
+
+  -- 3) register “@” in the file-path popup to pick files via fzf-lua
+  if self.file_path_pop then
+    local function open_file_selector()
+      -- Ensure we are in insert mode at a fresh line when triggered from normal
+      -- mode so that the selected path is inserted cleanly.
+      if vim.fn.mode() ~= "i" then
+        local bufnr = self.file_path_pop.bufnr
+        local line_count = vim.api.nvim_buf_line_count(bufnr)
+        local last_line = vim.api.nvim_buf_get_lines(bufnr, line_count - 1, line_count, false)[1] or ""
+        if last_line ~= "" then
+          -- Append a blank line if the last line already has content
+          vim.api.nvim_buf_set_lines(bufnr, line_count, line_count, false, { "" })
+          line_count = line_count + 1
+        end
+        -- Move the cursor to the beginning of the (new) last line and enter insert mode
+        vim.api.nvim_win_set_cursor(0, { line_count, 0 })
+        vim.cmd("startinsert")
+      end
+      require("fzf-lua").complete_file({
+        cmd = "rg --files",
+        winopts = { preview = { hidden = false } },
+      })
+    end
+
+    -- map “@” in both normal and insert mode
+    for _, mode in ipairs({ "n", "i" }) do
+      self.file_path_pop:map(mode, "@", open_file_selector,
+        { noremap = true, desc = "Search file and insert path" })
+    end
   end
 end
 
