@@ -1,4 +1,4 @@
-*simplegpt.txt*            For NVIM v0.8.0           Last change: 2025 July 04
+*simplegpt.txt*            For NVIM v0.8.0           Last change: 2025 July 05
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -138,6 +138,8 @@ further customization.
 
   Function documentation  conf.lua                
   (Docstring)                                     
+
+  Variable documentation  conf.lua                
 
   Code Explanation        conf.lua                
 
@@ -483,9 +485,10 @@ for the selected lines | | md_context | Directly loading the content in
 `.sgpt.md` as the register value. | | filename | The name of the current file |
 | terminal | The content from the active (visiable) terminal buffer, capturing
 recent terminal output (if available) | | full_terminal | like terminal, but
-including all terminal output | | p | If register `p` contains a list of file
-paths (one per line), its value becomes the concatenation of the content from
-each of those files. Files that do not exist will be skipped. |
+including all terminal output | | cword | The word under the cursor when the
+command was invoked | | p | If register `p` contains a list of file paths (one
+per line), its value becomes the concatenation of the content from each of
+those files. Files that do not exist will be skipped. |
 
 
 TEMPLATE ENGINE
@@ -565,6 +568,7 @@ SHORTCUTS                                       *simplegpt-features-shortcuts*
         - `<LocalLeader>sc`: (C)omplete Code in Diff Mode (no explanation).
         - `<LocalLeader>sl`: Fix code using LSP diagnostics.
         - `<LocalLeader>sk`: Add documentation for the function.
+        - `<LocalLeader>sv`: Add documentation for the variable under cursor or selection.
         - `<LocalLeader>sg`: (G)rammar Fix.
         - `<LocalLeader>sd`: (D)ense for condensing text.
         - `<LocalLeader>st`: (T)hread or Continue conversation.
