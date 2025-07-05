@@ -160,10 +160,6 @@ function M.RegQAUI:build(callback)
       },
     })
 
-    if is_path_popup then
-      self.file_path_pop = self.pop_dict[k]
-    end
-
     reg_cnt = reg_cnt + 1
     local buf_k = self.pop_dict[k].bufnr
     vim.api.nvim_buf_set_text(buf_k, 0, 0, 0, 0, vim.split(vim.fn.getreg(k), "\n"))
@@ -171,10 +167,33 @@ function M.RegQAUI:build(callback)
     -- Add a virtual-text hint showing the shortcut (press “@”) only for the
     -- file-path popup.
     if is_path_popup then
+      self.file_path_pop = self.pop_dict[k]
       local ns = vim.api.nvim_create_namespace("SimpleGPTShortcutHint")
       vim.api.nvim_buf_set_extmark(buf_k, ns, 0, 0, {
         virt_text = { { " ← press @ to add files", "Comment" } },
         virt_text_pos = "eol",
+      })
+
+      -- Highlight any path lines that do not correspond to an existing file
+      local ns_missing = vim.api.nvim_create_namespace("SimpleGPTMissingFiles")
+
+      local function highlight_missing_files()
+        vim.api.nvim_buf_clear_namespace(buf_k, ns_missing, 0, -1)
+        local lines = vim.api.nvim_buf_get_lines(buf_k, 0, -1, false)
+        for lnum, path in ipairs(lines) do
+          path = vim.trim(path)
+          if path ~= "" and not vim.loop.fs_stat(path) then
+            vim.api.nvim_buf_add_highlight(buf_k, ns_missing, "Comment", lnum - 1, 0, -1)
+          end
+        end
+      end
+
+      -- initial highlight and automatic refresh when the buffer changes
+      highlight_missing_files()
+      vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "BufEnter" }, {
+        buffer = buf_k,
+        callback = highlight_missing_files,
+        desc = "SimpleGPT: highlight invalid file paths",
       })
     end
 

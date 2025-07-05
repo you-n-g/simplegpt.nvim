@@ -350,7 +350,7 @@ You can use these variables in your jinja template.
 | terminal     | The content from the active (visiable) terminal buffer, capturing recent terminal output (if available) |
 | full_terminal     | like terminal, but including all terminal output |
 | cword        | The word under the cursor when the command was invoked |
-| p            | If register `p` contains a list of file paths (one per line), its value becomes the concatenation of the content from each of those files.  While editing the template, open the *Files* popup and press <kbd>@</kbd> to fuzzy-search files with fzf-lua and append their paths automatically.  Files that do not exist will be skipped. |
+| p            | If register `p` contains a list of file paths (one per line), its value becomes the concatenation of the content from each of those files.  While editing the template, open the *Files* popup and press <kbd>@</kbd> to fuzzy-search files with fzf-lua and append their paths automatically.  Files that do not exist will be skipped and are now highlighted inside the popup (using the `Comment` highlight group) so you can immediately spot and fix stale paths. |
 
 #### Template Engine
 
