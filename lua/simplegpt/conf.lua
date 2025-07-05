@@ -180,6 +180,9 @@ local M = {
             suffix = "v",
             tpl = "variable_explain.json",
             target = "popup",
+            reg = {
+              f  = format.code_only,
+            },
             opts = { noremap = true, silent = true, desc = "Add Doc For (V)ariable" },
           },
           {
