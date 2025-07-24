@@ -109,9 +109,9 @@ local function extract_context(buf, cursor_line, context_len, show_line_num, hig
     table.insert(context_lines, string.format("<.... %d lines omitted .....>", line_count - end_line))
   end
 
-  table.insert(context_lines, 1, "Notation Explanation:")
-  table.insert(context_lines, "`>>` means the current line.")
-  table.insert(context_lines, "Lines are numbered from the top.")
+  table.insert(context_lines, "Notation Explanation:")
+  table.insert(context_lines, "- `>>` means the current line.")
+  table.insert(context_lines, "- Lines are numbered from the top.")
 
   return table.concat(context_lines, "\n")
 end
