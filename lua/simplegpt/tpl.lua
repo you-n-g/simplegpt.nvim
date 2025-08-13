@@ -6,6 +6,29 @@ local utils = require("simplegpt.utils")
 local conf = require("simplegpt.conf")
 -- TODO:
 local M = {}
+M.history = {} -- store template & register history
+
+-- Record current template / register values into history
+function M.record_history()
+  -- Build a snapshot of current template/register values
+  local snapshot = { t = vim.fn.getreg("t") }
+  for _, k in ipairs(M.get_placeholders()) do
+    snapshot[k] = vim.fn.getreg(k)
+  end
+
+  -- Append each value to a per-register history list
+  for reg, val in pairs(snapshot) do
+    if not M.history[reg] then
+      M.history[reg] = {}
+    end
+
+    -- avoid storing consecutive duplicate values.
+    if M.history[reg][#M.history[reg]] ~= val then
+      table.insert(M.history[reg], val)
+    end
+  end
+end
+
 M.RegQAUI = utils.class("RegQAUI", dialog.BaseDialog) -- register-based QA UI
 
 function M.RegQAUI:ctor(...)
@@ -502,7 +525,14 @@ end
 --- register common keys for dialogs
 ---@param exit_callback
 function M.RegQAUI:register_keys(exit_callback)
-  M.RegQAUI.super.register_keys(self, exit_callback)
+  -- wrap exit_callback so that history is recorded before exiting
+  local function _exit_cb(...)
+    if exit_callback then
+      exit_callback(...)
+    end
+    M.record_history()
+  end
+  M.RegQAUI.super.register_keys(self, _exit_cb)
   -- Register TPL_DIALOG_KEYMAPS via add_winbar
   local keymaps = require("simplegpt.conf").get_tpl_dialog_keymaps()
   dialog.add_winbar(self.all_pops[1].winid, keymaps)
@@ -585,8 +615,15 @@ function M.RegQAUI:register_keys(exit_callback)
 
   -- 2) Register 'Q' to exit the NUI and create a buffer chat with the query
   local buffer_chat_key = require("simplegpt.conf").options.dialog.keymaps.buffer_chat_keys
-  for _, pop in ipairs(self.all_pops) do
-      pop:map("n", buffer_chat_key, function()
+  local p_d = {t = self.tpl_pop}
+  for k, ppop in pairs(self.pop_dict) do
+    p_d[k] = ppop
+  end
+  -- start after last entry (newest position)
+  local _hist_idx = {}
+
+  for k, pop in pairs(p_d) do
+    pop:map("n", buffer_chat_key, function()
       -- Exit the current NUI
       self:quit()  -- this will switch back to the orginal buffer
 
@@ -599,7 +636,41 @@ function M.RegQAUI:register_keys(exit_callback)
       
       -- Notify the user
       vim.notify("Created buffer chat with template query", vim.log.levels.INFO)
+
+      -- Record current template and register values for future history/navigation
+      M.record_history()
     end, { noremap = true, desc = "Exit template and create a buffer chat with the query" })
+
+    ---------------------------------------------------------------------------
+    -- <Up>/<Down> mappings inside register pop-ups to navigate stored history
+    ---------------------------------------------------------------------------
+    _hist_idx[k] = (M.history[k] and (#M.history[k] + 1)) or 1
+    function build_func(k, delta)
+      local function rotate_history()
+        local hist = M.history[k]
+        if not hist or #hist == 0 then
+          vim.notify("No history for register " .. k, vim.log.levels.WARN)
+          return
+        end
+        local idx = (_hist_idx[k] or 1) + delta
+        if idx < 1 then
+          idx = #hist
+        elseif idx > #hist then
+          idx = 1
+        end
+        _hist_idx[k] = idx
+
+        -- update popup buffer and underlying register
+        vim.api.nvim_buf_set_lines(p_d[k].bufnr, 0, -1, false, vim.split(hist[idx], "\n"))
+        vim.fn.setreg(k, hist[idx])
+      end
+      return rotate_history
+    end
+
+    pop:map("n", "<C-p>", build_func(k, -1),
+      { noremap = true, desc = "SimpleGPT: previous history value" })
+    pop:map("n", "<C-n>", build_func(k, 1),
+      { noremap = true, desc = "SimpleGPT: next history value" })
   end
 
   -- 3) register “@” in the file-path popup to pick files via fzf-lua

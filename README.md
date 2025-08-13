@@ -391,6 +391,9 @@ After receiving a response from ChatGPT, you can perform several actions to inte
     - `{"<C-s>"}`: Save registers (for template editing only)
     - `K`: Show special value for placeholder under cursor (for template editing only)
     - `Q`: Send current question or conversation to a buffer for chatting.
+  - For `Template Editor` (register-based QA UI)
+    - `{"<C-p>"}`: History Cycling; Cycle to previous stored value of the current register
+    - `{"<C-n>"}`: History Cycling; Cycle to next stored value of the current register
   - For `ChatDialog` (The dialog that can get responses)
     - `{"<C-a>"}`: Append response to original buffer after selection/current line
     - `{"<C-y>"}`: Copy full response to clipboard
