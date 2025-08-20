@@ -647,6 +647,7 @@ function M.RegQAUI:register_keys(exit_callback)
     _hist_idx[k] = (M.history[k] and (#M.history[k] + 1)) or 1
     function build_func(k, delta)
       local function rotate_history()
+        -- rotate through register history and show current index indicator
         local hist = M.history[k]
         if not hist or #hist == 0 then
           vim.notify("No history for register " .. k, vim.log.levels.WARN)
@@ -661,8 +662,18 @@ function M.RegQAUI:register_keys(exit_callback)
         _hist_idx[k] = idx
 
         -- update popup buffer and underlying register
-        vim.api.nvim_buf_set_lines(p_d[k].bufnr, 0, -1, false, vim.split(hist[idx], "\n"))
+        local buf_nr = p_d[k].bufnr
+        vim.api.nvim_buf_set_lines(buf_nr, 0, -1, false, vim.split(hist[idx], "\n"))
         vim.fn.setreg(k, hist[idx])
+
+        -- add end-of-buffer virtual text indicating current/total history entry
+        local ns = vim.api.nvim_create_namespace("SimpleGPTHistoryHint")
+        vim.api.nvim_buf_clear_namespace(buf_nr, ns, 0, -1)
+        local last_line = vim.api.nvim_buf_line_count(buf_nr) - 1
+        vim.api.nvim_buf_set_extmark(buf_nr, ns, last_line, -1, {
+          virt_text = { { string.format(" [%d/%d]", idx, #hist), "Comment" } },
+          virt_text_pos = "eol",
+        })
       end
       return rotate_history
     end
