@@ -3,6 +3,7 @@ local conf = require("simplegpt.conf")
 local search_replace = require("simplegpt.search_replace")
 local options = conf.options
 local avante_llm    = require("avante.llm")
+local avante_utils = require("avante.utils")
 
 --- @class DialogContext
 --- @field from_bufnr number         The buffer number where the request originated.
@@ -234,6 +235,12 @@ function M.chat_completions(messages, cb, provider)
       end
     end,
   }
+  provider.on_error = function(result)
+    -- NOTE: avante's on_error logic is in provider instead of handler_opts
+    -- this line is copy from lua/avante/llm.lua's on_error logic
+    cb(result.body, "ERROR")
+    avante_utils.error("API request failed with status " .. result.status, { once = true, title = "Avante" })
+  end
   avante_llm.curl({
     provider     = provider,
     prompt_opts  = prompt_opts,
@@ -345,6 +352,10 @@ function M.ChatDialog:call(question)
       self.current_answer_idx = #self.conversation
       -- Save the complete answer to conversation history
       table.insert(self.conversation, { content = current_answer, role = "assistant" })
+    end
+
+    if state == "ERROR" then
+      vim.notify(answer)
     end
 
     if popup.border.winid ~= nil then

@@ -356,6 +356,8 @@ function M.buf_chat_complete()
         buf_state:stop()
       end)
       -- State cleanup will handle the spinner
+    elseif state == "ERROR" then
+      vim.notify(answer)
     end
   end
 
