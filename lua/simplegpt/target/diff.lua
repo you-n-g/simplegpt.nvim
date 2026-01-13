@@ -67,13 +67,24 @@ function M.DiffPopup:build(context)
     for _, p in ipairs(self.all_pops) do
       vim.api.nvim_buf_set_option(p.bufnr, "filetype", self.context["filetype"]) -- todo set to current filetype
     end
+    -- if visual is not selected, use the current line
+    if self.context.visual_selection == nil then
+      local cursor = self.context.cursor_pos
+      self.context.visual_selection = {
+        start = { row = cursor[1], col = 0 },
+        ["end"] = { row = cursor[1], col = 0 },
+        mode = "V",
+      }
+    end
+
     local key_map = { visual = "visual", file = "full_content" }
+    local content = self.context.rqa:get_special()[key_map[self.context.replace_target]] or ""
     vim.api.nvim_buf_set_lines(
       self.orig_popup.bufnr,
       0,
       -1,
       false,
-      vim.split(self.context.rqa:get_special()[key_map[self.context.replace_target]], "\n")
+      vim.split(content, "\n")
     ) -- set conttn
 
     self:_turn_on_diff()
