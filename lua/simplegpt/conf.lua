@@ -403,6 +403,9 @@ local M = {
   },
 }
 
+
+M.format = format
+
 -- This function retrieves the basic keymaps for a given name.
 -- It first checks if a specific key is defined for the name.
 -- If not, it constructs the keymap using a prefix and suffix associated with the name.

@@ -59,6 +59,11 @@ local function register_shortcut_list(shortcut_list)
       -- Support setting extra reg when loading template
       if s.reg ~= nil then
         for reg, value in pairs(s.reg) do
+          -- Sometime, the value depends on the simplegpt context.
+          -- but we can't access simplegpt in config. So we delay the building of the value as as a function
+          if type(value) == "function" then
+            value = value()
+          end
           -- Check if `vim.fn.getreg(reg)` contains `value` then skip setting it.
           -- Substring indicates contains. We do not need an exact match.
           local current_value = vim.fn.getreg(reg)
@@ -75,14 +80,21 @@ local function register_shortcut_list(shortcut_list)
   end
 end
 
+local function update_shortcut_list(shortcut_list)
+  local keymaps = require"simplegpt.conf".options.keymaps
+  local prefix = keymaps.shortcuts.prefix
+  for _, s in ipairs(shortcut_list) do
+    s.key = s.key or (prefix and prefix .. s.suffix)
+  end
+end
+
 function M.register_shortcuts()
   local keymaps = require"simplegpt.conf".options.keymaps
-  local shortcuts = keymaps.shortcuts
-  for _, s in ipairs(shortcuts.list) do
-    s.key = s.key or (shortcuts.prefix and shortcuts.prefix .. s.suffix)
-  end
-  register_shortcut_list(shortcuts.list)
+  local shortcut_list = keymaps.shortcuts.list
+  update_shortcut_list(shortcut_list)
+  register_shortcut_list(shortcut_list)
 
+  update_shortcut_list(keymaps.custom_shortcuts)
   register_shortcut_list(keymaps.custom_shortcuts)
 end
 
