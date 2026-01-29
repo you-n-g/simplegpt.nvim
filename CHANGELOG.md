@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.1.0](https://github.com/you-n-g/simplegpt.nvim/compare/v2.0.0...v2.1.0) (2026-01-29)
+
+
+### Features
+
+* add 'f' code_only reg and update variable_explain template ([8bb5a43](https://github.com/you-n-g/simplegpt.nvim/commit/8bb5a4349dae4e06957a27479187f61acbe81f40))
+* add @ shortcut in file-path popup to insert files via fzf-lua ([eff8f1a](https://github.com/you-n-g/simplegpt.nvim/commit/eff8f1a1cb90b8451703109a327168be57f5e03e))
+* add context_line_num variable with line numbers and current line marker ([c88fa18](https://github.com/you-n-g/simplegpt.nvim/commit/c88fa18f56a5739d9841f87cc16d2158f298eb4d))
+* add register history and C-p/C-n navigation in template editor ([654a68e](https://github.com/you-n-g/simplegpt.nvim/commit/654a68ecb2f53b2415e6bb6e82b4537aff7c8825))
+* add variable documentation feature with cword support and docs update ([3a1bde5](https://github.com/you-n-g/simplegpt.nvim/commit/3a1bde591494cbd3b07e6684bd37572d69f14dd1))
+* add visual-mode 'k' binding for code completion docs in diff ([af5e8bd](https://github.com/you-n-g/simplegpt.nvim/commit/af5e8bd9f2b4de6ddb94e1236ae207e016b1e19f))
+* display history entry index in register popup ([30cdf31](https://github.com/you-n-g/simplegpt.nvim/commit/30cdf31e2ed0de26a9daddfa2ce537fd02996da8))
+* enhance code_explain template with full file description guidance ([5a97650](https://github.com/you-n-g/simplegpt.nvim/commit/5a97650e9443ce7fcbb3d363779b9bc7d0809454))
+* highlight non-existent file paths in Files popup ([e33fb1d](https://github.com/you-n-g/simplegpt.nvim/commit/e33fb1d7858ee013c21049a91ecffc0f8dca8b3d))
+
+
+### Bug Fixes
+
+* notify user on API error in chat completions and buf chat ([e1e9798](https://github.com/you-n-g/simplegpt.nvim/commit/e1e97987cb2dc44378eef96431a4c66526c690c3))
+* refine the context notation explanation ([7343385](https://github.com/you-n-g/simplegpt.nvim/commit/7343385427c8526bb5cb754838d266c4b5f218e6))
+* set visual selection to current line if none is selected in DiffPopup ([57223e0](https://github.com/you-n-g/simplegpt.nvim/commit/57223e0c7cbcc8f83f25b14168122cc5595a3cfd))
+
 ## [2.0.0](https://github.com/you-n-g/simplegpt.nvim/compare/v1.3.0...v2.0.0) (2025-05-23)
 
 
