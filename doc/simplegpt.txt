@@ -1,4 +1,4 @@
-*simplegpt.txt*          For NVIM v0.8.0          Last change: 2026 January 13
+*simplegpt.txt*          For NVIM v0.8.0          Last change: 2026 January 29
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
