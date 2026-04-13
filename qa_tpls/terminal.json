@@ -1,1 +1,1 @@
-{"t": "You are an expert in teminal commmands\n\nHere is the context of your terminal\n```\n{{context}}\n```\n\nPlease response the terminal command for the following intention\n```\n{{q-}}\n```"}
+{"t": "You are an expert in teminal commmands\n\n{% if md_context %}\nYou have some information for reference.\n````markdown\n{{md_context}}\n````\n{% endif %}\n\nHere is the context of your terminal\n```\n{{context}}\n```\n\nPlease response the terminal command for the following intention\n```\n{{q-}}\n```"}

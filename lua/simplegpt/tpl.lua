@@ -418,8 +418,24 @@ function M.RegQAUI:get_special()
   end
 
   -- 7) Get the content in `.sgpt.md` and render it as {{md_context}}
-  local md_file_path = ".sgpt.md"
-  if vim.loop.fs_stat(md_file_path) then
+  -- Search upward from cwd to filesystem root, stop at the first match
+  local function find_sgpt_md()
+    local dir = vim.fn.getcwd()
+    while true do
+      local candidate = dir .. "/.sgpt.md"
+      if vim.loop.fs_stat(candidate) then
+        return candidate
+      end
+      local parent = vim.fn.fnamemodify(dir, ":h")
+      if parent == dir then
+        break -- reached filesystem root
+      end
+      dir = parent
+    end
+    return nil
+  end
+  local md_file_path = find_sgpt_md()
+  if md_file_path then
     local md_content = {}
     for line in io.lines(md_file_path) do
       table.insert(md_content, line)
