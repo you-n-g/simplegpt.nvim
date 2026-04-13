@@ -1,4 +1,5 @@
-*simplegpt.txt*           For NVIM v0.8.0           Last change: 2026 March 12
+*simplegpt.txt*
+                                 For NVIM v0.8.0    Last change: 2026 April 13
 
 ==============================================================================
 Table of Contents                                *simplegpt-table-of-contents*
@@ -312,7 +313,7 @@ BUILD CHAT BASED ON RICH CONTEXT ~
 
 <https://i.redd.it/vvvz21cv3d2f1.gif>
 
-- Call any tools (e.g. `<localleader>se`) to build according question based on context.
+- Call any tools (e.g. `<localleader>se`) to build according question based on context.
 - Press `Q` to convert the question into a new chat.
 - Press `<localleader>gc` to continue chat.
 
@@ -501,15 +502,17 @@ SimpleGPT uses a Jinja-like template engine (jinja-engine.nvim
 <https://github.com/you-n-g/jinja-engine.nvim>) to power its template system:
 
 - **Variable Interpolation**: Access registers using `{{register_name}}` syntax
-    >json
+
+>json
         {
           "t": "I am working on a {{filetype}} file. The content is: {{content}}. Selected lines: {{visual}}. Question: {{q}}."
         }
-    <
+<
 - **Control Structures**: Use Jinja-style control flow
-    >jinja
+
+>jinja
         {% if visual %}Selected: {{visual}}{% else %}No selection{% endif %}
-    <
+<
 
 The template engine provides familiar Jinja-style syntax while being fully
 integrated with Neovim.
